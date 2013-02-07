@@ -21,12 +21,13 @@
   \item{traits}{a dataframe contains traits of every
   individual or species. e.g. DBH, status.}
 
-  \item{habitat}{a list of environments about the
-  community. e.g. location, mean elevation and other
-  topographic parameters of the quadrat.}
+  \item{habitat}{a list \link{im} objects about
+  environments about the community. e.g. location, mean
+  elevation and other topographic parameters of the
+  quadrat.}
 
-  \item{phylo}{a phylo object contains phylogeny of species
-  in the community.}
+  \item{phylo}{a \link{phylo} object contains phylogeny of
+  species in the community.}
 
   \item{type}{a character indicate types of the community.
   it can be "ind-mapped" (default), "pre-abs" and "sp-ab"
@@ -40,6 +41,18 @@
 }
 \value{
   a \code{scp} object contains following attributes:
+  \tabular{ll}{ com: \tab a \link{ppp} object contains
+  spatial information of the community \cr N: \tab total
+  number of individual \cr S: \tab total number of species
+  \cr sp: \tab a vector of total species name \cr ab: \tab
+  species abundance distribution \cr win: \tab an
+  \link{owin} object contains spatial region of the
+  community \cr traits: \tab a dataframe contains character
+  of each individuals, e.g. species name, DBH, status \cr
+  habitat: \tab a list \link{im} objects about environments
+  about the community. \cr phylo: \tab a \link{phylo}
+  object contains phylogeny of species in the community.
+  \cr }
 }
 \description{
   \code{scp} create a spatial community pattern object. it

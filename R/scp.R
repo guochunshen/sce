@@ -8,8 +8,8 @@
 #' @param x,y spatial coordination of each individual if available
 #' @param win either a vector of length 4 or an owin object (\link{owin}) represents spatial region of the community
 #' @param traits a dataframe contains traits of every individual or species. e.g. DBH, status.
-#' @param habitat a list of environments about the community. e.g. location, mean elevation and other topographic parameters of the quadrat.
-#' @param phylo a phylo object contains phylogeny of species in the community.
+#' @param habitat a list \link{im} objects about environments about the community. e.g. location, mean elevation and other topographic parameters of the quadrat.
+#' @param phylo a \link{phylo} object contains phylogeny of species in the community.
 #' @param type a character indicate types of the community. it can be "ind-mapped" (default), "pre-abs" and "sp-ab" which represents
 #' represents either a species presence-absence vector, species abundance vector or individual mapped dataframe of a community, respectively.
 #' @param forceUnique unique location of individuals if it set true.
@@ -22,6 +22,17 @@
 #' 
 #'
 #' @return a \code{scp} object contains following attributes:
+#' \tabular{ll}{
+#' com: \tab a \link{ppp} object contains spatial information of the community \cr
+#' N: \tab  total number of individual \cr
+#' S: \tab  total number of species \cr
+#' sp: \tab  a vector of total species name \cr
+#' ab: \tab  species abundance distribution \cr
+#' win: \tab an \link{owin} object contains spatial region of the community \cr
+#' traits: \tab a dataframe contains character of each individuals, e.g. species name, DBH, status \cr
+#' habitat: \tab a list \link{im} objects about environments about the community. \cr
+#' phylo: \tab  a \link{phylo} object contains phylogeny of species in the community. \cr
+#' }
 #' 
 #' 
 #' 
@@ -55,12 +66,17 @@ scp <- function(species,x=NULL,y=NULL,win=NULL,type="ind-mapped",
     if(!valid) return
     com=data.frame(species=species,x=x,y=y)
     del_index=attr(valid,"del_index")
-    if(forceUnique & !is.null(del_index))
+    if(forceUnique & !is.null(del_index)){
       com=com[-del_index,]
-    data$com=com
+      traits=traits[-del_index,]
+      species=species[-del_index]
+    }
+      
+    data$com=ppp(x=com$x,y=com$y,window=win,check=FALSE)
     data$win=win
-    data$N=dim(data$com)[1]
-    data$sp=unique(data$com$species)
+    data$N=dim(com)[1]
+    data$ab=table(com$species)
+    data$sp=unique(com$species)
     data$S=length(data$sp)
   }else if("pre-abs"){
     #TODO 
@@ -70,6 +86,7 @@ scp <- function(species,x=NULL,y=NULL,win=NULL,type="ind-mapped",
     stop("unsupported data types")
   }
   data$type=type
+  traits$species=species
   data$traits=traits
   data$habitat=habitat
   
@@ -124,7 +141,7 @@ check_ind_mapped_data<-function(species,x=NULL,y=NULL,win=NULL,forceUnique=FALSE
     if(!forceUnique){
       stop("locations of individual are not unique.\n")
     }else{
-      del_index=match(names(xyfrq)[which(xyfrq>1)],names(xyfrq))
+      del_index=match(names(xyfrq)[which(xyfrq>1)],xy)
       attr(valid,"del_index")=del_index
     }
   }

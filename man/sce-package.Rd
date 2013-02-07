@@ -51,12 +51,26 @@ For further information on any of these functions, type \code{help(name)} where 
     \code{\link{scp}} \tab create a spatial community pattern \cr
   }
   
+  \bold{To manipulate a spatial population/community pattern}
+  
+  \tabular{ll}{
+    \code{\link{removeRareSpecies}} \tab remove rare species from the community \cr
+  }
+  
 }
+
+\section{II. EXPLORATORY DATA ANALYSIS }{
+
+  \tabular{ll}{
+  \code{\link{pcf_adaptive}} \tab estimate the pair correlation function by an adaptive method. \cr
+  }
+}
+
 
 \section{III. MODEL FITTING}{
   
   \tabular{ll}{
-    \code{\link{fitClusterModel}} \tab fitting cluster model for a spatial population/community pattern \cr
+    \code{\link{fitCluster}} \tab fitting cluster model for a spatial population/community pattern \cr
   }
 }
 
