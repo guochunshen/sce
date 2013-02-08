@@ -7,9 +7,8 @@
 #'@param com a \link{scp} object of a given community
 #'@param trend a specific formular for modeling trend.
 #'@param cluster define how internal cluster assembled with intensity function
-#'@param covmodel define the exact covariance function under LGCP model
 #'@param group factor, defination of unit of individuals used to fit model
-#'@param ctlpars control parameters used in model fitting.
+#'@param ctlpars control parameters used in model fitting. See meaning of each par in Details.
 #'
 #'
 #'@details
@@ -17,11 +16,24 @@
 #'1. fit the point pattern by a heterogeneous poisson process; 2. calculate pair correlation function of the 
 #' residual. 3. estimate internal clustering parameters by minimum contrast method.
 #'
-#'@return a list of fitted parameters for each group
+#'@return a list of fm object contains fitted parameters for each group
 #'
+#'@seealso 
+#'\link{sigTest}, \link{removeRareSpecies}
+#'
+#'
+#'@examples
+#' #load the testData set
+#' data(testData)
+#' #remove rare species
+#' com=removeRareSpecies(testData,80)
+#' 
+#' #fit pattern of each species by a best cluster model
+#' fittedmodel=fitCluster(com,~elev+grad,group=com$traits$species)
+#' 
 #'
 
-fitCluster<-function(com,trend=~1,cluster="LGCP",covmodel=list(model="matern",nu=0.3),group=NULL,
+fitCluster<-function(com,trend=~1,cluster="LGCP",group=NULL,
                      ctlpars=list("rmax"=25,"rmin"=3,"bw"=5,"sigma2"=3,"alpha"=10,
                                   "nurange"=c(Inf,0.5),"q"=2,"edgecor"='translate'),...){
   #validation check
@@ -57,6 +69,7 @@ fitCluster<-function(com,trend=~1,cluster="LGCP",covmodel=list(model="matern",nu
     attr(re,"group")=grplevels[i]
     attr(re,"fittedmodel")=data.ppm
     attr(re,"minicontrast")=estPars
+    attr(re,"class")=c("fm",class(re))
     result[[i]]=re
   }
   return(result)
@@ -113,5 +126,12 @@ matern.estpcf=function (emppcf, startpar = c(sigma2 = 1, alpha = 1), lambda = NU
   result$internal <- list(model = "matern")
   attr(result,"nu")=nu
   return(result)
+}
+
+print.fm<-function(x,...){
+  xname=names(x)
+  x=as.numeric(x)
+  names(x)=xname
+  print(x)
 }
 

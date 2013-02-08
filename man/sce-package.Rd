@@ -32,6 +32,7 @@ For further information on any of these functions, type \code{help(name)} where 
     II. \tab Exploratory Data Analysis \cr
     III. \tab Model fitting \cr
     IV. \tab Simulation \cr 
+    V. \tab hypothesis tests and model diagnostics \cr
   }
 }
 
@@ -71,6 +72,14 @@ For further information on any of these functions, type \code{help(name)} where 
   
   \tabular{ll}{
     \code{\link{fitCluster}} \tab fitting cluster model for a spatial population/community pattern \cr
+  }
+}
+
+\section{V. HYPOTHESIS TESTS AND MODEL DIAGNOSTICS}{
+
+  \tabular{ll}{
+    \code{\link{sigHabitatTest}} \tab testing significance of habitat variables by considering aggregative residual \cr
+    \code{\link{sigAggreResidualTest}} \tab testing significance of aggregation in the residual. \cr
   }
 }
 
