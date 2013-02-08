@@ -8,6 +8,7 @@
 #'@param trend a specific formular for modeling trend.
 #'@param cluster define how internal cluster assembled with intensity function
 #'@param group factor, defination of unit of individuals used to fit model
+#'@param sigTest a logical flag to test significance of extra aggregation in residual and habitat variables
 #'@param ctlpars control parameters used in model fitting. See meaning of each par in Details.
 #'
 #'
@@ -33,9 +34,10 @@
 #' 
 #'
 
-fitCluster<-function(com,trend=~1,cluster="LGCP",group=NULL,
+fitCluster<-function(com,trend=~1,cluster="LGCP",group=NULL,sigTest=FALSE,
                      ctlpars=list("rmax"=25,"rmin"=3,"bw"=5,"sigma2"=3,"alpha"=10,
-                                  "nurange"=c(Inf,0.5),"q"=2,"edgecor"='translate'),...){
+                                  "nurange"=c(Inf,0.5),"q"=2,"edgecor"='translate',
+                                  "nsim"=10,"r"=seq(0,60,2),"siglevel"=0.05),...){
   #validation check
   if(!RandomFieldsSafe()){
     stop("The newest version of RandomFields package is needed")
@@ -70,6 +72,11 @@ fitCluster<-function(com,trend=~1,cluster="LGCP",group=NULL,
     attr(re,"fittedmodel")=data.ppm
     attr(re,"minicontrast")=estPars
     attr(re,"class")=c("fm",class(re))
+    if(sigTest){
+      aggreRes_pvalue=sigAggreResidualTest(re,ctlpars$nsim,ctlpars$r,ctlpars$edgecor)
+      habitat_pvalues=sigHabitatTest(re,clusterResidual=aggreRes_pvalue<ctlpars$siglevel)
+      attr(re,"pvalues")=c(aggreRes_pvalue,habitat_pvalues)
+    }
     result[[i]]=re
   }
   return(result)

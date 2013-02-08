@@ -1,17 +1,20 @@
 #' To calculate pvalues of habitat varaibles under consideration of extra aggregation existed in residual.
 #' 
 #' @param fittedModel a \link{fm} object representing a fitted cluster point process for the given point pattern.
-#'
+#' @param clusterResidual a logical flag to consider any left cluster residual if it is true.
 #'
 
-sigHabitatTest<-function(fittedModel){
+sigHabitatTest<-function(fittedModel,clusterResidual=TRUE){
   
   data.ppm=attr(fittedModel,"fittedmodel")
   nu=fittedModel[1]
   alpha=fittedModel[2]
   sigma2=fittedModel[3]
   beta=fittedModel[-c(1:3)]
+  if(clusterResidual)
   acacov=vcov.mykppm(data.ppm,par=c(sigma2,alpha),nu=nu)
+  else
+    acacov=vcov(data.ppm)
   pvalue=2*(1-pnorm(abs(beta/sqrt(diag(acacov)))))[-1]
   return(pvalue)
 }

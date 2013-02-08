@@ -3,8 +3,8 @@
 \title{Fitting the each group individual mapped population in the community by a clustering model}
 \usage{
   fitCluster(com, trend = ~1, cluster = "LGCP",
-    group = NULL,
-    ctlpars = list(rmax = 25, rmin = 3, bw = 5, sigma2 = 3, alpha = 10, nurange = c(Inf, 0.5), q = 2, edgecor = "translate"),
+    group = NULL, sigTest = FALSE,
+    ctlpars = list(rmax = 25, rmin = 3, bw = 5, sigma2 = 3, alpha = 10, nurange = c(Inf, 0.5), q = 2, edgecor = "translate", nsim = 10, r = seq(0, 60, 2), siglevel = 0.05),
     ...)
 }
 \arguments{
@@ -17,6 +17,9 @@
 
   \item{group}{factor, defination of unit of individuals
   used to fit model}
+
+  \item{sigTest}{a logical flag to test significance of
+  extra aggregation in residual and habitat variables}
 
   \item{ctlpars}{control parameters used in model fitting.
   See meaning of each par in Details.}
