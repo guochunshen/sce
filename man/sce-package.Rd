@@ -52,10 +52,19 @@ For further information on any of these functions, type \code{help(name)} where 
     \code{\link{scp}} \tab create a spatial community pattern \cr
   }
   
+   \bold{Typical spatial community data within the package}
+  
+  \tabular{ll}{
+    \code{\link{testData}} \tab a small community data for fast testing \cr
+    \code{\link{BCI}} \tab the 2005 full individual mapped data from BCI plot \cr
+    
+  } 
+  
   \bold{To manipulate a spatial population/community pattern}
   
   \tabular{ll}{
     \code{\link{removeRareSpecies}} \tab remove rare species from the community \cr
+    \code{\link{applyGroup}} \tab apply a function on each member of a community, paralla computation supported \cr
   }
   
 }
@@ -72,6 +81,7 @@ For further information on any of these functions, type \code{help(name)} where 
   
   \tabular{ll}{
     \code{\link{fitCluster}} \tab fitting cluster model for a spatial population/community pattern \cr
+    \code{\link{updateCluster}} \tab update a given cluster model manually or automatically. \cr
   }
 }
 
@@ -80,6 +90,8 @@ For further information on any of these functions, type \code{help(name)} where 
   \tabular{ll}{
     \code{\link{sigHabitatTest}} \tab testing significance of habitat variables by considering aggregative residual \cr
     \code{\link{sigAggreResidualTest}} \tab testing significance of aggregation in the residual. \cr
+    \code{\link{backwardStep}} \tab select a best clustering model for a group of individuals based on pvalue. \cr
+    \code{\link{varDecomp}} \tab calculate proportion of variance explained by habitat, internal clustering and random process. \cr
   }
 }
 

@@ -6,8 +6,7 @@
 #'
 #'@param com a \link{scp} object of a given community
 #'@param trend a specific formular for modeling trend.
-#'@param cluster define how internal cluster assembled with intensity function
-#'@param group factor, defination of unit of individuals used to fit model
+#'@param cluster define how internal cluster assembled with intensity function. possible choose are "poisson" and "LGCP"
 #'@param sigTest a logical flag to test significance of extra aggregation in residual and habitat variables
 #'@param ctlpars control parameters used in model fitting. See meaning of each par in Details.
 #'
@@ -30,14 +29,14 @@
 #' com=removeRareSpecies(testData,80)
 #' 
 #' #fit pattern of each species by a best cluster model
-#' fittedmodel=fitCluster(com,~elev+grad,group=com$traits$species)
+#' fittedmodel=fitCluster(com,~elev+grad)
 #' 
 #'
 
-fitCluster<-function(com,trend=~1,cluster="LGCP",group=NULL,sigTest=FALSE,
+fitCluster<-function(com,trend=~1,cluster="LGCP",sigTest=FALSE,
                      ctlpars=list("rmax"=25,"rmin"=3,"bw"=5,"sigma2"=3,"alpha"=10,
                                   "nurange"=c(Inf,0.5),"q"=2,"edgecor"='translate',
-                                  "nsim"=10,"r"=seq(0,60,2),"siglevel"=0.05),...){
+                                  "nsim"=10,"r"=seq(0,60,2)),...){
   #validation check
   if(!RandomFieldsSafe()){
     stop("The newest version of RandomFields package is needed")
@@ -45,16 +44,13 @@ fitCluster<-function(com,trend=~1,cluster="LGCP",group=NULL,sigTest=FALSE,
   #number of environmental variables
   nhabitat=length(com$habitat)
   
-  if(is.null(group))
-    group=as.factor(rep(1,com$N))
-  grplevels=levels(group)
-  result=list()
-  for(i in 1:length(grplevels)){
-    ind_index=group==grplevels[i]
-    data.ppp=com$com[ind_index]
-    #fit the heterogeneous poisson point process
-    data.ppm=ppm(data.ppp,trend,covariates=com$habitat)
-    
+  data.ppp=com$com
+  #fit the heterogeneous poisson point process
+  data.ppm=ppm(data.ppp,trend,covariates=com$habitat)
+  
+  beta=coef(data.ppm)
+  
+  if("poisson"!=cluster){
     #estimate the intensity of points at each point location
     lambda=predict(data.ppm,locations=data.ppp, type="trend")
     #estimate pair correlation function by adaptive method
@@ -63,23 +59,29 @@ fitCluster<-function(com,trend=~1,cluster="LGCP",group=NULL,sigTest=FALSE,
                                rmax=ctlpars$rmax,rmin=ctlpars$rmin,nu=ctlpars$nurange,
                                q=ctlpars$q)
     nu=attr(estPars,"nu")
+    names(nu)="nu"
     sigma2=estPars$par[1]
     alpha=estPars$par[2]
-    beta=coef(data.ppm)
     re=c(nu,sigma2,alpha,beta)
-    names(re)[1]="nu"
-    attr(re,"group")=grplevels[i]
-    attr(re,"fittedmodel")=data.ppm
     attr(re,"minicontrast")=estPars
-    attr(re,"class")=c("fm",class(re))
-    if(sigTest){
-      aggreRes_pvalue=sigAggreResidualTest(re,ctlpars$nsim,ctlpars$r,ctlpars$edgecor)
-      habitat_pvalues=sigHabitatTest(re,clusterResidual=aggreRes_pvalue<ctlpars$siglevel)
-      attr(re,"pvalues")=c(aggreRes_pvalue,habitat_pvalues)
-    }
-    result[[i]]=re
+  }else{
+    re=c(rep(NA,3),beta)
   }
-  return(result)
+  attr(re,"data")=com
+  attr(re,"trend")=trend
+  attr(re,"fittedmodel")=data.ppm
+  attr(re,"modeltype")=cluster
+  attr(re,"ctlpars")=ctlpars
+  attr(re,"class")=c("fm",class(re))
+  if(sigTest){
+    aggreRes_pvalue=sigAggreResidualTest(re,ctlpars$nsim,ctlpars$r,ctlpars$edgecor)
+    names(aggreRes_pvalue)="aggreRes"
+    clusterResidual= (aggreRes_pvalue<ctlpars$siglevel) & cluster!="poisson"
+    habitat_pvalues=sigHabitatTest(re,clusterResidual)
+    attr(re,"pvalues")=c(aggreRes_pvalue,habitat_pvalues)
+  }
+  
+  return(re)
 }
 
 best.matern.estpcf=function(X, startpar = c(sigma2 = 1, alpha = 1), lambda = NULL, nu=c(0.25), 

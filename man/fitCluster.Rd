@@ -3,8 +3,8 @@
 \title{Fitting the each group individual mapped population in the community by a clustering model}
 \usage{
   fitCluster(com, trend = ~1, cluster = "LGCP",
-    group = NULL, sigTest = FALSE,
-    ctlpars = list(rmax = 25, rmin = 3, bw = 5, sigma2 = 3, alpha = 10, nurange = c(Inf, 0.5), q = 2, edgecor = "translate", nsim = 10, r = seq(0, 60, 2), siglevel = 0.05),
+    sigTest = FALSE,
+    ctlpars = list(rmax = 25, rmin = 3, bw = 5, sigma2 = 3, alpha = 10, nurange = c(Inf, 0.5), q = 2, edgecor = "translate", nsim = 10, r = seq(0, 60, 2)),
     ...)
 }
 \arguments{
@@ -13,10 +13,8 @@
   \item{trend}{a specific formular for modeling trend.}
 
   \item{cluster}{define how internal cluster assembled with
-  intensity function}
-
-  \item{group}{factor, defination of unit of individuals
-  used to fit model}
+  intensity function. possible choose are "poisson" and
+  "LGCP"}
 
   \item{sigTest}{a logical flag to test significance of
   extra aggregation in residual and habitat variables}
@@ -47,7 +45,7 @@ data(testData)
 com=removeRareSpecies(testData,80)
 
 #fit pattern of each species by a best cluster model
-fittedmodel=fitCluster(com,~elev+grad,group=com$traits$species)
+fittedmodel=fitCluster(com,~elev+grad)
 }
 \seealso{
   \link{sigTest}, \link{removeRareSpecies}
