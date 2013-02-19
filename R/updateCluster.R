@@ -15,7 +15,7 @@ updateCluster <- function(fittedmodel,trend=NULL,siglevel=0.05){
   modeltype=attr(fittedmodel,"modeltype")
   data=attr(fittedmodel,"data")
   ctlpars=attr(fittedmodel,"ctlpars")
-  cluster=attr(fittedmodel,"cluster")
+  cluster=attr(fittedmodel,"modeltype")
   
   #1. whether the model can be improve?
   #1.1 delete any insignificance habitat first
@@ -26,9 +26,9 @@ updateCluster <- function(fittedmodel,trend=NULL,siglevel=0.05){
     del=which(pvalues[-1]==max(pvalues[-1],na.rm=T))[1]
     allterms=names(pvalues[-1])[-del]
     trend=as.formula(paste("~ ",paste(allterms,collapse="+")))
+    #3. update the fitted model based the new formular
+    fittedmodel=fitCluster(data,trend,cluster,sigTest=TRUE,ctlpars=ctlpars)
   }
-  #3. update the fitted model based the new formular
-  fittedmodel=fitCluster(data,trend,cluster,sigTest=TRUE,ctlpars=ctlpars)
   
   return(fittedmodel)
 }

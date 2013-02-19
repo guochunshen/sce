@@ -4,7 +4,7 @@
 \usage{
   fitCluster(com, trend = ~1, cluster = "LGCP",
     sigTest = FALSE,
-    ctlpars = list(rmax = 25, rmin = 3, bw = 5, sigma2 = 3, alpha = 10, nurange = c(Inf, 0.5), q = 2, edgecor = "translate", nsim = 10, r = seq(0, 60, 2)),
+    ctlpars = list(rmax = 25, rmin = 3, bw = 5, sigma2 = 3, alpha = 10, nurange = c(Inf, 0.5), q = 2, edgecor = "translate", nsim = 10, r = seq(0, 60, 2), siglevel = 0.05),
     ...)
 }
 \arguments{
@@ -41,13 +41,16 @@
 \examples{
 #load the testData set
 data(testData)
+
 #remove rare species
-com=removeRareSpecies(testData,80)
+com=removeRareSpecies(testData,180)
 
 #fit pattern of each species by a best cluster model
 fittedmodel=fitCluster(com,~elev+grad)
 }
 \seealso{
-  \link{sigTest}, \link{removeRareSpecies}
+  \link{sigHabitatTest},
+  \link{sigAggreResidualTest},\link{updateCluster}
+  ,\link{varDecomp}
 }
 

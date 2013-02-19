@@ -19,14 +19,15 @@
 #'@return a list of fm object contains fitted parameters for each group
 #'
 #'@seealso 
-#'\link{sigTest}, \link{removeRareSpecies}
+#'\link{sigHabitatTest}, \link{sigAggreResidualTest},\link{updateCluster} ,\link{varDecomp}
 #'
 #'
 #'@examples
 #' #load the testData set
 #' data(testData)
+#' 
 #' #remove rare species
-#' com=removeRareSpecies(testData,80)
+#' com=removeRareSpecies(testData,180)
 #' 
 #' #fit pattern of each species by a best cluster model
 #' fittedmodel=fitCluster(com,~elev+grad)
@@ -36,7 +37,7 @@
 fitCluster<-function(com,trend=~1,cluster="LGCP",sigTest=FALSE,
                      ctlpars=list("rmax"=25,"rmin"=3,"bw"=5,"sigma2"=3,"alpha"=10,
                                   "nurange"=c(Inf,0.5),"q"=2,"edgecor"='translate',
-                                  "nsim"=10,"r"=seq(0,60,2)),...){
+                                  "nsim"=10,"r"=seq(0,60,2),"siglevel"=0.05),...){
   #validation check
   if(!RandomFieldsSafe()){
     stop("The newest version of RandomFields package is needed")
