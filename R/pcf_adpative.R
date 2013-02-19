@@ -1,7 +1,7 @@
 #' estimate pair correlation function by adaptive method
 #' 
 #' \code{pcf_adaptive} is only a warp function of \link{mygest} function in InhomCluster package to
-#' fit the formate of fv object defined in spatstat package. See details of the parameters in \link{mygest}.
+#' fit the formate of fv object defined in spatstat package.
 #'  
 #'  @param data a \code{spatstat ppp} point patttern object
 #'  @param lambda vector containing intensity for each point in data

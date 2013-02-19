@@ -34,19 +34,20 @@
 \details{
   Three steps were carried out: 1. fit the point pattern by
   a heterogeneous poisson process; 2. calculate pair
-  correlation function of the residual. 3. estimate
-  internal clustering parameters by minimum contrast
-  method.
+  correlation function of the residual (using adaptive
+  estimation, see details in \code{\link{pcf_adaptive}}).
+  3. estimate internal clustering parameters by minimum
+  contrast method.
 }
 \examples{
 #load the testData set
 data(testData)
 
 #remove rare species
-com=removeRareSpecies(testData,180)
+com=removeRareSpecies(testData,600)
 
 #fit pattern of each species by a best cluster model
-fittedmodel=fitCluster(com,~elev+grad)
+fittedmodel=fitCluster(com,~elev+grad,sigTest=TRUE)
 }
 \seealso{
   \link{sigHabitatTest},

@@ -9,14 +9,18 @@
 #' data(testData)
 #' 
 #' #get the first one hundred individuals
-#' subsetScp(testData,1:100)
+#' subset(testData,1:100)
 #' 
 #' #get a perticular species
 #' sel=testData$traits$species==testData$sp[2]
-#' subsetScp(testData,sel)
+#' subset(testData,sel)
 #' 
 
-subsetScp <- function(x, i){
+
+
+
+subset.scp <- function(x, i){
+  
   x$com=x$com[i]
   x$N=x$com$n
   x$traits=x$traits[i,]
@@ -26,4 +30,9 @@ subsetScp <- function(x, i){
   x$S=length(x$sp)
   return(x)
 }
- 
+
+"[.scp" <-  
+  function(x, i, j, drop, ...){
+  #todo some times it works, some times are not, figure it out   
+    return(x)
+  }

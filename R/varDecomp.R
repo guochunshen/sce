@@ -5,12 +5,21 @@
 #'@param R the quadrat scale used to evaluate the variance of poisson noise
 #'@param delta use delta x delta grid for numerical integration.
 #'
+#'@return a vector of length 6 contains \code{"PVH","PVR","varHabitat","varInterCluster","varPoi","varNonrand"}. Specifically,
+#'  "PVH": proportion of variance explained by Habitat, thus proportion of variance explained
+#'  by internal clustering processes is \bold{PVI}=1-PVH
+#'  "PVR": proportion of variance explained by poisson Random process, 
+#'  thus proportion of variance explained by the nonrandom processes (\bold{PVNR}) is 1-PVR
+#'  "varHabitat" and "varInterCluster" are the variance explained by habtiat and internal cluster
+#'  process in the log intensity function of the point pattern; "varPoi" and "varNonrand" are the variances
+#'  explained by poisson random and nonrandom processes in the intensity function of the point pattern.
+#'
 
 
 varDecomp<-function(fittedmodel,r=c(0:80),R=10,delta=1){
   data.ppm=attr(fittedmodel,"fittedmodel")
   trendmap=predict(data.ppm, type="trend")
-  varHabitat=var(log(as.numeric(trend$v)))
+  varHabitat=var(log(as.numeric(trendmap$v)))
   varInterCluster=fittedmodel[2]
   PVH=varHabitat/(varHabitat+varInterCluster)
   

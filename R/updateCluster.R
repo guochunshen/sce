@@ -5,13 +5,18 @@
 #' if it is null, the most insignificant habitat will be removed from the formula.
 #' @param siglevel a marginal significance level used to decide which part of model is significance.
 #' 
-#'
-#'
+#' @seealso \code{\link{fitCluster}}, \code{\link{sigHabitatTest}}, \code{\link{sigAggreResidualTest}}
+#' 
 #'
 
 updateCluster <- function(fittedmodel,trend=NULL,siglevel=0.05){
   
   pvalues=attr(fittedmodel,"pvalues")
+  if(is.null(pvalues)){
+    pvalues=sigTestofCluster(fittedmodel)
+    attr(fittedmodel,"pvalues")=pvalues
+  }
+    
   modeltype=attr(fittedmodel,"modeltype")
   data=attr(fittedmodel,"data")
   ctlpars=attr(fittedmodel,"ctlpars")

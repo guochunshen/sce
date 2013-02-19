@@ -14,7 +14,7 @@
 #'@details
 #'Three steps were carried out:
 #'1. fit the point pattern by a heterogeneous poisson process; 2. calculate pair correlation function of the 
-#' residual. 3. estimate internal clustering parameters by minimum contrast method.
+#' residual (using adaptive estimation, see details in \code{\link{pcf_adaptive}}). 3. estimate internal clustering parameters by minimum contrast method.
 #'
 #'@return a list of fm object contains fitted parameters for each group
 #'
@@ -27,10 +27,10 @@
 #' data(testData)
 #' 
 #' #remove rare species
-#' com=removeRareSpecies(testData,180)
+#' com=removeRareSpecies(testData,600)
 #' 
 #' #fit pattern of each species by a best cluster model
-#' fittedmodel=fitCluster(com,~elev+grad)
+#' fittedmodel=fitCluster(com,~elev+grad,sigTest=TRUE)
 #' 
 #'
 
@@ -75,14 +75,20 @@ fitCluster<-function(com,trend=~1,cluster="LGCP",sigTest=FALSE,
   attr(re,"ctlpars")=ctlpars
   attr(re,"class")=c("fm",class(re))
   if(sigTest){
-    aggreRes_pvalue=sigAggreResidualTest(re,ctlpars$nsim,ctlpars$r,ctlpars$edgecor)
-    names(aggreRes_pvalue)="aggreRes"
-    clusterResidual= (aggreRes_pvalue<ctlpars$siglevel) & cluster!="poisson"
-    habitat_pvalues=sigHabitatTest(re,clusterResidual)
-    attr(re,"pvalues")=c(aggreRes_pvalue,habitat_pvalues)
+    attr(re,"pvalues")=sigTestofCluster(re)
   }
   
   return(re)
+}
+
+sigTestofCluster <- function (re) {
+  ctlpars=attr(re,"ctlpars")
+  cluster=attr(re,"modeltype")
+  aggreRes_pvalue=sigAggreResidualTest(re,ctlpars$nsim,ctlpars$r,ctlpars$edgecor)
+  names(aggreRes_pvalue)="aggreRes"
+  clusterResidual= (aggreRes_pvalue<ctlpars$siglevel) & cluster!="poisson"
+  habitat_pvalues=sigHabitatTest(re,clusterResidual)
+  return(c(aggreRes_pvalue,habitat_pvalues))
 }
 
 best.matern.estpcf=function(X, startpar = c(sigma2 = 1, alpha = 1), lambda = NULL, nu=c(0.25), 

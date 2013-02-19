@@ -63,8 +63,9 @@ For further information on any of these functions, type \code{help(name)} where 
   \bold{To manipulate a spatial population/community pattern}
   
   \tabular{ll}{
+    \code{\link{subset.scp}} \tab extract some part of the community \cr
     \code{\link{removeRareSpecies}} \tab remove rare species from the community \cr
-    \code{\link{applyGroup}} \tab apply a function on each member of a community, paralla computation supported \cr
+    \code{\link{applyGroup}} \tab apply a function on each member of a group devided from a community, paralla computation supported \cr
   }
   
 }
@@ -104,11 +105,5 @@ Maintainer: Guochun Shen <shenguochun@gmail.com>
 ~~ Literature or other references for background information ~~
 }
 
-\keyword{ package }
-\seealso{
-~~ Optional links to other man pages, e.g. ~~
-~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
-}
-\examples{
-%% ~~ simple examples of the most important functions ~~
-}
+\keyword{ spatial community ecology, spatial variance decomposition }
+

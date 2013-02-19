@@ -18,4 +18,8 @@
 \description{
   To update a model manually or automatically
 }
+\seealso{
+  \code{\link{fitCluster}}, \code{\link{sigHabitatTest}},
+  \code{\link{sigAggreResidualTest}}
+}
 
