@@ -31,8 +31,15 @@ subset.scp <- function(x, i){
   return(x)
 }
 
-"[.scp" <-  
+"[.scp"<-
   function(x, i, j, drop, ...){
   #todo some times it works, some times are not, figure it out   
+    x$com=x$com[i]
+    x$N=x$com$n
+    x$traits=x$traits[i,]
+    x$traits$species=as.factor(as.character(x$traits$species))
+    x$ab=table(x$traits$species)
+    x$sp=unique(x$traits$species)
+    x$S=length(x$sp)
     return(x)
   }
