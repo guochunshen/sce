@@ -55,6 +55,7 @@ For further information on any of these functions, type \code{help(name)} where 
    \bold{Typical spatial community data within the package}
   
   \tabular{ll}{
+    \code{\link{NATrees}} \tab the maps of North American trees \cr
     \code{\link{testData}} \tab a small community data for fast testing \cr
     \code{\link{BCI}} \tab the 2005 full individual mapped data from BCI plot \cr
     

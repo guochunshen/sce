@@ -2,7 +2,7 @@
 \alias{applyGroup}
 \title{apply the same function on every member of a group}
 \usage{
-  applyGroup(com, group, Fun, verbpro, ...)
+  applyGroup(com, group, Fun, verbpro = TRUE, ...)
 }
 \arguments{
   \item{com}{a \code{\link{scp}} object.}

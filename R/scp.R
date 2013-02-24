@@ -78,9 +78,9 @@ scp <- function(species,x=NULL,y=NULL,win=NULL,type="ind-mapped",
     data$ab=table(com$species)
     data$sp=unique(com$species)
     data$S=length(data$sp)
-  }else if("pre-abs"){
+  }else if("pre-abs"==type){
     #TODO 
-  }else if("sp-ab"){
+  }else if("sp-ab"==type){
     #TODO
   }else{
     stop("unsupported data types")
