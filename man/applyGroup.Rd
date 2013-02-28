@@ -1,8 +1,9 @@
 \name{applyGroup}
 \alias{applyGroup}
-\title{apply the same function on every member of a group}
+\title{apply the same function on every member of a group, multicore is supported on Linux with multicores CPU}
 \usage{
-  applyGroup(com, group, Fun, verbpro = TRUE, ...)
+  applyGroup(com, group, Fun, verbpro = TRUE, mc.cores = 5,
+    ...)
 }
 \arguments{
   \item{com}{a \code{\link{scp}} object.}
@@ -16,6 +17,9 @@
   \item{verbpro}{logical flage to show the verbose of
   process of calculation}
 
+  \item{mc.cores}{number of cores used in parallel
+  calculation on Linux}
+
   \item{...}{other parameters passed to the \code{Fun}
   function}
 }
@@ -23,6 +27,7 @@
   a list of results that returned by the function
 }
 \description{
-  apply the same function on every member of a group
+  apply the same function on every member of a group,
+  multicore is supported on Linux with multicores CPU
 }
 
