@@ -24,13 +24,16 @@ updateCluster <- function(fittedmodel,trend=NULL,siglevel=0.05){
   
   #1. whether the model can be improve?
   #1.1 delete any insignificance habitat first
-  hasinsig=any(pvalues[-1]>siglevel)
+  hasinsig=length(pvalues)>1 & any(pvalues[-1]>siglevel)
   
   #2. if yes, delete some part of the model and given a new formular
   if(hasinsig & is.null(trend)){
     del=which(pvalues[-1]==max(pvalues[-1],na.rm=T))[1]
     allterms=names(pvalues[-1])[-del]
+    if(length(allterms)>0)
     trend=as.formula(paste("~ ",paste(allterms,collapse="+")))
+    else
+      trend=as.formula("~1")
     #3. update the fitted model based the new formular
     fittedmodel=fitCluster(data,trend,cluster,sigTest=TRUE,ctlpars=ctlpars)
   }
