@@ -17,9 +17,9 @@
 backwardStep <- function(fittedmodel,siglevel=0.05){
   can_improve=TRUE
   while(can_improve){
-    old_formula=attr(fittedmodel,"trend")
-    fittedmodel=updateCluster(fittedmodel,siglevel)
-    new_formula=attr(fittedmodel,"trend")
+    old_formula=as.character(attr(fittedmodel,"trend"))[2]
+    fittedmodel=updateCluster(fittedmodel,siglevel=siglevel)
+    new_formula=as.character(attr(fittedmodel,"trend"))[2]
     if(old_formula==new_formula)
       can_improve=FALSE
   }
