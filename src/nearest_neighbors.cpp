@@ -1,13 +1,15 @@
 
 #include <Rcpp.h>
+#include <vector>
 #include "stdafx.h"
 #include "alglibmisc.h"
 
+using namespace std;
 using namespace Rcpp;
 using namespace alglib;
 
 // [[Rcpp::export]]
-List nearest_neighbors(NumericVector xy, int rmax){
+List nearest_neighbors(NumericVector xy, double rmax, int nguess){
   //step1: translate R data formate into alglib data formate
   real_2d_array a;
   int npoints=xy.size()/2;
@@ -32,17 +34,31 @@ List nearest_neighbors(NumericVector xy, int rmax){
   integer_1d_array nj = "[]";
   real_1d_array nd = "[]";
   double *a_row=a[0];
-   
+  int ijcountn =0;
+  
+  int starti[nguess];
+  int endj[nguess];
+  double nndij[nguess];
+  
   for(int i=0; i<npoints;i++){
     x.setcontent(2,a_row);
     k = kdtreequeryrnn(kdt, x, rmax,false);
-    std::cout << k<<std::endl;
+    //std::cout << k<<std::endl;
     kdtreequeryresultstags(kdt, nj);
     kdtreequeryresultsdistances(kdt,nd);
+    for(int j=0;j<k;j++){
+      /*starti[ijcountn]=i;
+      endj[ijcountn]=nj[j];
+      nndij[ijcountn]=nd[j];*/
+      ijcountn++;
+    }
     a_row=a_row+a.getstride();
   }
-  
+  NumericVector starti2(&starti[0],&starti[ijcountn-1]);
+  NumericVector endj2(&endj[0], &endj[ijcountn-1]);
+  NumericVector nndij2(&nndij[0], &nndij[ijcountn-1]);
   //transfer result into R formate
-  List z = List::create();
+  List z = List::create(starti2,endj2,nndij2);
+ 
   return(z);
 }
