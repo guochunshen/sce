@@ -1,12 +1,10 @@
 
 
 closepairs2 <- function(X,rmax,ordered=TRUE){
-  npts <- npoints(X)
-  #nguess<- ceiling(4 * pi * (npts^2) * (rmax^2)/area.owin(X$window))
-  nguess=npts^2
+ 
   xy=as.vector(matrix(c(X$x,X$y),nrow=2,ncol=X$n,byrow=TRUE))
-  re=nearest_neighbors(xy,rmax,nguess)
-  names(re)=c("i","j","d")
+  re=nearest_neighbors(xy,rmax)
+  names(re)=c("i","j")
   #in c code, i and j is start from 0, thus plus 1 here for consistent index prefer in R
   re$i=re$i+1
   re$j=re$j+1
@@ -16,6 +14,7 @@ closepairs2 <- function(X,rmax,ordered=TRUE){
   re$yj=X$y[re$j]
   re$dx=re$xj-re$xi
   re$dy=re$yj=re$yi
+  re$d=sqrt((re$xj-re$xi)^2+(re$yj-re$yi)^2)
   if(!ordered){
     ok=re$i<re$j
     re$i=re$i[ok]

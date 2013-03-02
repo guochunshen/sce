@@ -13,7 +13,7 @@
 #' 
 
 
-applyGroup<-function(com,group,Fun,verbpro=TRUE,mc.cores=5,...){
+applyGroup<-function(com,group,Fun,verbpro=TRUE,mc.cores=5,multicore=TRUE,...){
   
   if(is.null(group))
     stop("please specify a valid group index")
@@ -22,10 +22,11 @@ applyGroup<-function(com,group,Fun,verbpro=TRUE,mc.cores=5,...){
   
   grplevels=unique(group)
   nls=nlevels(group)
-  
+  if(multicore)
   re=mclapply(1:nls,applyOneGroup,grplevels=grplevels,verbpro=verbpro,group=group,Fun=Fun,com=com,
               mc.cores=mc.cores,...)
-
+  else
+    re=lapply(1:nls,applyOneGroup,grplevels=grplevels,verbpro=verbpro,group=group,Fun=Fun,com=com,...)
   return(re)
 }
 
