@@ -5,17 +5,24 @@
 #'
 
 sigHabitatTest<-function(fittedModel,clusterResidual=TRUE){
+  if(as.character(attr(fittedModel,"trend"))[2]=="1"){
+    warning("can't test significant of habitat without included it in the model")
+    pvalue=1
+    names(pvalue)="habitat"
+    return(pvalue)
+  }
+    data.ppm=attr(fittedModel,"fittedmodel")
+    nu=fittedModel[1]
+    alpha=fittedModel[2]
+    sigma2=fittedModel[3]
+    beta=fittedModel[-c(1:3)]
+    if(clusterResidual)
+      acacov=vcov.mykppm(data.ppm,par=c(sigma2,alpha),nu=nu)
+    else
+      acacov=vcov(data.ppm)
+    pvalue=2*(1-pnorm(abs(beta/sqrt(diag(acacov)))))[-1]
   
-  data.ppm=attr(fittedModel,"fittedmodel")
-  nu=fittedModel[1]
-  alpha=fittedModel[2]
-  sigma2=fittedModel[3]
-  beta=fittedModel[-c(1:3)]
-  if(clusterResidual)
-  acacov=vcov.mykppm(data.ppm,par=c(sigma2,alpha),nu=nu)
-  else
-    acacov=vcov(data.ppm)
-  pvalue=2*(1-pnorm(abs(beta/sqrt(diag(acacov)))))[-1]
+  
   return(pvalue)
 }
 

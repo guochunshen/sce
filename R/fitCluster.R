@@ -76,24 +76,28 @@ fitCluster<-function(com,trend=~1,cluster="LGCP",sigTest=FALSE,
   attr(re,"class")=c("fm",class(re))
   if(sigTest){
     #some very strange distribution will cause some error in the simulation
-    clusterpvalues=try(sigTestofCluster(re))
-    if(class(clusterpvalues)=="try-error")
-      attr(clusterpvalues,"possible reason")="extreme unusual spatial distribution"
-      warning("There are errors in calculation of pvalues, it might be caused by extreme unusual spatial distribution")
-    attr(re,"pvalues")=clusterpvalues
+    attr(re,"pvalues")=sigTestofCluster(re)
   }
   
   return(re)
 }
 
 sigTestofCluster <- function (re) {
+  
   ctlpars=attr(re,"ctlpars")
   cluster=attr(re,"modeltype")
-  aggreRes_pvalue=sigAggreResidualTest(re,ctlpars$nsim,ctlpars$r,ctlpars$edgecor)
-  names(aggreRes_pvalue)="aggreRes"
+  aggreRes_pvalue=try(sigAggreResidualTest(re,ctlpars$nsim,ctlpars$r,ctlpars$edgecor))
   clusterResidual= (aggreRes_pvalue<ctlpars$siglevel) & cluster!="poisson"
-  habitat_pvalues=sigHabitatTest(re,clusterResidual)
-  return(c(aggreRes_pvalue,habitat_pvalues))
+  habitat_pvalues=try(sigHabitatTest(re,clusterResidual))
+  if(inherits(aggreRes_pvalue,"try-error") | inherits(habitat_pvalues,"try-error")){
+    attr(clusterpvalues,"possible reason")="extreme unusual spatial distribution"
+    warning("There are errors in calculation of pvalues, it might be caused by extreme unusual spatial distribution")
+    re=c(NA,NA)
+    class(re)="try-error"
+    return(re)
+  }else{
+    return(c(aggreRes_pvalue,habitat_pvalues))
+  }
 }
 
 best.matern.estpcf=function(X, startpar = c(sigma2 = 1, alpha = 1), lambda = NULL, nu=c(0.25), 
