@@ -92,14 +92,36 @@ scp <- function(species,x=NULL,y=NULL,win=NULL,type="ind-mapped",
   }else{
     traits=data.frame(species=species)
   }
-  
   data$traits=traits
+  
+  check_habitat(habitat,win)
   data$habitat=habitat
   
   class(data)<-"scp"
   return(data)
 }
 
+check_habitat <- function (habitat, win) {
+  if(!is.null(habitat)){
+    if(!inherits(habitat,"list")){
+      stop("habitat of the community should be a list of im objects") 
+    }else if(!all(unlist(lapply(habitat,function(x) inherits(x,"im"))))){
+      stop("habitat of the community should be a list of im object")    
+    }else{
+      xrange=unique(unlist(lapply(habitat,function(x) x$xrange)))
+      yrange=unique(unlist(lapply(habitat,function(x) x$yrange)))
+      if(length(xrange)!=2 | length(yrange)!=2){
+        warning("Observed window ranges of habitat are different")
+      }
+      xrange=range(xrange)
+      yrange=range(yrange)
+      rangediff=xrange[1]!=win$xrange[1] | xrange[2]!=win$xrange[2] |
+        yrange[1]!= win$yrange[1] | yrange[2] != win$yrange[2]
+      if(rangediff)
+        warning("Observed spatial ranges of habitat and individuals are not equal.")
+    }
+  }
+}
 
 check_traits <- function (traits, data) {
   if(!inherits(traits,"data.frame")){
@@ -112,6 +134,7 @@ check_traits <- function (traits, data) {
     
   }
 }
+
 check_ind_mapped_data<-function(species,x=NULL,y=NULL,win=NULL,forceUnique=FALSE){
   valid=TRUE
   #check required paramters
