@@ -86,7 +86,13 @@ scp <- function(species,x=NULL,y=NULL,win=NULL,type="ind-mapped",
     stop("unsupported data types")
   }
   data$type=type
-  traits$species=species
+  if(!is.null(traits)){
+    check_traits(traits,data)
+    traits$species=species
+  }else{
+    traits=data.frame(species=species)
+  }
+  
   data$traits=traits
   data$habitat=habitat
   
@@ -95,6 +101,17 @@ scp <- function(species,x=NULL,y=NULL,win=NULL,type="ind-mapped",
 }
 
 
+check_traits <- function (traits, data) {
+  if(!inherits(traits,"data.frame")){
+    stop("traits should be inherits from data.frame")
+  }else{
+    nrowtraits=dim(traits)[1]
+    if(nrowtraits!=data$N){
+      stop("Length of traits not equals to number of individuals")
+    }
+    
+  }
+}
 check_ind_mapped_data<-function(species,x=NULL,y=NULL,win=NULL,forceUnique=FALSE){
   valid=TRUE
   #check required paramters
