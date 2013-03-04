@@ -90,7 +90,7 @@ scp <- function(species,x=NULL,y=NULL,win=NULL,type="ind-mapped",
   data$traits=traits
   data$habitat=habitat
   
-  class(data)="scp"
+  class(data)<-"scp"
   return(data)
 }
 
@@ -159,5 +159,8 @@ print.scp <- function(x,...){
   }
 }
 
-
+#plot the spatial distribution of scp object
+plot.scp <- function(x,...){
+  plot(x$com,...)
+}
 
