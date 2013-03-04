@@ -75,7 +75,12 @@ fitCluster<-function(com,trend=~1,cluster="LGCP",sigTest=FALSE,
   attr(re,"ctlpars")=ctlpars
   attr(re,"class")=c("fm",class(re))
   if(sigTest){
-    attr(re,"pvalues")=sigTestofCluster(re)
+    #some very strange distribution will cause some error in the simulation
+    clusterpvalues=try(sigTestofCluster(re))
+    if(class(clusterpvalues)=="try-error")
+      attr(clusterpvalues,"possible reason")="extreme unusual spatial distribution"
+      warning("There are errors in calculation of pvalues, it might be caused by extreme unusual spatial distribution")
+    attr(re,"pvalues")=clusterpvalues
   }
   
   return(re)
