@@ -25,3 +25,20 @@ BEGIN_RCPP
     return Rcpp::wrap(__result);
 END_RCPP
 }
+// SAR_approximateC
+NumericVector SAR_approximateC(NumericVector longxy, NumericVector latxy, NumericMatrix scp, NumericVector long_all, NumericVector lat_all, IntegerVector area, int nrep, int max_area);
+RcppExport SEXP sce_SAR_approximateC(SEXP longxySEXP, SEXP latxySEXP, SEXP scpSEXP, SEXP long_allSEXP, SEXP lat_allSEXP, SEXP areaSEXP, SEXP nrepSEXP, SEXP max_areaSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope __rngScope;
+    NumericVector longxy = Rcpp::as<NumericVector >(longxySEXP);
+    NumericVector latxy = Rcpp::as<NumericVector >(latxySEXP);
+    NumericMatrix scp = Rcpp::as<NumericMatrix >(scpSEXP);
+    NumericVector long_all = Rcpp::as<NumericVector >(long_allSEXP);
+    NumericVector lat_all = Rcpp::as<NumericVector >(lat_allSEXP);
+    IntegerVector area = Rcpp::as<IntegerVector >(areaSEXP);
+    int nrep = Rcpp::as<int >(nrepSEXP);
+    int max_area = Rcpp::as<int >(max_areaSEXP);
+    NumericVector __result = SAR_approximateC(longxy, latxy, scp, long_all, lat_all, area, nrep, max_area);
+    return Rcpp::wrap(__result);
+END_RCPP
+}
