@@ -5,7 +5,17 @@
 
 using namespace Rcpp;
 
-
+// nearest_neighbors
+List nearest_neighbors(NumericVector xy, double rmax);
+RcppExport SEXP sce_nearest_neighbors(SEXP xySEXP, SEXP rmaxSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope __rngScope;
+    NumericVector xy = Rcpp::as<NumericVector >(xySEXP);
+    double rmax = Rcpp::as<double >(rmaxSEXP);
+    List __result = nearest_neighbors(xy, rmax);
+    return Rcpp::wrap(__result);
+END_RCPP
+}
 // rcpp_hello_world
 List rcpp_hello_world();
 RcppExport SEXP sce_rcpp_hello_world() {

@@ -91,6 +91,15 @@ test_that("manipulating scp object",{
   spab2=table(com2$traits$species)
   expect_true(all(sort(spab)==sort(spab2)))
 
+  #apply a function on each element of an arbitrat group of the community individuals.
+  re=applyGroup(testData,testData$traits$species,function(x) x$N)
+  expect_is(re,"list")
+  re=unlist(re)
+  expect_equal(sort(as.numeric(re)),sort(as.numeric(testData$ab)))
+  expect_error(applyGroup(testData,testData$traits$species,function(x) x$N,multicore=TRUE,mc.cores=3),
+               "'mc.cores' > 1 is not supported on Windows")
+  expect_output(applyGroup(testData,testData$traits$species,function(x) x$N,verbpro=TRUE),
+                 "starting the 1 th element in the group")
   
 })
 

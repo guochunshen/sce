@@ -13,8 +13,9 @@
 #'
 #'@details
 #'Three steps were carried out:
-#'1. fit the point pattern by a heterogeneous poisson process; 2. calculate pair correlation function of the 
-#' residual (using adaptive estimation, see details in \code{\link{pcf_adaptive}}). 3. estimate internal clustering parameters by minimum contrast method.
+#'1. fit the point pattern by a heterogeneous poisson process; 
+#'2. calculate pair correlation function of the residual (using adaptive estimation, see details in \code{\link{pcf_adaptive}}). 
+#'3. estimate internal clustering parameters by minimum contrast method.
 #'
 #'@return a list of fm object contains fitted parameters for each group
 #'

@@ -13,7 +13,7 @@
 #' 
 
 
-applyGroup<-function(com,group,Fun,verbpro=TRUE,mc.cores=5,multicore=TRUE,...){
+applyGroup<-function(com,group,Fun,verbpro=FALSE,mc.cores=5,multicore=FALSE,...){
   
   if(is.null(group))
     stop("please specify a valid group index")

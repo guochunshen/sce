@@ -34,4 +34,30 @@ test_that("fit cluster model to a species distribution",{
   #all pvalues should be less or equals to 1
   expect_true(all(pvalues<=1))
   
+  
+  #update the fittedmodel automatically
+  re<-fitCluster(sp1,~elev+grad,sigTest=TRUE)
+  pvalues=attr(re,"pvalues")[-1]
+  canimprove=any(pvalues>0.05)
+  re_new=updateCluster(re)
+  if(canimprove){
+    expect_true(length(re)>length(re_new))
+    del=which(pvalues==max(pvalues))[1]
+    allhabitats=attr(terms(attr(re,"trend")),"term.labels")
+    #the habitat with first lagest pvalue will be delete, so its name will not be founded in the results
+    expect_true(any(names(re_new)!=allhabitats[del]))
+    
+  }else{
+    expect_true(length(re)==length(re_new))
+  }
+  #even we didnot do the significant test in the model fitting, it will do it in the update model process
+  re2=fitCluster(sp1,~elev+grad,sigTest=FALSE)
+  re_new2=updateCluster(re2)
+  expect_equal(re_new,re_new2)
+  
+  
+  #if let the program automatically update the model until reached a reasonable model, all habitat pvalues should be signficant
+  re_best=backwardStep(re)
+  expect_true(all(attr(re_best,"pvalues")[-1]<0.05))
+  
 })
