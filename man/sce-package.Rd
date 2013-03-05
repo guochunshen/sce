@@ -98,8 +98,15 @@ For further information on any of these functions, type \code{help(name)} where 
   }
 }
 
+\section{VI. Other functions}{
+
+  \tabular{ll}{
+    \code{\link{downloadNATree}} \tab download the north American tree distribution files from interent \cr
+    \code{\link{NAtreeRaster}} \tab transfer the zipped shapfile distribution of tree data into a dataframe of species occurance \cr
+  }
+}
 \author{
-Guochun Shen
+Guochun Shen, Jian Zhang
 
 Maintainer: Guochun Shen <shenguochun@gmail.com>
 }
