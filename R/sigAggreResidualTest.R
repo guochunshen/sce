@@ -24,6 +24,7 @@ sigAggreResidualTest=function(fittedmodel,nsim=10,r=seq(0,60,2),edcor="translate
     ui = ui+t.rslt
   }
   pvalue=calc.pval(ui)
+  names(pvalue)="aggreRes"
   return(pvalue)
 }
 
