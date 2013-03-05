@@ -2,8 +2,8 @@
 \alias{applyGroup}
 \title{apply the same function on every member of a group, multicore is supported on Linux with multicores CPU}
 \usage{
-  applyGroup(com, group, Fun, verbpro = TRUE, mc.cores = 5,
-    ...)
+  applyGroup(com, group, Fun, verbpro = FALSE,
+    mc.cores = 5, multicore = FALSE, ...)
 }
 \arguments{
   \item{com}{a \code{\link{scp}} object.}

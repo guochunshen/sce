@@ -16,7 +16,12 @@ updateCluster <- function(fittedmodel,trend=NULL,siglevel=0.05){
     pvalues=sigTestofCluster(fittedmodel)
     attr(fittedmodel,"pvalues")=pvalues
   }
-    
+  
+  if(class(pvalues)=="try-error"){
+    warning("can't evaluate the model caused by error in calculation of pvalues")
+    return(fittedmodel)
+  }
+  
   modeltype=attr(fittedmodel,"modeltype")
   data=attr(fittedmodel,"data")
   ctlpars=attr(fittedmodel,"ctlpars")

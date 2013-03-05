@@ -3,19 +3,43 @@
 #' @param fittedModel a \link{fm} object representing a fitted cluster point process for the given point pattern.
 #' @param clusterResidual a logical flag to consider any left cluster residual if it is true.
 #'
+#'
+#'@details
+#' if there is significant clustered residual (\code{clusterResidual=TRUE}), significance of the habitat will be
+#' evaludated by considering those extra aggregation in residual. otherwise (\code{clusterResidual=FALSE}), regular
+#' significant test method of regression coefficients was carried out.
+#'
+#'
+#'@examples
+#'
+#'data(testData)
+#'
+#'sp1=subset(testData,testData$traits$species=="ACALDI")
+#'
+#'fm=fitCluster(sp1,~elev+grad,sigTest=FALSE)
+#'
+#'sigHabitatTest(fm)
+#'
 
 sigHabitatTest<-function(fittedModel,clusterResidual=TRUE){
+  if(as.character(attr(fittedModel,"trend"))[2]=="1"){
+    warning("can't test significant of habitat without included it in the model")
+    pvalue=1
+    names(pvalue)="habitat"
+    return(pvalue)
+  }
+    data.ppm=attr(fittedModel,"fittedmodel")
+    nu=fittedModel[1]
+    alpha=fittedModel[2]
+    sigma2=fittedModel[3]
+    beta=fittedModel[-c(1:3)]
+    if(clusterResidual)
+      acacov=vcov.mykppm(data.ppm,par=c(sigma2,alpha),nu=nu)
+    else
+      acacov=vcov(data.ppm)
+    pvalue=2*(1-pnorm(abs(beta/sqrt(diag(acacov)))))[-1]
   
-  data.ppm=attr(fittedModel,"fittedmodel")
-  nu=fittedModel[1]
-  alpha=fittedModel[2]
-  sigma2=fittedModel[3]
-  beta=fittedModel[-c(1:3)]
-  if(clusterResidual)
-  acacov=vcov.mykppm(data.ppm,par=c(sigma2,alpha),nu=nu)
-  else
-    acacov=vcov(data.ppm)
-  pvalue=2*(1-pnorm(abs(beta/sqrt(diag(acacov)))))[-1]
+  
   return(pvalue)
 }
 

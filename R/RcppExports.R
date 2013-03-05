@@ -9,3 +9,7 @@ rcpp_hello_world <- function() {
     .Call('sce_rcpp_hello_world', PACKAGE = 'sce')
 }
 
+SAR_approximateC <- function(longxy, latxy, scp, long_all, lat_all, area, nrep, max_area) {
+    .Call('sce_SAR_approximateC', PACKAGE = 'sce', longxy, latxy, scp, long_all, lat_all, area, nrep, max_area)
+}
+

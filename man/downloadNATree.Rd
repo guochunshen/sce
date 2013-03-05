@@ -38,4 +38,7 @@
 \author{
   Jian Zhang "zjianATualberta.ca"
 }
+\seealso{
+  \code{\link{NAtreeRaster}}
+}
 

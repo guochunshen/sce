@@ -66,6 +66,7 @@ For further information on any of these functions, type \code{help(name)} where 
   \tabular{ll}{
     \code{\link{subset.scp}} \tab extract some part of the community \cr
     \code{\link{removeRareSpecies}} \tab remove rare species from the community \cr
+    \code{\link{selSpeciesByAbund}} \tab select a community with specific species abundance \cr
     \code{\link{applyGroup}} \tab apply a function on each member of a group devided from a community, paralla computation supported \cr
   }
   
@@ -97,8 +98,15 @@ For further information on any of these functions, type \code{help(name)} where 
   }
 }
 
+\section{VI. Other functions}{
+
+  \tabular{ll}{
+    \code{\link{downloadNATree}} \tab download the north American tree distribution files from interent \cr
+    \code{\link{NAtreeRaster}} \tab transfer the zipped shapfile distribution of tree data into a dataframe of species occurance \cr
+  }
+}
 \author{
-Guochun Shen
+Guochun Shen, Jian Zhang
 
 Maintainer: Guochun Shen <shenguochun@gmail.com>
 }

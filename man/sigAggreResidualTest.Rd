@@ -21,4 +21,17 @@
   To test whether there is any aggregative residual existed
   in the unexplianed pattern by habitat
 }
+\details{
+  This is a goodness-of-fit test based on the heterogeneous
+  pari correlation function.
+}
+\examples{
+data(testData)
+
+sp1=subset(testData,testData$traits$species=="ACALDI")
+
+fm=fitCluster(sp1,~elev+grad)
+
+sigAggreResidualTest(fm,nsim=10,r=0:30)
+}
 

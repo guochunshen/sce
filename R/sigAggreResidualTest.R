@@ -5,10 +5,19 @@
 #' @param r distance range used in goodness of fit test.
 #' @param edcor edge correction method. see details in \link{pcf}
 #'
+#'@details
+#' This is a goodness-of-fit test based on the heterogeneous pari correlation function.
 #'
+#'@examples
+#'data(testData)
 #'
+#' sp1=subset(testData,testData$traits$species=="ACALDI")
+#' 
+#' fm=fitCluster(sp1,~elev+grad)
+#' 
+#' sigAggreResidualTest(fm,nsim=10,r=0:30)
 #'
-#aggregativeResidualTest=function(data.ppp,covrs,trend,nsim,edcor){
+
 sigAggreResidualTest=function(fittedmodel,nsim=10,r=seq(0,60,2),edcor="translate"){
 
   data.ppm=attr(fittedmodel,"fittedmodel")
@@ -24,6 +33,7 @@ sigAggreResidualTest=function(fittedmodel,nsim=10,r=seq(0,60,2),edcor="translate
     ui = ui+t.rslt
   }
   pvalue=calc.pval(ui)
+  names(pvalue)="aggreRes"
   return(pvalue)
 }
 
