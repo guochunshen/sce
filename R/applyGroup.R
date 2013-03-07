@@ -22,9 +22,15 @@ applyGroup<-function(com,group,Fun,verbpro=FALSE,mc.cores=5,multicore=FALSE,...)
   
   grplevels=unique(group)
   nls=nlevels(group)
-  if(multicore)
-  re=mclapply(1:nls,applyOneGroup,grplevels=grplevels,verbpro=verbpro,group=group,Fun=Fun,com=com,
-              mc.cores=mc.cores,...)
+  if(multicore & Sys.info()["sysname"]=="Windows" ){
+   warning("Current version of R only support parallel computation under linux, thus multicore is disabled")
+   multicore=FALSE
+  }
+  
+  if(multicore){
+    re=mclapply(1:nls,applyOneGroup,grplevels=grplevels,verbpro=verbpro,group=group,Fun=Fun,com=com,
+                mc.cores=mc.cores,...)  
+  }
   else
     re=lapply(1:nls,applyOneGroup,grplevels=grplevels,verbpro=verbpro,group=group,Fun=Fun,com=com,...)
   return(re)

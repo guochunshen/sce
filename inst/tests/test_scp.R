@@ -96,8 +96,9 @@ test_that("manipulating scp object",{
   expect_is(re,"list")
   re=unlist(re)
   expect_equal(sort(as.numeric(re)),sort(as.numeric(testData$ab)))
+  if(Sys.info()["sysname"]=="Windows")
   expect_error(applyGroup(testData,testData$traits$species,function(x) x$N,multicore=TRUE,mc.cores=3),
-               "'mc.cores' > 1 is not supported on Windows")
+               "Current version of R only support parallel computation under linux, thus multicore is disabled")
   expect_output(applyGroup(testData,testData$traits$species,function(x) x$N,verbpro=TRUE),
                  "starting the 1 th element in the group")
   
