@@ -2,7 +2,7 @@ context("Summary statistic for population distribution")
 
 test_that("the second order statistic",{
   data(testData)
-  onesp=subset(testData,testData$traits$species=="DES2PA")
+  onesp=subset(testData,testData$traits$species=="MOURMY")
   data.ppp=onesp$com
   data.ppm=ppm(data.ppp,~elev+grad,covariates=testData$habitat)
   lambda=predict(data.ppm,locations=data.ppp, type="trend")
