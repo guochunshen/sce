@@ -10,6 +10,7 @@
 #' significant test method of regression coefficients was carried out.
 #'
 #'
+#'
 #'@examples
 #'
 #'data(testData)
@@ -30,8 +31,8 @@ sigHabitatTest<-function(fittedModel,clusterResidual=TRUE){
   }
     data.ppm=attr(fittedModel,"fittedmodel")
     nu=fittedModel[1]
-    alpha=fittedModel[2]
-    sigma2=fittedModel[3]
+    alpha=fittedModel[3]
+    sigma2=fittedModel[2]
     beta=fittedModel[-c(1:3)]
     if(clusterResidual)
       acacov=vcov.mykppm(data.ppm,par=c(sigma2,alpha),nu=nu)

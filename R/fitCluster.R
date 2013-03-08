@@ -17,6 +17,19 @@
 #'2. calculate pair correlation function of the residual (using adaptive estimation, see details in \code{\link{pcf_adaptive}}). 
 #'3. estimate internal clustering parameters by minimum contrast method.
 #'
+#'the \code{ctlpars} contains parameter values that are very sensitive to the final result. it controls calculations of 
+#'the pari correlation function, the minimum contrast method and significance tests of habitat and extra internal aggregation.
+#'it designed for advanced user, thus change it when you know what you are doing.
+#'
+#'Specifically, \code{rmax} controls the spatial range that calculate the pair correlation function in the
+#' \code{\link{pcf_adaptive}} function. \code{rmax} and \code{rmin} also define the range of distance considered in the 
+#' minimum contrast method n estimating parameters of internal aggregation. \code{nurange} controls the sharp of marten 
+#' covariance function in the minimum control method. \code{bw} controls the bindwidth of kernel estimation
+#' in \code{\link{pcf_adaptive}}. \code{sigma2}, \code{alpha} and \code{edgecor} are initial parameters of 
+#' the fitted clustering process.  \code{nsim}, \code{r} and \code{edgecor} are parameters used in testing significance of aggregated
+#' pattern in the residual. it adapted a goodness-of-fit test method. Thus they control the number of simulations, interpoint
+#' ditance range and edge correction method respectively.
+#'
 #'@return a list of fm object contains fitted parameters for each group
 #'
 #'@seealso 
@@ -36,9 +49,9 @@
 #'
 
 fitCluster<-function(com,trend=~1,cluster="LGCP",sigTest=FALSE,
-                     ctlpars=list("rmax"=25,"rmin"=3,"bw"=5,"sigma2"=3,"alpha"=10,
-                                  "nurange"=c(Inf,0.5),"q"=2,"edgecor"='translate',
-                                  "nsim"=10,"r"=seq(0,60,2),"siglevel"=0.05),...){
+                     ctlpars=list("rmax"=25,"rmin"=1,"bw"=2,"sigma2"=3,"alpha"=10,
+                                  "nurange"=c(Inf,0.5),"edgecor"='translate',
+                                  "nsim"=10,"r"=seq(0,60,1),"siglevel"=0.05),...){
   #validation check
   if(!RandomFieldsSafe()){
     stop("The newest version of RandomFields package is needed")
@@ -59,7 +72,7 @@ fitCluster<-function(com,trend=~1,cluster="LGCP",sigTest=FALSE,
     g=pcf_adaptive(data.ppp,maxt=ctlpars$rmax,lambda,bw=ctlpars$bw,adaptive=0.5,kerneltype=1)
     estPars=best.matern.estpcf(g, c(sigma2=ctlpars$sigma2, alpha=ctlpars$alpha),
                                rmax=ctlpars$rmax,rmin=ctlpars$rmin,nu=ctlpars$nurange,
-                               q=ctlpars$q)
+                               q=2)
     nu=attr(estPars,"nu")
     names(nu)="nu"
     sigma2=estPars$par[1]
@@ -136,11 +149,7 @@ matern.estpcf=function (emppcf, startpar = c(sigma2 = 1, alpha = 1), lambda = NU
                          ...,nu=nu)
   
   par <- result$par
-  if(FALSE){
-    plot(emppcf)
-    theo=theoretpcf(par,emppcf$r,nu)
-    lines(x=emppcf$r,y=theo,col=3)
-  }
+  
   names(par) <- c("sigma2", "alpha")
   result$par <- par
   mu <- if (is.numeric(lambda) && length(lambda) == 1 && lambda > 
