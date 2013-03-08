@@ -4,7 +4,7 @@
 \usage{
   fitCluster(com, trend = ~1, cluster = "LGCP",
     sigTest = FALSE,
-    ctlpars = list(rmax = 25, rmin = 3, bw = 5, sigma2 = 3, alpha = 10, nurange = c(Inf, 0.5), edgecor = "translate", nsim = 10, r = seq(0, 60, 2), siglevel = 0.05),
+    ctlpars = list(rmax = 25, rmin = 1, bw = 2, sigma2 = 3, alpha = 10, nurange = c(Inf, 0.5), edgecor = "translate", nsim = 10, r = seq(0, 60, 1), siglevel = 0.05),
     ...)
 }
 \arguments{
@@ -43,18 +43,20 @@
   very sensitive to the final result. it controls
   calculations of the pari correlation function, the
   minimum contrast method and significance tests of habitat
-  and extra internal aggregation. Specifically, \code{rmax}
-  controls the spatial range that calculate the pair
-  correlation function in the \code{\link{pcf_adaptive}}
-  function. \code{rmax} and \code{rmin} also define the
-  range of distance considered in the minimum contrast
-  method n estimating parameters of internal aggregation.
-  \code{nurange} controls the sharp of marten covariance
-  function in the minimum control method. \code{bw}
-  controls the bindwidth of kernel estimation in
-  \code{\link{pcf_adaptive}}. \code{sigma2}, \code{alpha}
-  and \code{edgecor} are initial parameters of the fitted
-  clustering process.  \code{nsim}, \code{r} and
+  and extra internal aggregation. it designed for advanced
+  user, thus change it when you know what you are doing.
+
+  Specifically, \code{rmax} controls the spatial range that
+  calculate the pair correlation function in the
+  \code{\link{pcf_adaptive}} function. \code{rmax} and
+  \code{rmin} also define the range of distance considered
+  in the minimum contrast method n estimating parameters of
+  internal aggregation. \code{nurange} controls the sharp
+  of marten covariance function in the minimum control
+  method. \code{bw} controls the bindwidth of kernel
+  estimation in \code{\link{pcf_adaptive}}. \code{sigma2},
+  \code{alpha} and \code{edgecor} are initial parameters of
+  the fitted clustering process.  \code{nsim}, \code{r} and
   \code{edgecor} are parameters used in testing
   significance of aggregated pattern in the residual. it
   adapted a goodness-of-fit test method. Thus they control
