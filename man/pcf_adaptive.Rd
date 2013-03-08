@@ -1,6 +1,6 @@
 \name{pcf_adaptive}
 \alias{pcf_adaptive}
-\title{estimate pair correlation function by adaptive method}
+\title{estimate the inhomogeneous pair correlation function by adaptive method}
 \usage{
   pcf_adaptive(data.ppp, lambda, maxt, bw, adaptive = T,
     kerneltype = 1)
