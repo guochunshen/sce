@@ -52,6 +52,10 @@ For further information on any of these functions, type \code{help(name)} where 
     \code{\link{scp}} \tab create a spatial community pattern \cr
   }
   
+  \bold{To simulate a spatial population/community pattern}
+  \tabular{ll}{
+    \code{\link{rCluster}} \tab simulate a cluster population distribution from a fitted cluster model or given parameters \cr
+  }
    \bold{Typical spatial community data within the package}
   
   \tabular{ll}{
@@ -91,6 +95,7 @@ For further information on any of these functions, type \code{help(name)} where 
 \section{V. HYPOTHESIS TESTS AND MODEL DIAGNOSTICS}{
 
   \tabular{ll}{
+    \code{\link{gofTest}} \tab goodness-of-fit test for a fitted cluster model \cr
     \code{\link{sigHabitatTest}} \tab testing significance of habitat variables by considering aggregative residual \cr
     \code{\link{sigAggreResidualTest}} \tab testing significance of aggregation in the residual. \cr
     \code{\link{backwardStep}} \tab select a best clustering model for a group of individuals based on pvalue. \cr

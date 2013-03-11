@@ -61,3 +61,37 @@ test_that("fit cluster model to a species distribution",{
   expect_true(all(attr(re_best,"pvalues")[-1]<0.05))
   
 })
+
+
+test_that("test goodness-of-fit test",{
+  #load one species data
+  data(testData)
+  sp1=subset(testData,testData$traits$species=="BEILPE")
+  
+  #fit a cluster model
+  fittedmodel=fitCluster(sp1,~elev+grad)
+  
+  #goodness-of-fit test
+  re=gofTest(fittedmodel,SFun=Fest,rRange=c(0,10),nsim=5,r=seq(0,20,1))
+  
+  #any pvalue should be smaller than 1
+  expect_true(all(re<=1))
+  
+  #if edge correction is not specified, several edge correction methods were used, thus pvalue should be a vector
+  expect_true(length(re)>1)
+  #if only one edge correction method used, it only return one pvalue
+  re=gofTest(fittedmodel,SFun=Fest,rRange=c(0,10),nsim=5,r=seq(0,20,1),correction="rs")
+  expect_equal(length(re),1)
+  
+  #the gofTest function also wroks for various summary statistics
+  re=gofTest(fittedmodel,SFun=Kest,rRange=c(0,10),nsim=5,r=seq(0,20,1))
+  expect_true(all(re<=1))
+  re=gofTest(fittedmodel,SFun=Kest,rRange=c(0,10),nsim=5,r=seq(0,20,1),correction="iso")
+  expect_equal(length(re),1)
+  re=gofTest(fittedmodel,SFun=pcf,rRange=c(0,10),nsim=5,r=seq(0,20,1))
+  expect_true(all(re<=1))
+  re=gofTest(fittedmodel,SFun=pcf,rRange=c(0,10),nsim=5,r=seq(0,20,1),correction="iso")
+  expect_equal(length(re),1)
+  
+  
+})
