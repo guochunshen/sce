@@ -7,7 +7,7 @@
     habitat = NULL, phylo = NULL, forceUnique = FALSE)
 }
 \arguments{
-  \item{species}{a vector of species names.}
+  \item{species}{a character vector of species names.}
 
   \item{abundance}{a vector of number of individuals for
   each species}

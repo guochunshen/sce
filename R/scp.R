@@ -74,6 +74,8 @@ scp <- function(species,x=NULL,y=NULL,win=NULL,type="ind-mapped",
         trait_name=colnames(traits)
         traits=as.data.frame(traits_temp)
         colnames(traits)=trait_name
+      }else{
+        traits=traits[-del_index,]
       }
         
       species=species[-del_index]
