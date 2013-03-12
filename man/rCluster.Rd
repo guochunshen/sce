@@ -33,6 +33,10 @@
 
   \item{xcell,ycell}{the size of grid used in generate
   random points.}
+
+  \item{ntry}{number of times try to regenerate point
+  pattern if error occured (common error is too much
+  points)}
 }
 \value{
   a ppp object

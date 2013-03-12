@@ -56,7 +56,16 @@ gofTest<-function(fittedmodel,SFun,rRange=c(0,10),nsim=10,r=seq(0,20,1),...){
   sm_simu=list()
   for(i in 1:nsim){
     #generate a realization of a fitted model
-    simudata=rCluster(fittedmodel,realdata$N,realdata$habitat)
+    simudata=rCluster(fittedmodel,realdata$N,realdata$habitat,ntry=3)
+    #if there is some error appeared in the point pattern simulation, just return a NULL pvalues
+    if(inherits(simudata,"try-error")){
+      if(!is.null(dim(sm_real))){
+        return(rep(NULL,dim(sm_real)[2]))
+      }else{
+        return(NULL)
+      }
+      
+    }
     sm_simu[[i]]=as.data.frame(SFun(simudata,r=r,...))[sel,-c(1:2)]
     if(i==1)
       sm_mean=sm_simu[[i]]
