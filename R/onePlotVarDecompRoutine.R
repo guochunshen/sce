@@ -2,6 +2,7 @@
 #' define a routine function for runing all nessary calcution of variance decompstion for each species in one plot 
 #'
 #'@param com  a scp object represent a community or a population
+#'@param fit_cores, gof_cores number of cores used in model fitting and goodness-of-fit test
 #'@param ctlpars a list of parameters controled the behavior of the model fitting and model diagnoise. Use it carefully.
 #'
 #'@details
@@ -34,12 +35,12 @@
 
 
 
-onePlotVarDecompRoutine <- function(com,ctlpars=list(rmax = 25, rmin = 2, 
+onePlotVarDecompRoutine <- function(com,fit_cores=10,gof_cores=5,ctlpars=list(rmax = 25, rmin = 2, 
                           bw = 2, sigma2 = 3, alpha = 10, nurange = c(Inf, 0.5), q = 0.5, 
                             edgecor = "translate",  nsim= 19, r = seq(0, 25, 2), siglevel = 0.05)){
   
   #step1: get a list of best fitted cluster models for each species by applying the above function on each species:
-  fittedmodels=applyGroup(com,com$traits$species,onespModel,ctlpars=ctlpars,verbpro=FALSE,mc.cores=20,multicore=TRUE)
+  fittedmodels=applyGroup(com,com$traits$species,onespModel,ctlpars=ctlpars,verbpro=FALSE,mc.cores=fit_cores,multicore=TRUE)
   head(fittedmodels)
   #we can still find some species can not be fitted, 
   unfiti=which(unlist(lapply(fittedmodels,function(x) class(x)[1]))=="try-error")
@@ -49,7 +50,8 @@ onePlotVarDecompRoutine <- function(com,ctlpars=list(rmax = 25, rmin = 2,
     fittedmodels=fittedmodels[-unfiti]
   
   #step2: The performance of the best fitted model can be evaluated by a goodness-of-fit test
-  model_performs=unlist(mclapply(fittedmodels,FUN=gofTest,SFun=Fest,rRange=c(0,ctlpars$rmax),nsim=ctlpars$nsim,r=seq(0,ctlpars$rmax,1),correction="cs",mc.cores=5))
+  model_performs=unlist(mclapply(fittedmodels,FUN=gofTest,SFun=Fest,rRange=c(0,ctlpars$rmax),nsim=ctlpars$nsim,
+                                 r=seq(0,ctlpars$rmax,1),correction="cs",mc.cores=gof_cores))
   #number of models that still not discribed the data well
   sum(model_performs<0.05)
   
