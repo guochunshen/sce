@@ -30,7 +30,7 @@ selSpeciesByAbund<-function(com,minN=10,maxN=50){
   }
   del_flag=rep(FALSE,com$N)
   for(i in del_index){
-    onesp=com$sp[i]
+    onesp=names(com$ab[i])
     del_flag=del_flag | (com$traits$species==onesp)
   }
   com=subset(com,!del_flag)

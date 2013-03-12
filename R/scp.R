@@ -3,7 +3,7 @@
 #' \code{scp} create a spatial community pattern object. it represents either a species presence-absence vector,
 #' species abundance vector or individual mapped dataframe of a community.
 #' 
-#' @param species a vector of species names.
+#' @param species a character vector of species names.
 #' @param abundance a vector of number of individuals for each species
 #' @param x,y spatial coordination of each individual if available
 #' @param win either a vector of length 4 or an owin object (\link{owin}) represents spatial region of the community
@@ -60,6 +60,7 @@
 scp <- function(species,x=NULL,y=NULL,win=NULL,type="ind-mapped",
                 abundance=NULL,traits=NULL,habitat=NULL,phylo=NULL,forceUnique=FALSE){
   data=list()
+  species=as.character(species)
   
   if("ind-mapped"==type){
     valid=check_ind_mapped_data(species=species, x=x, y=y, win=win, forceUnique=forceUnique)
