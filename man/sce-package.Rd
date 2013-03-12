@@ -106,6 +106,9 @@ For further information on any of these functions, type \code{help(name)} where 
 \section{VI. Other functions}{
 
   \tabular{ll}{
+    \code{\link{onePlotVarDecompRoutine}} \tab runing all nessary calcution of variance decompstion for each species in one plot \cr
+    \code{\link{runAndSave}} \tab run the specificed function and save result to a file \cr
+    \code{\link{dataframeToIms}} \tab convert a data.frame into a list of im objects \cr
     \code{\link{downloadNATree}} \tab download the north American tree distribution files from interent \cr
     \code{\link{NAtreeRaster}} \tab transfer the zipped shapfile distribution of tree data into a dataframe of species occurance \cr
   }

@@ -68,7 +68,13 @@ scp <- function(species,x=NULL,y=NULL,win=NULL,type="ind-mapped",
     del_index=attr(valid,"del_index")
     if(forceUnique & !is.null(del_index)){
       com=com[-del_index,]
-      traits=traits[-del_index,]
+      traits_temp=traits[-del_index,]
+      if(inherits(traits,"data.frame") & !inherits(traits_temp,"data.frame")){
+        trait_name=colnames(traits)
+        traits=as.data.frame(traits_temp)
+        colnames(traits)=trait_name
+      }
+        
       species=species[-del_index]
     }
       
@@ -96,6 +102,8 @@ scp <- function(species,x=NULL,y=NULL,win=NULL,type="ind-mapped",
   
   check_habitat(habitat,win)
   data$habitat=habitat
+  
+  data$phylo=phylo
   
   class(data)<-"scp"
   return(data)
