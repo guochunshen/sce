@@ -2,7 +2,8 @@
 \alias{varDecomp}
 \title{To estimate the proportion of variance explained by habitat, internal cluster and random process from a given fitted cluster model}
 \usage{
-  varDecomp(fittedmodel, r = c(0:80), R = 10, delta = 1)
+  varDecomp(fittedmodel, r = c(0:80), R = 10, delta = 1,
+    simple = FALSE)
 }
 \arguments{
   \item{fittedmodel}{a \code{\link{fm}} object representing
@@ -16,6 +17,9 @@
 
   \item{delta}{use delta x delta grid for numerical
   integration.}
+
+  \item{simple}{if it is true, only PVH and variance of
+  habitat and spatial autocorrelation were calculated}
 }
 \value{
   a vector of length 6 contains
