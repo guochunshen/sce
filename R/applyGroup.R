@@ -33,6 +33,8 @@ applyGroup<-function(com,group,Fun,verbpro=FALSE,mc.cores=5,multicore=FALSE,...)
   }
   else
     re=lapply(1:nls,applyOneGroup,grplevels=grplevels,verbpro=verbpro,group=group,Fun=Fun,com=com,...)
+  
+  names(re)=as.character(grplevels)
   return(re)
 }
 

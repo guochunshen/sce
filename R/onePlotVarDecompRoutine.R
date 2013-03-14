@@ -55,6 +55,7 @@ onePlotVarDecompRoutine <- function(com,fit_cores=10,gof_cores=5,ctlpars=list(rm
                                  r=seq(0,ctlpars$rmax,1),correction="cs",mc.cores=gof_cores,mc.preschedule = FALSE))
   #number of models that still not discribed the data well
   sum(model_performs<0.05)
+
   
   #step3: Based on the best fitted model, we can count how much percentage of species significantly affected by habitat and internal clustering.
   n_sp_fitted=(length(fittedmodels))
@@ -72,6 +73,8 @@ onePlotVarDecompRoutine <- function(com,fit_cores=10,gof_cores=5,ctlpars=list(rm
     propVariances=lapply(fittedmodels, varDecomp, r=c(0:ctlpars$rmax),R=4)
     PVHs=unlist(lapply(propVariances,function(x) x[1]))
     PVRs=unlist(lapply(propVariances,function(x) x[2]))
+    var_conf=lapply(fittedmodels,envelopeVar,nsim=ctlpars$nsim,conf_level=0.95,
+                    r=c(0:ctlpars$rmax),R=4,delta=1,simple=TRUE)
   }
   
   #step5: Finally, thinning and return result
@@ -79,7 +82,7 @@ onePlotVarDecompRoutine <- function(com,fit_cores=10,gof_cores=5,ctlpars=list(rm
   
   result=list(fittedmodels=fittedmodels,unfitsp=unfitsp,model_performs=model_performs,
               sig_intClu=sig_intClu,sig_habitat=sig_habitat,propVariances=propVariances,
-              PVHs=PVHs,PVRs=PVRs)
+              PVHs=PVHs,PVRs=PVRs,var_conf=var_conf)
   return(result)
 }
 

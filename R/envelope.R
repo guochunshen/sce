@@ -5,12 +5,16 @@
 #'@param nsim number of simulations used to generate the envelope
 #'@param conf_level significance level of the confidence interval
 #'@param r,R,delta parameters used in the \code{\link{varDecomp}} function
+#'@param simple a logical flag in \code{\link{varDecomp}} to calculate the PVH only if it is true
 #'
 
-envelopeVar<-function(fittedmodel,nsim=9,conf_level=0.95,r=c(0:80),R=10,delta=1){
+envelopeVar<-function(fittedmodel,nsim=9,conf_level=0.95,r=c(0:80),R=10,delta=1,simple=FALSE){
+  #extract the real population data
+  realdata=attr(fittedmodel,"data")
+  
   #extract parameters
-  ctlpars=attr(re,"ctlpars")
-  trend=attr(re,"trend")
+  ctlpars=attr(fittedmodel,"ctlpars")
+  trend=attr(fittedmodel,"trend")
   #calculate the summary statistic of simulated data
   sm_simu=list()
   for(i in 1:nsim){
@@ -20,15 +24,18 @@ envelopeVar<-function(fittedmodel,nsim=9,conf_level=0.95,r=c(0:80),R=10,delta=1)
     if(inherits(simudata,"try-error")){
         return(NULL)
     }
-    sm_simu[[i]]=varDecomp(fitCluster(simudata,trend,sigTest=FALSE,ctlpars=ctlpars),r=r,R=R,delta=delta)
+    sm_simu[[i]]=varDecomp(fitCluster(simudata,trend,sigTest=FALSE,ctlpars=ctlpars),r=r,R=R,delta=delta,simple=simple)
   }
   varnames=names(sm_simu[[1]])
   
   sm_simu=unlist(sm_simu)
   dim(sm_simu)=c(length(varnames),nsim)
+  deli=apply(sm_simu,1,function(x) all(is.na(x)))
+  sm_simu=sm_simu[!deli,]
+  varnames=varnames[!deli]
   #calculate confidence of the variance
   re=apply(sm_simu,1,confij,conf_level=conf_level)
-  rownames(re)=varnames
+  colnames(re)=varnames
   return(re)
 }
 

@@ -4,6 +4,7 @@
 #'@param r spatial range used in pair correlation function to caluclate the proportaion of variance
 #'@param R the quadrat scale used to evaluate the variance of poisson noise
 #'@param delta use delta x delta grid for numerical integration.
+#'@param simple if it is true, only PVH and variance of habitat and spatial autocorrelation were calculated
 #'
 #'@return a vector of length 6 contains \code{"PVH","PVR","varHabitat","varInterCluster","varPoi","varNonrand"}. Specifically,
 #'  "PVH": proportion of variance explained by Habitat, thus proportion of variance explained
@@ -16,12 +17,18 @@
 #'
 
 
-varDecomp<-function(fittedmodel,r=c(0:80),R=10,delta=1){
+varDecomp<-function(fittedmodel,r=c(0:80),R=10,delta=1,simple=FALSE){
   data.ppm=attr(fittedmodel,"fittedmodel")
   trendmap=predict(data.ppm, type="trend")
   varHabitat=var(log(as.numeric(trendmap$v)))
   varInterCluster=fittedmodel[2]
   PVH=varHabitat/(varHabitat+varInterCluster)
+  
+  if(simple){
+    re=c(PVH,NA,varHabitat,varInterCluster,NA,NA)
+    names(re)=c("PVH","PVR","varHabitat","varInterCluster","varPoi","varNonrand")
+    return(re)
+  }
   
   data.ppp=attr(fittedmodel,"data")$com
   pcfvalues=pcf(data.ppp,r=r)
