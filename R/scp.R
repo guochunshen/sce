@@ -60,10 +60,10 @@
 scp <- function(species,x=NULL,y=NULL,win=NULL,type="ind-mapped",
                 abundance=NULL,traits=NULL,habitat=NULL,phylo=NULL,forceUnique=FALSE){
   data=list()
-  species=as.character(species)
   
   if("ind-mapped"==type){
     valid=check_ind_mapped_data(species=species, x=x, y=y, win=win, forceUnique=forceUnique)
+    species=as.character(species)
     if(!valid) return
     com=data.frame(species=species,x=x,y=y)
     del_index=attr(valid,"del_index")

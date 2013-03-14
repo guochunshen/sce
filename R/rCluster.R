@@ -76,7 +76,8 @@ rCluster<-function(params,N_expect,covrs,ntry=1){
       ntry=ntry-1
     }
   }
-  return(X)
+  data=scp(species=rep(1,X$n),x=X$x,y=X$y,win=X$window,habitat=covrs,forceUnique=TRUE)
+  return(data)
 }
 
 #simulate a Matern Cluster point process by the given parameters
@@ -97,14 +98,14 @@ rMatern=function(sigma2,alpha,en.filter,plotdim,N,nu=0.5,xcell=1,ycell=1){
 
   if(!is.null(en.filter)){
     Lambda=en.filter
-    mu=log(N/sum(exp(en.filter$v+0.5*sigma2)*xcell*ycell))
+    mu=log(N/sum(exp(en.filter$v+Yim$v)*xcell*ycell))
     Lambda$v=exp(mu+en.filter$v+Yim$v)
   }else{
-    mu=log(N/sum(exp(0.5*sigma2)*xcell*ycell))
+    mu=log(N/sum(exp(Yim$v)*xcell*ycell))
     Lambda=Yim
     Lambda$v=exp(mu+Yim$v)
   }
-  
+
   #simulate inhomogeneous Poisson process with intensity function given by Lambda.
   X=rpoispp(Lambda)
   return(X)

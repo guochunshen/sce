@@ -72,6 +72,10 @@ test_that("creating scp object",{
   #check missing NA values in the species name
   expect_warning(scp(c(1:3,NA),1:4,1:4,win),"NA values are contained in species")
   
+  #if only one traits variable exist, the traits is still a data.frame
+  com1=scp(as.character(1:4),1:4,1:4,win,traits=data.frame(ss=c(1:4)))
+  expect_is(com1$traits,"data.frame")
+  
 })
 
 test_that("manipulating scp object",{

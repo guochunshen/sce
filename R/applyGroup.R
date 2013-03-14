@@ -44,6 +44,9 @@ applyOneGroup <- function ( i, grplevels, verbpro, group, Fun, com, ...) {
     subdata=subset(com,sel)
     
     re=Fun(subdata, ...)
+    if(verbpro){
+      print(paste("the", i, "th element finished"))
+    }
     return(re)
 }
 
