@@ -19,9 +19,16 @@
 #'
 
 sigAggreResidualTest=function(fittedmodel,nsim=10,r=seq(0,60,2),edcor="translate"){
-
+  data=attr(fittedmodel,"data")
   data.ppm=attr(fittedmodel,"fittedmodel")
-  e=envelope(data.ppm,nsim=nsim,verbose=FALSE,savefuns=TRUE,correction=edcor,r=r)
+  #since the translate edge correction need very large memory in its calculation, thus using border edge correction
+  #instand is the number of points large than 3000
+  if(data$N<3000){
+    e=envelope(data.ppm,nsim=nsim,verbose=FALSE,savefuns=TRUE,correction=edcor,r=r)
+  }else{
+    e=envelope(data.ppm,nsim=nsim,verbose=FALSE,savefuns=TRUE,correction="border",r=r)
+  }
+  
   npp=nsim+1
   Kfuns=attr(e,"simfuns")
   n=length(e$obs)
