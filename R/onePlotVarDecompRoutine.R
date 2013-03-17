@@ -41,7 +41,7 @@ onePlotVarDecompRoutine <- function(com,fit_cores=10,gof_cores=5,ctlpars=list(rm
   
   #step1: get a list of best fitted cluster models for each species 
   fittedmodels=applyGroup(com,com$traits$species,onespModel,ctlpars=ctlpars,verbpro=TRUE,mc.cores=fit_cores,
-                          multicore=TRUE,mc.preschedule=FALSE)
+                          multicore=TRUE)
   head(fittedmodels)
   #we can still find some species can not be fitted, 
   unfiti=which(unlist(lapply(fittedmodels,function(x) class(x)[1]))=="try-error")

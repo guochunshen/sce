@@ -26,9 +26,13 @@
 #' minimum contrast method n estimating parameters of internal aggregation. \code{nurange} controls the sharp of marten 
 #' covariance function in the minimum control method. \code{bw} controls the bindwidth of kernel estimation
 #' in \code{\link{pcf_adaptive}}. \code{sigma2}, \code{alpha} and \code{edgecor} are initial parameters of 
-#' the fitted clustering process.  \code{nsim}, \code{r} and \code{edgecor} are parameters used in testing significance of aggregated
-#' pattern in the residual. it adapted a goodness-of-fit test method. Thus they control the number of simulations, interpoint
-#' ditance range and edge correction method respectively.
+#' the fitted clustering process.  \code{nsim}, \code{r}, \code{ntry} and \code{edgecor} are parameters used in testing significance of aggregated
+#' pattern in the residual (see \code{\link{sigAggreResidualTest}}). it adapted a goodness-of-fit test method. Thus they control the number of simulations, interpoint
+#' ditance range and edge correction method respectively. 
+#' 
+#' aditionally, \code{nd} controls the maximum dimension of the grid of dummy points (nd * nd or nd[1] * nd[2]) used to evaluate the integral
+#'  in the pseudolikelihood. Incompatible with eps. without control it, you might have memory limitation problem in the \code{\link{sigHabitatTest}} 
+#'  function. 
 #'
 #'@return a list of fm object contains fitted parameters for each group
 #'
@@ -51,7 +55,8 @@
 fitCluster<-function(com,trend=~1,cluster="LGCP",sigTest=FALSE,
                      ctlpars=list("rmax"=25,"rmin"=1,"bw"=2,"sigma2"=3,"alpha"=10,
                                   "nurange"=c(Inf,0.5),"edgecor"='translate',
-                                  "nsim"=10,"r"=seq(0,60,1),"siglevel"=0.05),...){
+                                  "nsim"=10,"r"=seq(0,60,1),"siglevel"=0.05,
+                                  nd=50,ntry=10),...){
   #validation check
   if(!RandomFieldsSafe()){
     stop("The newest version of RandomFields package is needed")
@@ -60,8 +65,17 @@ fitCluster<-function(com,trend=~1,cluster="LGCP",sigTest=FALSE,
   nhabitat=length(com$habitat)
   
   data.ppp=com$com
-  #fit the heterogeneous poisson point process
-  data.ppm=ppm(data.ppp,trend,covariates=com$habitat)
+  
+  #try to avoide memory problem in sigHabitatTest function.
+  dQ=default.dummy(data.ppp)
+  if(dQ$n>10000){
+    #fit the heterogeneous poisson point process
+    data.ppm=ppm(data.ppp,trend,covariates=com$habitat,nd=ctlpars$nd)
+  }else{
+    #fit the heterogeneous poisson point process
+    data.ppm=ppm(data.ppp,trend,covariates=com$habitat)
+  }
+  
   
   beta=coef(data.ppm)
   
@@ -100,7 +114,7 @@ sigTestofCluster <- function (re) {
   
   ctlpars=attr(re,"ctlpars")
   cluster=attr(re,"modeltype")
-  aggreRes_pvalue=try(sigAggreResidualTest(re,ctlpars$nsim,ctlpars$r,ctlpars$edgecor))
+  aggreRes_pvalue=try(sigAggreResidualTest(re,ctlpars$nsim,ctlpars$r,ctlpars$edgecor,ntry=ctlpars$ntry))
   clusterResidual= (aggreRes_pvalue<ctlpars$siglevel) & cluster!="poisson"
   habitat_pvalues=try(sigHabitatTest(re,clusterResidual))
   if(inherits(aggreRes_pvalue,"try-error") | inherits(habitat_pvalues,"try-error")){
