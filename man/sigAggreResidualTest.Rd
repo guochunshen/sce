@@ -3,7 +3,7 @@
 \title{To test whether there is any aggregative residual existed in the unexplianed pattern by habitat}
 \usage{
   sigAggreResidualTest(fittedmodel, nsim = 10,
-    r = seq(0, 60, 2), edcor = "translate")
+    r = seq(0, 60, 2), edcor = "translate", ntry = 10)
 }
 \arguments{
   \item{fittedmodel}{a \link{fm} object represented a

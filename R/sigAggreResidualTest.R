@@ -18,7 +18,7 @@
 #' sigAggreResidualTest(fm,nsim=10,r=0:30)
 #'
 
-sigAggreResidualTest=function(fittedmodel,nsim=10,r=seq(0,60,2),edcor="translate"){
+sigAggreResidualTest=function(fittedmodel,nsim=10,r=seq(0,60,2),edcor="translate",ntry=10){
   data=attr(fittedmodel,"data")
   xy=data.frame(x=data$com$x,y=data$com$y)
   data.ppm=attr(fittedmodel,"fittedmodel")
@@ -48,22 +48,28 @@ sigAggreResidualTest=function(fittedmodel,nsim=10,r=seq(0,60,2),edcor="translate
   for(i in 1:nsim){
     data_simu=rpoispp(lambda)
     Kfuns[,i+1]=pcf_adaptive(data_simu,lambda=lambda_loc,maxt=max(r),bw=bw,adaptive =FALSE)$trans
-    while(any(is.infinite(Kfuns[,i+1]))){
+    localn=1
+    while(any(is.infinite(Kfuns[,i+1])) & localn<ntry){
       data_simu=rpoispp(lambda)
       Kfuns[,i+1]=pcf_adaptive(data_simu,lambda=lambda_loc,maxt=max(r),bw=bw,adaptive =FALSE)$trans
+      localn=localn+1
     }
      
     #lines(x=pcf_r,y=Kfuns[,i+1],col=2)
   }
-  
-  Kfuns[,1]=pcf_obs
-  n=length(pcf_obs)
-  
-  hsum=apply(Kfuns,1,sum,na.rm=TRUE)
-  hmean=(hsum-Kfuns)/nsim
-  
-  ui=apply((Kfuns-hmean)^2,2,sum,na.rm=TRUE)
-  pvalue=1-sum(ui[1]>ui[-1])/nsim
+  #if there is always infinite value contained in the pcf, just return a pvalue equals to 1
+  if(localn>=ntry){
+    pvalue=1
+  }else{
+    Kfuns[,1]=pcf_obs
+    n=length(pcf_obs)
+    
+    hsum=apply(Kfuns,1,sum,na.rm=TRUE)
+    hmean=(hsum-Kfuns)/nsim
+    
+    ui=apply((Kfuns-hmean)^2,2,sum,na.rm=TRUE)
+    pvalue=1-sum(ui[1]>ui[-1])/nsim
+  }
 
 #   
 #   
