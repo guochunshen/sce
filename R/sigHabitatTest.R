@@ -60,14 +60,13 @@ vcov.mykppm <- function(object, ...,
   lambda <- fitted(po, type="lambda")
   # extract covariate values
   Z <- model.matrix(po)
-  # compute pair correlation function minus 1
-  r <- as.vector(pairdist(U))
-  gr <- gloop(r,par,nu)-1
-  G <- matrix(gr, nU, nU)
   # evaluate integral
   ff <- Z * lambda * wt
   J <- t(Z) %*% ff
-  E <- t(ff) %*% G %*% ff
+  
+  # compute pair correlation function minus 1
+  E=pcfoneless (U, par, nu, nU, ff) 
+  
   # asymptotic covariance matrix in the Poisson case
   J.inv <- try(solve(J))
   # could be singular
@@ -99,27 +98,71 @@ vcov.mykppm <- function(object, ...,
   stop(paste("Unrecognised option: what=", what))
 }
 
-gloop=function(r,par,nu){
-  nr=length(r)
-  nmax=1e8
-  if(nr>nmax){
-    neach=nmax
-    n=floor(nr/neach)
-    re=numeric()
+pcfoneless <- function (U, par, nu, nU, ff,filename="temp_backingfile",usingBigmatrix=FALSE) {
+  if((!usingBigmatrix) & nU<5000){
+    r <- as.vector(pairdist(U))
+    gr <- g(r,par,nu)-1
+    rm(r)
+    gc()
+    G <- matrix(gr, nU, nU)
+    rm(gr)
+    gc()
+    E <- t(ff) %*% G %*% ff
+    rm(G)
+    gc()
+  }else{
+    neach=1e3
+    n=floor(nU/neach)
+    #in case of parallal calculation, backfile name should not be the same for different cores,
+    #Thus add some random number to the filename
+    filename=paste(filename,as.character(runif(1)),sep="")
+    des_filename=paste(filename,".desc",sep="")
+    G=big.matrix(nU,nU,type="double",backingfile=filename,descriptorfile=des_filename)
+    x=rep(U$x,each=neach)
+    y=rep(U$y,each=neach)
     for(i in 1:n){
       sel=((i-1)*neach+1):(neach*i)
-      re=c(re,g(r[sel],par,nu))
+      G[sel,]=g(sqrt((U$x[sel]-x)^2+(U$y[sel]-y)^2),par,nu)-1
     }
-    if(nr>n*neach){
-      sel=(n*neach+1):nr
-      re=c(re,g(r[sel],par,nu))
+    if(nU>n*neach){
+      sel=(n*neach+1):nU
+      x=rep(U$x,each=length(sel))
+      y=rep(U$y,each=length(sel))
+      G[sel,]=g(sqrt((U$x[sel]-x)^2+(U$y[sel]-y)^2),par,nu)-1
     }
-    return(re)
-  }else{
-    return(g(r,par,nu))
+    E <- (t(ff) %*% G %*% ff)[,]
+    #removing the filebacking object and file
+    rm(G)
+    gc()
+    file.remove(filename)
+    file.remove(des_filename)
   }
   
+  return(E)
 }
+# 
+# 
+# gloop=function(r,par,nu){
+#   nr=length(r)
+#   nmax=1e8
+#   if(nr>nmax){
+#     neach=nmax
+#     n=floor(nr/neach)
+#     re=numeric()
+#     for(i in 1:n){
+#       sel=((i-1)*neach+1):(neach*i)
+#       re=c(re,g(r[sel],par,nu))
+#     }
+#     if(nr>n*neach){
+#       sel=(n*neach+1):nr
+#       re=c(re,g(r[sel],par,nu))
+#     }
+#     return(re)
+#   }else{
+#     return(g(r,par,nu))
+#   }
+#   
+# }
 
 g <- function(r, par,nu) {
   

@@ -41,7 +41,8 @@ onePlotVarDecompRoutine <- function(com,fit_cores=10,gof_cores=5,ctlpars=list(rm
   
   #step1: get a list of best fitted cluster models for each species 
   fittedmodels=applyGroup(com,com$traits$species,onespModel,ctlpars=ctlpars,verbpro=TRUE,mc.cores=fit_cores,
-                          multicore=TRUE)
+                          multicore=TRUE,mc.preschedule = FALSE)
+  gc()
   head(fittedmodels)
   #we can still find some species can not be fitted, 
   unfiti=which(unlist(lapply(fittedmodels,function(x) class(x)[1]))=="try-error")
@@ -55,7 +56,7 @@ onePlotVarDecompRoutine <- function(com,fit_cores=10,gof_cores=5,ctlpars=list(rm
                                  r=seq(0,ctlpars$rmax,1),correction="cs",mc.cores=gof_cores,mc.preschedule = FALSE))
   #number of models that still not discribed the data well
   sum(model_performs<0.05)
-
+  gc()
   
   #step3: Based on the best fitted model, we can count how much percentage of species significantly affected by habitat and internal clustering.
   n_sp_fitted=(length(fittedmodels))
