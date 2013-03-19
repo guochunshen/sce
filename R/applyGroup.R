@@ -7,13 +7,15 @@
 #' @param verbpro logical flage to show the verbose of process of calculation
 #' @param mc.cores number of cores used in parallel calculation on Linux
 #' @param ... other parameters passed to the \code{Fun} function
-#' 
+#' @param repository an repository object that can save middle result into the repository file. 
+#'        see \code{\link{create_repository}} for detail. it only usefull to run long term calculation 
+#'        if the calculation environmental is not stable and will crash sometime.
 #' 
 #' @return a list of results that returned by the function
 #' 
 
 
-applyGroup<-function(com,group,Fun,verbpro=FALSE,mc.cores=5,multicore=FALSE,...){
+applyGroup<-function(com,group,Fun,verbpro=FALSE,mc.cores=5,multicore=FALSE,repository=NULL,...){
   
   if(is.null(group))
     stop("please specify a valid group index")
@@ -26,19 +28,29 @@ applyGroup<-function(com,group,Fun,verbpro=FALSE,mc.cores=5,multicore=FALSE,...)
    warning("Current version of R only support parallel computation under linux, thus multicore is disabled")
    multicore=FALSE
   }
-  
-  if(multicore){
-    re=mclapply(1:nls,applyOneGroup,grplevels=grplevels,verbpro=verbpro,group=group,Fun=Fun,com=com,
-                mc.cores=mc.cores,...)  
+  if(is.null(repository)){
+    joblist=1:nls
+  }else{
+    print("continuing doing unfinished jobs in the given repository")
+    joblist=getUnfinishedJobIds(repository)
   }
-  else
-    re=lapply(1:nls,applyOneGroup,grplevels=grplevels,verbpro=verbpro,group=group,Fun=Fun,com=com,...)
+  
+  if(length(joblist)>0){
+    if(multicore){
+      re=mclapply(joblist,applyOneGroup,grplevels=grplevels,verbpro=verbpro,group=group,Fun=Fun,com=com,
+                  repository=repository,mc.cores=mc.cores,mc.preschedule = FALSE,...)  
+    }
+    else
+      re=lapply(joblist,applyOneGroup,grplevels=grplevels,verbpro=verbpro,group=group,Fun=Fun,com=com,repository=repository,...)
+  }else if(!is.null(repository)){
+    re=readAllResults(repository)
+  }
   
   names(re)=as.character(grplevels)
   return(re)
 }
 
-applyOneGroup <- function ( i, grplevels, verbpro, group, Fun, com, ...) {
+applyOneGroup <- function ( i, grplevels, verbpro, group, Fun, com, repository, ...) {
     if(verbpro){
       print(paste("starting the", i, "th element in the group"))
     }
@@ -48,6 +60,9 @@ applyOneGroup <- function ( i, grplevels, verbpro, group, Fun, com, ...) {
     re=Fun(subdata, ...)
     if(verbpro){
       print(paste("the", i, "th element finished"))
+    }
+    if(!is.null(repository)){
+      repository=writeResultById(repository,i,re)
     }
     return(re)
 }

@@ -16,7 +16,7 @@
 #'@return
 #'a list contains:
 #'
-#'fittedmodels: parameters of the best fitted cluster model for each species.
+#'params: parameters of the best fitted cluster model for each species.
 #'unfitsp: species names that can't be fitted under current ctlpars settings.
 #'model_performs: pvalues of goodness-of_fit test
 #'sig_intClu: pvalues of internal clustering effect on each species distribution
@@ -37,61 +37,48 @@
 
 onePlotVarDecompRoutine <- function(com,fit_cores=10,gof_cores=5,ctlpars=list(rmax = 25, rmin = 2, 
                           bw = 2, sigma2 = 3, alpha = 10, nurange = c(Inf, 0.5), q = 0.5, 
-                            edgecor = "translate",  nsim= 19, r = seq(0, 25, 2), siglevel = 0.05)){
+                            edgecor = "translate",  nsim= 19, r = seq(0, 25, 2), siglevel = 0.05),
+                            result_rep_id=NULL){
+  
+  #run the routine of spatial variance decomposition on each species in each plot
+  fitmodel_rep=read_repository(result_rep_id,"./reps")
+  if(!inherits(fitmodel_rep,"repository"))
+    fitmodel_rep=create_repository(result_rep_id,com$sp,"./reps")
   
   #step1: get a list of best fitted cluster models for each species 
-  fittedmodels=applyGroup(com,com$traits$species,onespModel,ctlpars=ctlpars,verbpro=TRUE,mc.cores=fit_cores,
-                          multicore=TRUE,mc.preschedule = FALSE)
-  gc()
-  head(fittedmodels)
-  #we can still find some species can not be fitted, 
-  unfiti=which(unlist(lapply(fittedmodels,function(x) class(x)[1]))=="try-error")
-  unfitsp=com$sp[unfiti]
-  
-  if(length(unfitsp)>0)
-    fittedmodels=fittedmodels[-unfiti]
-  
-  #step2: The performance of the best fitted model can be evaluated by a goodness-of-fit test
-  model_performs=unlist(mclapply(fittedmodels,FUN=gofTest,SFun=Fest,rRange=c(0,ctlpars$rmax),nsim=ctlpars$nsim,
-                                 r=seq(0,ctlpars$rmax,1),correction="cs",mc.cores=gof_cores,mc.preschedule = FALSE))
-  #number of models that still not discribed the data well
-  sum(model_performs<0.05)
-  gc()
-  
-  #step3: Based on the best fitted model, we can count how much percentage of species significantly affected by habitat and internal clustering.
-  n_sp_fitted=(length(fittedmodels))
-  sig_intClu=unlist(lapply(fittedmodels,function(x) {attr(x,"pvalues")[1]<0.05}))
-  #define a function for calculate gloabl pvalue of habitat
-  global_pvalue=function(pvalues,n,siglevel=0.05){
-    return(1-any(pvalues<(1-(1-siglevel)^(1/n))))
-  }
-  ncovr=length(com$habitat)
-  sig_habitat=unlist(lapply(fittedmodels,function(x) {global_pvalue(attr(x,"pvalues")[-1],ncovr)<0.05}))
-  
-  
-  #step4: Now calculate the proportions of variance explained by habitat and internal clustering based on the best fitted models
-  if(!is.null(fittedmodels)){
-    propVariances=lapply(fittedmodels, varDecomp, r=c(0:ctlpars$rmax),R=4)
-    PVHs=unlist(lapply(propVariances,function(x) x[1]))
-    PVRs=unlist(lapply(propVariances,function(x) x[2]))
-    var_conf=lapply(fittedmodels,envelopeVar,nsim=ctlpars$nsim,conf_level=0.95,
-                    r=c(0:ctlpars$rmax),R=4,delta=1,simple=TRUE)
-  }
-  
-  #step5: Finally, thinning and return result
-  fittedmodels=lapply(fittedmodels,function(x) {xname=names(x);x=as.vector(x);names(x)=xname;return(x)})
-  
-  result=list(fittedmodels=fittedmodels,unfitsp=unfitsp,model_performs=model_performs,
-              sig_intClu=sig_intClu,sig_habitat=sig_habitat,propVariances=propVariances,
-              PVHs=PVHs,PVRs=PVRs,var_conf=var_conf)
+  results=applyGroup(com,com$traits$species,onespModel,ctlpars=ctlpars,verbpro=TRUE,mc.cores=fit_cores,
+                          multicore=TRUE,repository=fitmodel_rep)
+ 
   return(result)
 }
 
 #define a convinent function for searching a best fitted cluster model for each species
 onespModel=function(com,ctlpars){
+  #step1: find the best fitted model
   hnames=names(com$habitat)
   trend=as.formula(paste("~ ", paste(hnames, collapse = "+")))
   fittedmodel=try(fitCluster(com,trend,sigTest=TRUE,ctlpars=ctlpars))
   fittedmodel=try(backwardStep(fittedmodel))
-  return(fittedmodel)
+  
+  if(inherits(fittedmodel,"try-error"))
+    return(NULL)
+  
+  pvalues=attr(fittedmodel,"pvalues")
+  
+  #step2 The performance of the best fitted model can be evaluated by a goodness-of-fit test
+  model_perform=gofTest(fittedmodel,SFun=Fest,rRange=c(0,ctlpars$rmax),nsim=ctlpars$nsim,r=seq(0,ctlpars$rmax,1),correction="cs")
+  
+  #step3 calcualte the proportion of variance explained by each part of the model
+  propVariance=varDecomp(fittedmodel,r=c(0:ctlpars$rmax),R=4)
+  
+  #step4 confidence interval of PVH and PVR
+  var_conf=envelopeVar(fittedmodel,nsim=ctlpars$nsim,conf_level=0.95,
+  r=c(0:ctlpars$rmax),R=4,delta=1,simple=TRUE)
+  
+  #compose result
+  params=as.vector(fittedmodel)
+  names(params)=names(fittedmodel)
+  
+  result=list(params=params,pvalues=pvalues,model_perform=model_perform,propVariance=propVariance,var_conf=var_conf)
+  return(result)
 }

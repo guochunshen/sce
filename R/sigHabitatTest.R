@@ -99,7 +99,16 @@ vcov.mykppm <- function(object, ...,
 }
 
 pcfoneless <- function (U, par, nu, nU, ff,filename="temp_backingfile",usingBigmatrix=FALSE) {
-  if((!usingBigmatrix) & nU<5000){
+  #since the bigalgebra still not avaiable on the linux,just throw an error when handle very large nU
+  #remove it once these package are avalibled in Linux again
+  canBigmatrix=require(bigmemory) & require(bigalgebra)
+  if(canBigmatrix){
+    nUlimit=5000
+  }else{
+    nUlimit=8000
+  }
+  
+  if((!usingBigmatrix) & nU<nUlimit){
     r <- as.vector(pairdist(U))
     gr <- g(r,par,nu)-1
     rm(r)
@@ -111,6 +120,10 @@ pcfoneless <- function (U, par, nu, nU, ff,filename="temp_backingfile",usingBigm
     rm(G)
     gc()
   }else{
+    if(!canBigmatrix){
+      stop("too large number of menmory need in test significance of habitat")
+    }
+    
     neach=1e3
     n=floor(nU/neach)
     #in case of parallal calculation, backfile name should not be the same for different cores,

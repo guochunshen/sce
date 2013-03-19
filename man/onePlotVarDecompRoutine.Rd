@@ -4,7 +4,8 @@
 \usage{
   onePlotVarDecompRoutine(com, fit_cores = 10,
     gof_cores = 5,
-    ctlpars = list(rmax = 25, rmin = 2, bw = 2, sigma2 = 3, alpha = 10, nurange = c(Inf, 0.5), q = 0.5, edgecor = "translate", nsim = 19, r = seq(0, 25, 2), siglevel = 0.05))
+    ctlpars = list(rmax = 25, rmin = 2, bw = 2, sigma2 = 3, alpha = 10, nurange = c(Inf, 0.5), q = 0.5, edgecor = "translate", nsim = 19, r = seq(0, 25, 2), siglevel = 0.05),
+    result_rep_id = NULL)
 }
 \arguments{
   \item{com}{a scp object represent a community or a
@@ -20,11 +21,11 @@
 \value{
   a list contains:
 
-  fittedmodels: parameters of the best fitted cluster model
-  for each species. unfitsp: species names that can't be
-  fitted under current ctlpars settings. model_performs:
-  pvalues of goodness-of_fit test sig_intClu: pvalues of
-  internal clustering effect on each species distribution
+  params: parameters of the best fitted cluster model for
+  each species. unfitsp: species names that can't be fitted
+  under current ctlpars settings. model_performs: pvalues
+  of goodness-of_fit test sig_intClu: pvalues of internal
+  clustering effect on each species distribution
   sig_habitat: pvalues of habtiat effect on each species
   distribution propVariances: proportions of variance
   explained by each part of the cluster model PVHs:
