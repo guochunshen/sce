@@ -100,12 +100,14 @@ For further information on any of these functions, type \code{help(name)} where 
     \code{\link{sigAggreResidualTest}} \tab testing significance of aggregation in the residual. \cr
     \code{\link{backwardStep}} \tab select a best clustering model for a group of individuals based on pvalue. \cr
     \code{\link{varDecomp}} \tab calculate proportion of variance explained by habitat, internal clustering and random process. \cr
+    \code{\link{envelopeVar}} \tab calculate the confidence interval of proportion of variance \cr
   }
 }
 
 \section{VI. Other functions}{
 
   \tabular{ll}{
+    \code{\link{create_repository}} \tab save result in each step into a file for avoding unexpected error disturbance. it becomes very useful and can save you lots of time in long term calculation \cr
     \code{\link{onePlotVarDecompRoutine}} \tab runing all nessary calcution of variance decompstion for each species in one plot \cr
     \code{\link{runAndSave}} \tab run the specificed function and save result to a file \cr
     \code{\link{dataframeToIms}} \tab convert a data.frame into a list of im objects \cr

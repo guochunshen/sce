@@ -31,11 +31,13 @@ applyGroup<-function(com,group,Fun,verbpro=FALSE,mc.cores=5,multicore=FALSE,repo
   if(is.null(repository)){
     joblist=1:nls
   }else{
-    print("continuing doing unfinished jobs in the given repository")
     joblist=getUnfinishedJobIds(repository)
+    if(length(joblist)>0)
+      print("continuing doing unfinished jobs in the given repository")
   }
   
   if(length(joblist)>0){
+    
     if(multicore){
       re=mclapply(joblist,applyOneGroup,grplevels=grplevels,verbpro=verbpro,group=group,Fun=Fun,com=com,
                   repository=repository,mc.cores=mc.cores,mc.preschedule = FALSE,...)  

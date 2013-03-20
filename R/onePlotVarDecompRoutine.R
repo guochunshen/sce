@@ -49,7 +49,7 @@ onePlotVarDecompRoutine <- function(com,fit_cores=10,gof_cores=5,ctlpars=list(rm
   results=applyGroup(com,com$traits$species,onespModel,ctlpars=ctlpars,verbpro=TRUE,mc.cores=fit_cores,
                           multicore=TRUE,repository=fitmodel_rep)
  
-  return(result)
+  return(results)
 }
 
 #define a convinent function for searching a best fitted cluster model for each species

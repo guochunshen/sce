@@ -109,15 +109,21 @@ writeResultById<-function(rep,jobid,result){
 readAllResults<-function(rep){
   n=attr(rep,"njobs")
   re=list()
+  jobnames=c()
   for(i in 1:n){
     jobfile=getJobfilename(rep,i)
     if(file.exists(jobfile)){
       load(jobfile)
-      re[[i]]=result
+      if(!is.null(result)){
+        re[[i]]=result
+        jobnames[i]=as.character(rep$jobnames[i]) 
+      }
+      
     }else{
       warning(paste("the",i," th job has not been done"))
     }
   }
+  names(re)=jobnames
   return(re)
 }
 
@@ -129,7 +135,7 @@ removeEmptyResult<-function(rep){
     if(file.exists(jobfile)){
       load(jobfile)
       if(is.null(result)){
-        #file.remove(jobfile)
+        file.remove(jobfile)
         print(paste("the result of",rep$jobnames[i],"job is empty, removed!"))
       }
     }
