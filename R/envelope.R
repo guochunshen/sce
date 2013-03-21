@@ -35,6 +35,9 @@ envelopeVar<-function(fittedmodel,nsim=9,conf_level=0.95,r=c(0:80),R=10,delta=1,
   varnames=varnames[!deli]
   #calculate confidence of the variance
   re=apply(sm_simu,1,confij,conf_level=conf_level)
+  #calculate the stand divation
+  re_sd=apply(sm_simu,1,sd,na.rm=T)
+  re=rbind(re,re_sd)
   colnames(re)=varnames
   return(re)
 }

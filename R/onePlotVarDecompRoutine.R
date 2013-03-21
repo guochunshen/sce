@@ -32,6 +32,7 @@
 #' 
 #' re=onePlotVarDecompRoutine(com)
 #'
+#'
 
 
 
