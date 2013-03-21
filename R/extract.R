@@ -44,6 +44,7 @@ subset.scp <- function(x, i){
   x$ab=table(x$traits$species)
   x$sp=unique(x$traits$species)
   x$S=length(x$sp)
+  
   return(x)
 }
 

@@ -13,6 +13,7 @@
 #' @param type a character indicate types of the community. it can be "ind-mapped" (default), "pre-abs" and "sp-ab" which represents
 #' represents either a species presence-absence vector, species abundance vector or individual mapped dataframe of a community, respectively.
 #' @param forceUnique unique location of individuals if it set true.
+#' @param sptraits a data.frame contains traits of species. note that it is different with the traits parameter with store traits of every individual.
 #' 
 #' @details
 #' if type="ind-mapped", the required parameters are \code{species}, \code{x}, \code{y} and \code{owin}.
@@ -58,7 +59,8 @@
 #' 
 
 scp <- function(species,x=NULL,y=NULL,win=NULL,type="ind-mapped",
-                abundance=NULL,traits=NULL,habitat=NULL,phylo=NULL,forceUnique=FALSE){
+                abundance=NULL,traits=NULL,habitat=NULL,phylo=NULL,
+                forceUnique=FALSE,sptraits=NULL){
   data=list()
   
   if("ind-mapped"==type){
@@ -107,6 +109,7 @@ scp <- function(species,x=NULL,y=NULL,win=NULL,type="ind-mapped",
   data$habitat=habitat
   
   data$phylo=phylo
+  data$sptraits=sptraits
   
   class(data)<-"scp"
   return(data)
