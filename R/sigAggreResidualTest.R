@@ -34,30 +34,27 @@ sigAggreResidualTest=function(fittedmodel,nsim=10,r=seq(0,60,2),edcor="translate
   data.ppm=attr(fittedmodel,"fittedmodel")
   bw=attr(fittedmodel,"ctlpars")$bw
   npp=nsim+1
+  lambda=predict.ppm(data.ppm)
+  #if we get extrem value in the lambda, it means the ppm model is not well fitted
+  #thus we can adjust the extrem values in the lambda to avoid memory problem
+  lambda=check_lambda(lambda,data$N)
   
-  pcf_obs=get_pcf(data$com,data.ppm,xy,r,edcor,bw,data$N) 
+  pcf_obs=get_pcf(data$com,lambda,xy,r,edcor,bw,data$N) 
   
   pcf_r=pcf_obs$r
   pcf_obs=pcf_obs$trans
   #plot(x=pcf_r,y=pcf_obs)
   
   Kfuns=matrix(nrow=length(pcf_obs),ncol=npp)
-  lambda=predict.ppm(data.ppm)
-  #if we get extrem value in the lambda, it means the ppm model is not well fitted
-  #thus we can adjust the extrem values in the lambda to avoid memory problem
-  maxlambda=5*data$N/(lambda$xstep*lambda$ystep)
-  if(max(lambda$v)>maxlambda){
-    extri=which(lambda$v>5*data$N/(lambda$xstep*lambda$ystep))
-    lambda$v[extri]=maxlambda
-  }
+  
   
   for(i in 1:nsim){
-    data_simu=rpoispp(lambda)
-    Kfuns[,i+1]=get_pcf(data_simu,data.ppm,xy,r,edcor,bw,data$N)$trans
+    data_simu=rmypoispp(lambda,data$N)
+    Kfuns[,i+1]=get_pcf(data_simu,lambda,xy,r,edcor,bw,data$N)$trans
     localn=1
     while(any(is.infinite(Kfuns[,i+1])) & localn<ntry){
-      data_simu=rpoispp(lambda)
-      Kfuns[,i+1]=get_pcf(data_simu,data.ppm,xy,r,edcor,bw,data$N)$trans
+      data_simu=rmypoispp(lambda,data$N)
+      Kfuns[,i+1]=get_pcf(data_simu,lambda,xy,r,edcor,bw,data$N)$trans
       localn=localn+1
     }
     
@@ -94,10 +91,10 @@ sigAggreResidualTest=function(fittedmodel,nsim=10,r=seq(0,60,2),edcor="translate
 }
 
 
-get_pcf <- function (com,data.ppm,xy,r,edcor,bw,N) {
-  lambda_loc=predict.ppm(data.ppm,locations=xy)
+get_pcf <- function (com,lambda,xy,r,edcor,bw,N) {
+  lambda_loc=interp.im(lambda,x=com$x,y=com$y)
   if(N<500){
-    pcf_obs=pcf(com,lambda=lambda_loc,r=seq(0,max(r),length.out=101),correction=edcor)
+    pcf_obs=try(pcf(com,lambda=lambda_loc,r=seq(0,max(r),length.out=101),correction=edcor))
     pcf_obs=pcf_obs[-1,]
   }else{
     pcf_obs=pcf_adaptive(com,lambda=lambda_loc,maxt=max(r),bw=bw,adaptive =FALSE)

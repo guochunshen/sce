@@ -43,10 +43,20 @@
 #'gofTest(fittedmodel,SFun=Fest,rRange=c(0,10),nsim=20,r=seq(0,20,1))
 #'
 
+gofTest_params<-function(params,realdata,SFun,rRange=c(0,10),nsim=10,r=seq(0,20,1),...){
+  pvalues=gof_core(realdata,r,rRange,nsim,params,SFun,...)
+  return(pvalues)
+}
+
+
 gofTest<-function(fittedmodel,SFun,rRange=c(0,10),nsim=10,r=seq(0,20,1),...){
   #extract the real population data
   realdata=attr(fittedmodel,"data")
-  
+  pvalues=gof_core(realdata,r,rRange,nsim,fittedmodel,SFun,...)
+  return(pvalues)
+}
+
+gof_core <- function (realdata, r, rRange, nsim, params, SFun,...) {
   #calculate the summary statistic of real data
   sm_real=SFun(realdata$com,r=r,...)
   sel=sm_real$r>=rRange[1] & sm_real$r<=rRange[2]
@@ -56,7 +66,7 @@ gofTest<-function(fittedmodel,SFun,rRange=c(0,10),nsim=10,r=seq(0,20,1),...){
   sm_simu=list()
   for(i in 1:nsim){
     #generate a realization of a fitted model
-    simudata=rCluster(fittedmodel,realdata$N,realdata$habitat,ntry=3)$com
+    simudata=rCluster(params,realdata$N,realdata$habitat,ntry=3)$com
     #if there is some error appeared in the point pattern simulation, just return a NULL pvalues
     if(inherits(simudata,"try-error")){
       if(!is.null(dim(sm_real))){
@@ -98,7 +108,6 @@ gofTest<-function(fittedmodel,SFun,rRange=c(0,10),nsim=10,r=seq(0,20,1),...){
   }
   pvalues=(m+1)/(nsim+1)
   names(pvalues)=names(D_real)
-  
   return(pvalues)
 }
 
