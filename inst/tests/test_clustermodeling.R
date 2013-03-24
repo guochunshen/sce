@@ -56,9 +56,13 @@ test_that("fit cluster model to a species distribution",{
   expect_equal(re_new,re_new2)
   
   
-  #if let the program automatically update the model until reached a reasonable model, all habitat pvalues should be signficant
-  re_best=backwardStep(re)
-  expect_true(all(attr(re_best,"pvalues")[-1]<0.05))
+  #if let the program automatically update the model until reached a reasonable model, all habitat pvalues should be signficant 
+  #or no habitat left. In this case all habitat varaibles are insignificant
+  expect_warning(re_best<-backwardStep(re),"can't test significant of habitat without included it in the model")
+  if(length(re_best)==4)
+    expect_equal(as.logical(attr(re_best,"pvalues")[2]),TRUE)
+  else
+    expect_true(all(attr(re_best,"pvalues")[-1]<0.05))
   
 })
 
