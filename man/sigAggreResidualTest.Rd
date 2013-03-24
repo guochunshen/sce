@@ -23,7 +23,12 @@
 }
 \details{
   This is a goodness-of-fit test based on the heterogeneous
-  pari correlation function.
+  pari correlation function. since
+  \code{\link{pcf_adaptive}} is good at lower memory and
+  worse on scater data point pattern (e.g. number of
+  individuals below than 50). Thus we use
+  \code{\link{pcf_adaptive}} on abundant species, and use
+  \code{\link{pcf}} on rare species.
 }
 \examples{
 data(testData)
@@ -32,6 +37,13 @@ sp1=subset(testData,testData$traits$species=="ACALDI")
 
 fm=fitCluster(sp1,~elev+grad)
 
+#significant residual
 sigAggreResidualTest(fm,nsim=10,r=0:30)
+
+sp2=subset(testData,testData$traits$species=="HIRTTR")
+
+fm2=fitCluster(sp2,~elev+grad)
+
+sigAggreResidualTest(fm2,nsim=10,r=0:30)
 }
 

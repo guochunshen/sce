@@ -4,7 +4,8 @@
 \usage{
   scp(species, x = NULL, y = NULL, win = NULL,
     type = "ind-mapped", abundance = NULL, traits = NULL,
-    habitat = NULL, phylo = NULL, forceUnique = FALSE)
+    habitat = NULL, phylo = NULL, forceUnique = FALSE,
+    sptraits = NULL)
 }
 \arguments{
   \item{species}{a character vector of species names.}
@@ -38,6 +39,10 @@
 
   \item{forceUnique}{unique location of individuals if it
   set true.}
+
+  \item{sptraits}{a data.frame contains traits of species.
+  note that it is different with the traits parameter with
+  store traits of every individual.}
 }
 \value{
   a \code{scp} object contains following attributes:

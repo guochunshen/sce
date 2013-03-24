@@ -54,6 +54,7 @@ For further information on any of these functions, type \code{help(name)} where 
   
   \bold{To simulate a spatial population/community pattern}
   \tabular{ll}{
+    \code{\link{rmypoispp}} \tab simulate a null zero point pattern given by the lambda and also avoiding too extreme point pattern \cr
     \code{\link{rCluster}} \tab simulate a cluster population distribution from a fitted cluster model or given parameters \cr
   }
    \bold{Typical spatial community data within the package}
@@ -69,6 +70,7 @@ For further information on any of these functions, type \code{help(name)} where 
   
   \tabular{ll}{
     \code{\link{subset.scp}} \tab extract some part of the community \cr
+    \code{\link{removeSpecies}} \tab remove species in the given species list from the community \cr
     \code{\link{removeRareSpecies}} \tab remove rare species from the community \cr
     \code{\link{selSpeciesByAbund}} \tab select a community with specific species abundance \cr
     \code{\link{applyGroup}} \tab apply a function on each member of a group devided from a community, paralla computation supported \cr
