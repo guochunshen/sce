@@ -1,7 +1,7 @@
 Package: sce
 Type: Package
 Title: A R package for Spatial Community Ecology
-Version: 0.01
+Version: 0.02
 Date: 2013-02-06
 Author: Guochun Shen
 Maintainer: Guochun Shen <shenguochun@gmail.com>
