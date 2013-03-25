@@ -218,3 +218,5 @@ plot.scp <- function(x,...){
   plot(x$com,...)
 }
 
+
+
