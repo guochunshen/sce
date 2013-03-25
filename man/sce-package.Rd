@@ -56,6 +56,7 @@ For further information on any of these functions, type \code{help(name)} where 
   \tabular{ll}{
     \code{\link{rmypoispp}} \tab simulate a null zero point pattern given by the lambda and also avoiding too extreme point pattern \cr
     \code{\link{rCluster}} \tab simulate a cluster population distribution from a fitted cluster model or given parameters \cr
+    \code{\link{rCommunity}} \tab simulate a community uniquely driven by random/dispersal/habitat/compeition \cr
   }
    \bold{Typical spatial community data within the package}
   
