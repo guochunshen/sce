@@ -3,7 +3,7 @@ Type: Package
 Title: A R package for Spatial Community Ecology
 Version: 0.02
 Date: 2013-02-06
-Author: Guochun Shen
+Author: Guochun Shen, qsyang
 Maintainer: Guochun Shen <shenguochun@gmail.com>
 Description: This is a collective R functions for various spatial explicit analyses in Community ecology
 License: GNU3
