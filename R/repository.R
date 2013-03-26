@@ -39,6 +39,9 @@
 #'#you can get the same unfinished job names
 #'getUnfinishedJobNames(rp2)
 #'
+#'#get all results in the repository
+#'getAllResults(rp1)
+#'
 #'#finally, you can delete the repository 
 #'remove_repository(rp2)
 #'
