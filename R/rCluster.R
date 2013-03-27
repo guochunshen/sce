@@ -107,6 +107,6 @@ rMatern=function(sigma2,alpha,en.filter,plotdim,N,nu=0.5,xcell=1,ycell=1){
   }
 
   #simulate inhomogeneous Poisson process with intensity function given by Lambda.
-  X=rpoispp(Lambda)
+  X=rmypoispp(Lambda,N)
   return(X)
 }

@@ -72,6 +72,7 @@ For further information on any of these functions, type \code{help(name)} where 
   \tabular{ll}{
     \code{\link{spShuffle}} \tab implimentation of species shuffling null model \cr
     \code{\link{ecol_phylo_corr}} \tab create a phylogeny based on the ecological dissimilarity of given species \cr
+    \code{\link{splitToPopu}} \tab split a community into a list of populations \cr
     \code{\link{quadratize}} \tab divide the whole plot into several equal size quadrats \cr
     \code{\link{subset.scp}} \tab extract some part of the community \cr
     \code{\link{removeSpecies}} \tab remove species in the given species list from the community \cr
