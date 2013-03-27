@@ -5,7 +5,7 @@
   create_repository(identity,schedule,repository_path=".")
     read_repository(identity, repository_path=".")
     getUnfinishedJobIds(rep) getUnfinishedJobNames(rep)
-    writeResultById(rep,jobid,result)
+    writeResultById(rep,jobid,result) readAllResults(rep)
     remove_repository(rep,repository_path=".")
 }
 \arguments{
@@ -53,7 +53,7 @@ rp2=read_repository("test")
 getUnfinishedJobNames(rp2)
 
 #get all results in the repository
-getAllResults(rp1)
+readAllResults(rp1)
 
 #finally, you can delete the repository
 remove_repository(rp2)

@@ -6,6 +6,7 @@
 #' getUnfinishedJobIds(rep)
 #' getUnfinishedJobNames(rep)
 #' writeResultById(rep,jobid,result)
+#' readAllResults(rep)
 #' remove_repository(rep,repository_path=".")
 #'
 #'@param identity a character represent the uniqueness of the repository object (the file name of an RData file). 
@@ -40,7 +41,7 @@
 #'getUnfinishedJobNames(rp2)
 #'
 #'#get all results in the repository
-#'getAllResults(rp1)
+#'readAllResults(rp1)
 #'
 #'#finally, you can delete the repository 
 #'remove_repository(rp2)
