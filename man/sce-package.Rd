@@ -50,6 +50,7 @@ For further information on any of these functions, type \code{help(name)} where 
   
   \tabular{ll}{
     \code{\link{scp}} \tab create a spatial community pattern \cr
+    \code{\link{as.scp}} \tab create a spaital community pattern from ppp object \cr
   }
   
   \bold{To simulate a spatial population/community pattern}
@@ -57,6 +58,7 @@ For further information on any of these functions, type \code{help(name)} where 
     \code{\link{rmypoispp}} \tab simulate a null zero point pattern given by the lambda and also avoiding too extreme point pattern \cr
     \code{\link{rCluster}} \tab simulate a cluster population distribution from a fitted cluster model or given parameters \cr
     \code{\link{rCommunity}} \tab simulate a community uniquely driven by random/dispersal/habitat/compeition \cr
+    \code{\link{rCom}} \tab simulate a community with phylogenetic information \cr
   }
    \bold{Typical spatial community data within the package}
   
@@ -87,6 +89,7 @@ For further information on any of these functions, type \code{help(name)} where 
 
   \tabular{ll}{
   \code{\link{pcf_adaptive}} \tab estimate the pair correlation function by an adaptive method. \cr
+  \code{\link{phyMarkCorr}} \tab phylogenetic mark correlation function with the species shuffling null model \cr
   }
 }
 

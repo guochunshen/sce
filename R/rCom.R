@@ -181,7 +181,10 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
     
     #radio of interaction
     r=matrix(competition$r,nrow=S,ncol=S)
-    mod08 <- list(cif="straussm",par=list(beta=rep(competition$beta,S),gamma=gamma,radii=r),w=win)
+    rownames(r)=colnames(r)=spname
+    spbeta=rep(competition$beta,S)
+    names(spbeta)=spname
+    mod08 <- list(cif="straussm",par=list(beta=spbeta,gamma=gamma,radii=r),w=win)
     com <- rmh(model=mod08,start=list(n.start=N),
              control=list(ptypes=spab/N,nrep=5e5,nverb=1e5))
     com$marks=data.frame(sp=marks(com))
