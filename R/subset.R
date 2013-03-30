@@ -40,7 +40,11 @@ subset.scp <- function(x, i){
   x$com=x$com[i]
   x$N=x$com$n
   x$traits=x$traits[i,]
-  x$traits$species=as.factor(as.character(x$traits$species))
+  if(is.data.frame(x$traits))
+    x$traits$species=as.factor(as.character(x$traits$species))
+  else
+    x$traits=data.frame(species=as.factor(x$traits))
+  
   x$ab=table(x$traits$species)
   x$sp=unique(x$traits$species)
   x$S=length(x$sp)
