@@ -114,8 +114,16 @@ points(sp1$com)
 
 #pure habitat filtering with strong phylogenetic signal in abundance, no compeittion
 com=rCom(N,S,win,ab="physignal",phy=list(br=runif,phylosignal=100),covr=list(type="sin",scale=16),niche="unif")
+phylosig(com$phylo,com$ab,test=TRUE)
+
 
 #pure competition with unform abundance distribution
 com=rCom(N,S,win,ab="unif",niche="unif",competition=list(beta=0.9,r=5))
+com$ab
+plot(com$com,col=com$sp)
+
+#pure compeition with strong phylogenetic signal in abundance
+com=rCom(N,S,win,ab="physignal",niche="unif",competition=list(beta=0.9,r=5),phy=list(br=runif,phylosignal=100))
+phylosig(com$phylo,com$ab,test=TRUE)
 }
 

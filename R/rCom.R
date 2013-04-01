@@ -74,11 +74,22 @@
 #'
 #'#pure habitat filtering with strong phylogenetic signal in abundance, no compeittion
 #'com=rCom(N,S,win,ab="physignal",phy=list(br=runif,phylosignal=100),covr=list(type="sin",scale=16),niche="unif")     
+#'phylosig(com$phylo,com$ab,test=TRUE)  
+#'
 #'
 #'#pure competition with unform abundance distribution
 #'com=rCom(N,S,win,ab="unif",niche="unif",competition=list(beta=0.9,r=5))
+#'com$ab
+#'plot(com$com,col=com$sp)
+#' 
+#'#pure compeition with strong phylogenetic signal in abundance
+#'com=rCom(N,S,win,ab="physignal",niche="unif",competition=list(beta=0.9,r=5),phy=list(br=runif,phylosignal=100))
+#'phylosig(com$phylo,com$ab,test=TRUE)  
 #'
-#'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+#'
+#'
+
+
 rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,niche=NULL,competition=NULL){
   
   if(is.null(phy)){
@@ -127,6 +138,7 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
     spab=round(trait1*N)
     spab[spab==0]=1
     spab=spab[match(spname,names(spab))]
+    names(spab)=spname
   }
   #fix the NA problem in abundance
   spab[is.na(spab)]=1
@@ -185,10 +197,10 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
     spbeta=rep(competition$beta,S)
     names(spbeta)=spname
     mod08 <- list(cif="straussm",par=list(beta=spbeta,gamma=gamma,radii=r),w=win)
-    com <- rmh(model=mod08,start=list(n.start=N),
-             control=list(ptypes=spab/N,nrep=5e5,nverb=1e5))
-    com$marks=data.frame(sp=marks(com))
-    #TODO find a way to specify the species name
+    
+    #simulated a community just by moving the points.
+    com <- rmh(model=mod08,start=list(n.start=spab),control=list(p=1,nrep=5e5,nverb=1e5,fixall=TRUE))
+    com$marks=data.frame(sp=spname[as.numeric(com$marks)])
     
   #case 4: only dispersal limitation, a homogeneous Cox point process fore each species
     #case 5: habitat filtering and dispersal limitation, a imhomogeneous Cox point process for each species  
