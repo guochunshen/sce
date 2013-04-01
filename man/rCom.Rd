@@ -63,7 +63,13 @@
   competition will happen. otherwise this parameter should
   contain at least \code{beta} and \code{r} to define the
   competition intensity and competition distance between
-  species.}
+  species.  it is also better to give the number of
+  simulation \code{nrep} (default value 5e5) and number of
+  simulation unit \code{nverb} (default value 1e5) to
+  report. addtional parameter like \code{verbose} can be
+  configured to disable verb progress report only
+  interspecific competition was modeled if \code{intra}
+  equals to FALSE.}
 }
 \value{
   a scp object
@@ -107,7 +113,7 @@ plot(sp1)
 
 #pure habitat filtering with unfirom ahundance distribution and uniform niche distribution
 com=rCom(N,S,win,ab="unif",covr=list(type="sin",scale=16),niche="unif")
-plot(com$habitat)
+plot(com$habitat[[1]])
 sp1=subset(com,com$traits$species==names(which(com$ab==max(com$ab))))
 points(sp1$com)
 
@@ -123,7 +129,7 @@ com$ab
 plot(com$com,col=com$sp)
 
 #pure compeition with strong phylogenetic signal in abundance
-com=rCom(N,S,win,ab="physignal",niche="unif",competition=list(beta=0.9,r=5),phy=list(br=runif,phylosignal=100))
+com=rCom(N,S,win,ab="physignal",niche="unif",competition=list(beta=0.9,r=10),phy=list(br=runif,phylosignal=100))
 phylosig(com$phylo,com$ab,test=TRUE)
 }
 

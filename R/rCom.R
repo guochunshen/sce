@@ -26,7 +26,9 @@
 #' 
 #' @param competition a list to set competition between individuals. if it is NULL, it means there is no competition will happen. otherwise
 #'        this parameter should contain at least \code{beta} and \code{r} to define the competition intensity and competition distance between species.
-#'        
+#'        it is also better to give the number of simulation \code{nrep} (default value 5e5) and number of simulation unit \code{nverb} 
+#'        (default value 1e5) to report. addtional parameter like \code{verbose} can be configured to disable verb progress report
+#'         only interspecific competition was modeled if \code{intra} equals to FALSE.
 #'
 #'@details
 #'it is possible to missing some species if the expected species abundance is quite low.
@@ -67,7 +69,7 @@
 #'
 #'#pure habitat filtering with unfirom ahundance distribution and uniform niche distribution
 #'com=rCom(N,S,win,ab="unif",covr=list(type="sin",scale=16),niche="unif")
-#'plot(com$habitat)
+#'plot(com$habitat[[1]])
 #'sp1=subset(com,com$traits$species==names(which(com$ab==max(com$ab))))
 #'points(sp1$com)
 #'
@@ -83,7 +85,7 @@
 #'plot(com$com,col=com$sp)
 #' 
 #'#pure compeition with strong phylogenetic signal in abundance
-#'com=rCom(N,S,win,ab="physignal",niche="unif",competition=list(beta=0.9,r=5),phy=list(br=runif,phylosignal=100))
+#'com=rCom(N,S,win,ab="physignal",niche="unif",competition=list(beta=0.9,r=10),phy=list(br=runif,phylosignal=100))
 #'phylosig(com$phylo,com$ab,test=TRUE)  
 #'
 #'
@@ -166,7 +168,7 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
     }
     spIntensity=list()
     for(i in 1:S){
-      tri=exp(abs(covarable-spniche[i]))
+      tri=exp((covarable-spniche[i])*10)
       spIntensity[[i]]=im(tri,xrange=win$xrange,yrange=win$yrange)
     }
     covarable=im(covarable,xrange=win$xrange,yrange=win$yrange)
@@ -190,6 +192,11 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
     gamma=sqrt(gamma+0.5)
     gamma=gamma/max(gamma)
     rownames(gamma)=colnames(gamma)=spname
+    if(!is.null(competition$intra)){
+      if(!competition$intra)
+        diag(gamma)=1
+    }
+    #set intraspecific competition is zero here
     
     #radio of interaction
     r=matrix(competition$r,nrow=S,ncol=S)
@@ -197,9 +204,24 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
     spbeta=rep(competition$beta,S)
     names(spbeta)=spname
     mod08 <- list(cif="straussm",par=list(beta=spbeta,gamma=gamma,radii=r),w=win)
+    if(!is.null(competition$nrep))
+      nrep=competition$nrep
+    else
+      nrep=5e5
     
+    if(!is.null(competition$nverb))
+      nverb=competition$nverb
+    else
+      nverb=1e5
+    if(!is.null(competition$verbose)){
+      verbose=competition$verbose
+    }else
+      verbose=TRUE
+    if(!verbose){
+      nverb=nrep
+    }
     #simulated a community just by moving the points.
-    com <- rmh(model=mod08,start=list(n.start=spab),control=list(p=1,nrep=5e5,nverb=1e5,fixall=TRUE))
+    com <- rmh(model=mod08,start=list(n.start=spab),control=list(p=1,nrep=nrep,nverb=nverb,fixall=TRUE),verbose=verbose)
     com$marks=data.frame(sp=spname[as.numeric(com$marks)])
     
   #case 4: only dispersal limitation, a homogeneous Cox point process fore each species
@@ -227,7 +249,12 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
     com$phylo=phytree
   }
   if(!is.null(covr)){
-    com$habitat=covarable
+    com$habitat=list(covr=covarable)
+    com$niche=spniche
+  }
+  if(!is.null(competition)){
+    com$gamma=gamma
+    com$niche=spniche
   }
     
   
