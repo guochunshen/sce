@@ -53,5 +53,13 @@ phyMarkCorr=function(com,phyd,focalij=NULL,rmax,step=1,nsim=19,alpha=0.05,scale=
         as.double(alpha), as.integer(scale));
   r=seq(step/2,rmax,step)
   result=list("real"=re[[11]][-1],"upper"=re[[14]][-1],"lower"=re[[15]][-1],"r"=r[-1],"pvalues"=re[[16]][-1])
+  class(result)="pmc"
   return(result)
+}
+
+
+plot.pmc<-function(pmc,...){
+  plot(x=range(pmc$r),y=range(unlist(pmc[1:3])),type="n",...)
+  polygon(x=c(pmc$r,rev(pmc$r)),y=c(pmc$lower,pmc$upper),col="grey",border="grey")
+  lines(x=pmc$r,y=pmc$real)
 }

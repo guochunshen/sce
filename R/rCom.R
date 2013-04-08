@@ -17,7 +17,7 @@
 #'        should be given too.
 #' 
 #' @param covr a list or an \code{im} object represent map of covariable. if it is a character, the map of covariable will be generated
-#'        accroding to this character. current avaiable choise is list(type="sine",scale=1). if it is NULL, it means there is effect of covariables on the distribution
+#'        accroding to this character. current avaiable choise is list(type="sine",scale=1,strength=5). if it is NULL, it means there is effect of covariables on the distribution
 #'        of species.
 #' @param niche a character controls how does the niche of species generate. current avaiable choise are NULL, "unif", "physignal". the "physignal" 
 #'        means the niche of species will generated accroding to the phylogeny of species. in other words, it means there are strong phylogenetic
@@ -123,7 +123,7 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
   
   #generate a phylogenetic tree if it is required
   if(!is.null(phy)){
-    phytree=rtree(S,tip.label=spname,br=phy$br)
+    phytree=rcoal(S,tip.label=spname,br=phy$br)
   }
   
   #generate the species abundance distribution
@@ -135,6 +135,8 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
     spab=rlognormal(N,S)
   }else if(ab=="physignal"){
     trait1=fastBM(phytree,mu=phy$phylosignal)
+    while(phylosig(phytree,trait1,test=TRUE)$P>0.01)
+      trait1=fastBM(phytree,mu=phy$phylosignal)
     trait1=(trait1-min(trait1))
     trait1=trait1/sum(trait1)
     spab=round(trait1*N)
@@ -151,6 +153,9 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
       spniche=runif(S)
     }else if(niche=="physignal"){
       spniche=fastBM(phytree,mu=phy$phylosignal)
+      while(phylosig(phytree,spniche,test=TRUE)$P>0.01)
+        spniche=fastBM(phytree,mu=phy$phylosignal)
+      
       spniche=(spniche-min(spniche))
       spniche=spniche/max(spniche)
       spniche[spniche==0]=1
@@ -163,12 +168,15 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
     if(covr$type=="sin"){
       cl=seq(0,win$xrange[2])
       ncl=length(cl)
-      covarable=sin(cl/covr$scale)
+      #scaled into range from 0 to 1
+      covarable=(sin(cl/covr$scale)+1)/2
       covarable=matrix(rep(covarable,each=ncl),ncol=ncl,nrow=ncl)
     }
     spIntensity=list()
     for(i in 1:S){
-      tri=exp((covarable-spniche[i])*10)
+      #tri=exp((sin(cl/covr$scale-asin(spniche[i])*4)+1)/2*covr$strength)
+      #tri=matrix(rep(tri,each=ncl),ncol=ncl,nrow=ncl)
+      tri=exp((covarable-spniche[i])*covr$strength)
       spIntensity[[i]]=im(tri,xrange=win$xrange,yrange=win$yrange)
     }
     covarable=im(covarable,xrange=win$xrange,yrange=win$yrange)

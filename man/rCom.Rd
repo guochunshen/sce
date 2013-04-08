@@ -44,9 +44,10 @@
   \item{covr}{a list or an \code{im} object represent map
   of covariable. if it is a character, the map of
   covariable will be generated accroding to this character.
-  current avaiable choise is list(type="sine",scale=1). if
-  it is NULL, it means there is effect of covariables on
-  the distribution of species.}
+  current avaiable choise is
+  list(type="sine",scale=1,strength=5). if it is NULL, it
+  means there is effect of covariables on the distribution
+  of species.}
 
   \item{niche}{a character controls how does the niche of
   species generate. current avaiable choise are NULL,
