@@ -9,8 +9,8 @@
 #'        branch length distribution. it can be runif (default) and rexp or other 
 #' @param ab a character represent the distribution of species abundance. current values a "unif", "lognormal", "logseries" and "physignal".
 #'        note that "physignal" means the species abundance distribution follows phylogenetic relationship between species. in this case,
-#'        a phylogeney should be given. \code{phylosignal} also should be given to indicate how strong the phylogenetic signal in niche or
-#'        abundance should be generated. 0 means no significant signal. the larger the phylosignal is, the strong the phylogenetic signal is.
+#'        a phylogeney should be given. \code{physigPvalue} also should be given to indicate how strong the phylogenetic signal in niche or
+#'        abundance should be generated. 
 #'        
 #' @param intra a list represent spatial pattern of intraspecific individuals. it's \code{type} can be "Poisson" and "cluster". if its
 #'        \code{type} equals "cluster", a manten clustering process is specified with parameter \code{alpha}, \code{sigma2} and \code{nu}
@@ -134,33 +134,45 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
   }else if(ab=="lognormal"){
     spab=rlognormal(N,S)
   }else if(ab=="physignal"){
-    trait1=fastBM(phytree,mu=phy$phylosignal)
-    while(phylosig(phytree,trait1,test=TRUE)$P>0.01)
-      trait1=fastBM(phytree,mu=phy$phylosignal)
-    trait1=(trait1-min(trait1))
-    trait1=trait1/sum(trait1)
-    spab=round(trait1*N)
-    spab[spab==0]=1
+    spab=fastBM(phytree,a=N/S,sig2=N/S*10,bounds=c(1,N))
+    while(phylosig(phytree,spab,test=TRUE)$P>0.01)
+      spab=fastBM(phytree,a=N/S,sig2=N/S*10,bounds=c(1,N))
+    spab=round(spab)
     spab=spab[match(spname,names(spab))]
-    names(spab)=spname
   }
+  names(spab)=spname
+  
   #fix the NA problem in abundance
   spab[is.na(spab)]=1
   
   #generate a ecological relationship if it is needed
   if(!is.null(niche)){
+    #if niche is unif, an implicit assumption here is low correlation between niche and phylogeny
     if(niche=="unif"){
       spniche=runif(S)
-    }else if(niche=="physignal"){
-      spniche=fastBM(phytree,mu=phy$phylosignal)
-      while(phylosig(phytree,spniche,test=TRUE)$P>0.01)
-        spniche=fastBM(phytree,mu=phy$phylosignal)
+      if(!is.null(phy)){
+        phyd=cophenetic(phytree)
+        phyd=phyd[lower.tri(phyd)]
+        ror=match(phytree$tip.label,spname)
+        niched=as.matrix(dist(spniche[ror]))
+        phyniche_cor=cor(phyd,niched[lower.tri(niched)])
+        while(phyniche_cor<0 | phyniche_cor>0.001 ){
+          spniche=runif(S)
+          niched=as.matrix(dist(spniche[ror]))
+          phyniche_cor=cor(phyd,niched[lower.tri(niched)])
+        }
+          
+      }
       
-      spniche=(spniche-min(spniche))
-      spniche=spniche/max(spniche)
-      spniche[spniche==0]=1
+    }else if(niche=="physignal"){
+      spniche=fastBM(phytree,a=0.5,bounds=c(0,1))
+      while(phylosig(phytree,spniche,test=TRUE)$P>0.01)
+        spniche=fastBM(phytree,a=0.5,bounds=c(0,1))
+      
       spniche=spniche[match(spname,names(spniche))]
+     
     }
+    names(spniche)=spname
   }
   
   #generate a habitat map and intensity map for each species if it is needed
@@ -174,9 +186,8 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
     }
     spIntensity=list()
     for(i in 1:S){
-      #tri=exp((sin(cl/covr$scale-asin(spniche[i])*4)+1)/2*covr$strength)
-      #tri=matrix(rep(tri,each=ncl),ncol=ncl,nrow=ncl)
-      tri=exp((covarable-spniche[i])*covr$strength)
+      
+      tri=exp(-covr$strength*abs(covarable-spniche[i]))
       spIntensity[[i]]=im(tri,xrange=win$xrange,yrange=win$yrange)
     }
     covarable=im(covarable,xrange=win$xrange,yrange=win$yrange)

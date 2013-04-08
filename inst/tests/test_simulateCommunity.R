@@ -1,5 +1,40 @@
 context("simulate communities with different ecological properties and phylogenetic relationship")
 
+test_that("test the previous rCommunity",{
+  #let make sure the phylogenetic mark correlation function works correctly here
+  com_control=list(S=10,N=1000,ab="lognormal",win=owin(c(0,100),c(0,100)),
+                   intra="Poisson",inter="independent",R2=0.9,covr=FALSE,beta=2,r=5,covrscale=16)
+  
+  #Poisson distribution
+  com=rCommunity(com_control)
+  #random phylogenetic structure is expected
+  phy=phyMarkCorr(as.scp(com$data.ppp),ecol_phylo_corr(com$ecold,0.9),rmax=20,nsim=99)
+  
+  #dispersal
+  com_control$intra="dispersal"
+  com=rCommunity(com_control)
+  phy=phyMarkCorr(as.scp(com$data.ppp),ecol_phylo_corr(com$ecold,0.9),rmax=20,nsim=99)
+  
+  #habitat
+  com_control$intra="Poisson"
+  com_control$covr=TRUE
+  com_control$covrscale=5
+  com=rCommunity(com_control)
+  phy=phyMarkCorr(as.scp(com$data.ppp),ecol_phylo_corr(com$ecold,0.9),rmax=50,nsim=99)
+  phy2=phyMarkCorr(as.scp(com$data.ppp),ecol_phylo_corr(com$ecold,0.0001),rmax=50,nsim=99)
+  
+  
+  
+  #compeition, relatively time consuming
+  com_control$covr=FALSE
+  com_control$inter="dependent"
+  com=rCommunity(com_control)
+  phy=phyMarkCorr(as.scp(com$data.ppp),ecol_phylo_corr(com$ecold,0.9),rmax=20,nsim=99)
+  
+  #just from the plot(phy), you can see that the phyMarkCorr function works correctly.
+})
+
+
 test_that("test on the rCom",{
   N=1000
   S=10
@@ -37,37 +72,49 @@ test_that("test on the rCom",{
   
   
   #pure habitat filtering with unfirom ahundance distribution and uniform niche distribution
-  com=rCom(N,S,win,ab="unif",covr=list(type="sin",scale=16,strength=5),niche="unif")
+  com=rCom(N,S,win,ab="unif",covr=list(type="sin",scale=16,strength=5),niche="unif"
+           ,phy=list(br=runif,phylosignal=100))
   sp1=subset(com,com$traits$species==names(which(com$ab==max(com$ab))))
   fitmodel=fitCluster(sp1,~covr,sigTest=TRUE)
   pvalues=as.numeric(attr(fitmodel,"pvalues"))
   #and have significant habitat association
   expect_true(pvalues[2]<0.1)
-  
-  
-  #pure habitat filtering with strong phylogenetic signal in abundance, no compeittion, no phylogenetic signal in niche
-  com=rCom(N,S,win,ab="physignal",phy=list(br=runif,phylosignal=100),covr=list(type="sin",scale=16,strength=5),niche="unif")
-  expect_true(phylosig(com$phylo,com$ab,test=TRUE)$P<0.05)
-  #no signal in species niche
-  expect_true(phylosig(com$phylo,com$niche,test=TRUE)$P>0.05)
   #thus phylogenetic structure should be random at all scale
   comphy=phyMarkCorr(com,cophenetic(com$phylo),nsim=99,rmax=50)
   phypvalue=comphy$pvalues
   expect_true((1-pbinom(sum(phypvalue<0.05),length(phypvalue),0.05))>0.05)
+  plot(comphy)
   
-  #here have some error
+  #pure habitat filtering with strong phylogenetic signal in abundance, 
+  #no compeittion, no phylogenetic signal in niche
+  com=rCom(N,S,win,ab="physignal",phy=list(br=runif,phylosignal=100),
+           covr=list(type="sin",scale=16,strength=5),niche="unif")
+  expect_true(phylosig(com$phylo,com$ab,test=TRUE)$P<0.05)
+  #no signal in species niche
+  expect_true(phylosig(com$phylo,com$niche,test=TRUE)$P>0.05)
+  niched=as.matrix(dist(com$niche[match(com$phylo$tip.label,names(com$niche))]))
+  phyd=cophenetic(com$phylo)
+  cor(niched[lower.tri(niched)],phyd[lower.tri(phyd)])
+  #thus phylogenetic structure should be random at all scale
+  comphy=phyMarkCorr(com,cophenetic(com$phylo),nsim=99,rmax=50)
+  phypvalue=comphy$pvalues
+  expect_true((1-pbinom(sum(phypvalue<0.05),length(phypvalue),0.05))>0.05)
+  plot(comphy)
+  
+  
   #pure habitat filtering with strong phylogenetic signal in niche
   com=rCom(N,S,win,ab="unif",phy=list(br=runif,phylosignal=100),covr=list(type="sin",scale=16,strength=5),niche="physignal")
   #phylogenetic signal in niche
-  expect_true(phylosig(com$phylo,com$niche,test=TRUE,nsim=1E4)$P<0.1)
+  expect_true(phylosig(com$phylo,com$niche,test=TRUE,nsim=1E3)$P<0.1)
   #nonrandom phylogenetic pattern at small scale
   comphy=phyMarkCorr(com,cophenetic(com$phylo),nsim=99,rmax=10)
   phypvalue=comphy$pvalues
-  expect_true((1-pbinom(sum(phypvalue<0.05),length(phypvalue),0.05))>0.05)
+  expect_true((1-pbinom(sum(phypvalue<0.05),length(phypvalue),0.05))<0.05)
   
-  
-  #pure interspecific competition with unform abundance distribution
-  com=rCom(N,S,win,ab="unif",niche="unif",competition=list(beta=0.9,r=10,nrep=5e5,verbose=FALSE,intra=FALSE))
+
+  #pure interspecific competition with unform abundance distribution, and no phylogenetic signal in niche
+  com=rCom(N,S,win,ab="unif",niche="unif",phy=list(br=runif,phylosignal=100),
+           competition=list(beta=0.9,r=10,nrep=5e5,verbose=FALSE,intra=FALSE))
   pppdata=com$com
   marks(pppdata)=com$traits$species
   sp2name=names(which(com$gamma[1,]==min(com$gamma[1,-1])[1]))
@@ -75,12 +122,34 @@ test_that("test on the rCom",{
   sp2gof=try(dclf.test(pppdata,pcfcross,i="sp1",j=sp2name,nsim=69,r=seq(0,5,length.out=30),verbose=FALSE))
   if(!inherits(sp2gof,"try-error"))
     expect_true(sp2gof$p.value<0.05)
+  #no significant phylogenetic structure is expected at small scale
+  comphy=phyMarkCorr(com,cophenetic(com$phylo),nsim=99,rmax=5)
+  phypvalue=comphy$pvalues
+  expect_true((1-pbinom(sum(phypvalue<0.05),length(phypvalue),0.05))>0.05)
   
-  #pure interspecific competition with strong phylogenetic signal in abundance
-  com=rCom(N,S,win,ab="physignal",niche="unif",competition=list(beta=0.9,r=10,nrep=5e5,verbose=FALSE,
-                              intra=FALSE),phy=list(br=runif,phylosignal=100))
+  
+  
+  #pure interspecific competition with unform abundance distribution, 
+  #and signficant phylogenetic signal in niche
+  com=rCom(N,S,win,ab="unif",niche="physignal",phy=list(br=runif,phylosignal=100),
+           competition=list(beta=0.9,r=10,nrep=5e5,verbose=FALSE,intra=FALSE))
+  #phylogenetic signal in niche
+  expect_true(phylosig(com$phylo,com$niche,test=TRUE,nsim=1E3)$P<0.1)
+  
+  #significant phylogenetic structure is expected at small scale
+  comphy=phyMarkCorr(com,cophenetic(com$phylo),nsim=199,rmax=30)
+  phypvalue=comphy$pvalues
+  expect_true((1-pbinom(sum(phypvalue<0.1),length(phypvalue),0.05))<0.05)
+  plot(comphy)
+  
+  #pure interspecific competition with strong phylogenetic signal in abundance and niche
+  com=rCom(N,S,win,ab="physignal",niche="physignal",phy=list(br=runif,phylosignal=100),
+           competition=list(beta=0.9,r=10,nrep=5e5,verbose=FALSE,intra=FALSE))
   expect_true(phylosig(com$phylo,com$ab,test=TRUE)$P<0.05)
+  expect_true(phylosig(com$phylo,com$niche,test=TRUE)$P<0.05)
   
+  comphy=phyMarkCorr(com,cophenetic(com$phylo),nsim=199,rmax=30)
+  phypvalue=comphy$pvalues[comphy$r<10]
   
   
 })
