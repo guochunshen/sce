@@ -229,7 +229,8 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
       
     }else if(niche=="physignal"){
       spniche=fastBM(phytree,a=0.5,bounds=c(0,1))
-      while(phylosig(phytree,spniche,test=TRUE)$P>0.01)
+      #TODO a significant phylogenetic signal does not mean the correlation between niche distance and phylogenetic distance is high.
+      while(phylosig(phytree,spniche)<4)
         spniche=fastBM(phytree,a=0.5,bounds=c(0,1))
       
       spniche=spniche[match(spname,names(spniche))]
