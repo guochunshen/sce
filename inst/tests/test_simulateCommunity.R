@@ -100,7 +100,7 @@ test_that("test on the rCom",{
   comphy=phyMarkCorr(com,cophenetic(com$phylo),nsim=99,rmax=50)
   phypvalue=comphy$pvalues
   expect_true((1-pbinom(sum(phypvalue<0.05),length(phypvalue),0.05))>0.05)
-  #plot(comphy)
+  plot(comphy)
   
   
   #pure habitat filtering with strong phylogenetic signal in niche
@@ -111,7 +111,7 @@ test_that("test on the rCom",{
   comphy=phyMarkCorr(com,cophenetic(com$phylo),nsim=99,rmax=50)
   phypvalue=comphy$pvalues
   expect_true((1-pbinom(sum(phypvalue<0.05),length(phypvalue),0.05))<0.05)
-  #plot(comphy)
+  plot(comphy)
 
   #pure interspecific competition with unform abundance distribution, and no phylogenetic signal in niche
   com=rCom(N,S,win,ab="unif",niche="unif",phy=list(br=runif,phylosignal=100),

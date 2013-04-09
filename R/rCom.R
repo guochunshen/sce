@@ -32,6 +32,7 @@
 #'
 #'@details
 #'it is possible to missing some species if the expected species abundance is quite low.
+#'The "physignal" in niche mean there is a high (R2>80) correlation between species niche differences and their phylogenetic correlation
 #'
 #'@return
 #'a scp object
@@ -228,13 +229,24 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
       }
       
     }else if(niche=="physignal"){
-      spniche=fastBM(phytree,a=0.5,bounds=c(0,1))
-      #TODO a significant phylogenetic signal does not mean the correlation between niche distance and phylogenetic distance is high.
-      while(phylosig(phytree,spniche)<4)
-        spniche=fastBM(phytree,a=0.5,bounds=c(0,1))
+#       spniche=fastBM(phytree,a=0.5,bounds=c(0,1))
+#       #a significant phylogenetic signal does not mean the correlation between niche distance and phylogenetic distance is high.
+#       phyd=cophenetic(phytree)
+#       phyd=phyd[lower.tri(phyd)]
+#       #ror=match(phytree$tip.label,spname)
+#       niched=as.matrix(dist(spniche))
+#       phyniche_cor=cor(phyd,niched[lower.tri(niched)])
+#       while(phyniche_cor<0.98 ){
+#         spniche=fastBM(phytree,a=0.5,bounds=c(0,1))
+#         niched=as.matrix(dist(spniche))
+#         phyniche_cor=cor(phyd,niched[lower.tri(niched)])
+#       }
+#       
+      spniche=princomp(cophenetic(phytree))$scores[,1]
       
+      spniche=scaleRange(spniche,min=0,max=1)
       spniche=spniche[match(spname,names(spniche))]
-     
+      
     }
     names(spniche)=spname
   }

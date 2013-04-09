@@ -5,8 +5,6 @@
 #'@param min the minimum value of the output vector
 #'@param max the maxmum value of the output vector
 #'
-#'@note
-#' every elements in x should be positive
 #'
 #'@examples
 #'
