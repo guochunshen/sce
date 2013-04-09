@@ -117,6 +117,7 @@ For further information on any of these functions, type \code{help(name)} where 
 \section{VI. Other functions}{
 
   \tabular{ll}{
+    \code{\link{scaleRange}} \tab scale the range of a vector and keeping linear relationship between elements unchange. \cr
     \code{\link{rlognormal}} \tab generate a lognormal distributed species abundance distribution \cr
     \code{\link{rlogseries}} \tab generate a logseries distributed species abundance distribution \cr
     \code{\link{create_repository}} \tab save result in each step into a file for avoding unexpected error disturbance. it becomes very useful and can save you lots of time in long term calculation \cr

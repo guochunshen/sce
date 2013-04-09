@@ -60,6 +60,6 @@ phyMarkCorr=function(com,phyd,focalij=NULL,rmax,step=1,nsim=19,alpha=0.05,scale=
 
 plot.pmc<-function(pmc,...){
   plot(x=range(pmc$r),y=range(unlist(pmc[1:3])),type="n",...)
-  polygon(x=c(pmc$r,rev(pmc$r)),y=c(pmc$lower,pmc$upper),col="grey",border="grey")
+  polygon(x=c(pmc$r,rev(pmc$r)),y=c(pmc$lower,rev(pmc$upper)),col="grey",border="grey")
   lines(x=pmc$r,y=pmc$real)
 }
