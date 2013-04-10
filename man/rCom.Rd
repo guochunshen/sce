@@ -78,7 +78,9 @@
 }
 \details{
   it is possible to missing some species if the expected
-  species abundance is quite low.
+  species abundance is quite low. The "physignal" in niche
+  mean there is a high (R2>80) correlation between species
+  niche differences and their phylogenetic correlation
 }
 \examples{
 library(testthat)

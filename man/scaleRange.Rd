@@ -16,9 +16,6 @@
   scale a vector's range and keep the relationship between
   elements
 }
-\note{
-  every elements in x should be positive
-}
 \examples{
 x=runif(100,1,100)
 x2=scaleRange(x,0.5,1)
