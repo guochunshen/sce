@@ -199,7 +199,7 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
     spab=rlognormal(N,S)
   }else if(ab=="physignal"){
     spab=fastBM(phytree,a=N/S,sig2=N/S*10,bounds=c(1,N))
-    while(phylosig(phytree,spab,test=TRUE)$P>0.01)
+    while(phylosignal(spab,phytree)$PIC.variance.P>0.01)
       spab=fastBM(phytree,a=N/S,sig2=N/S*10,bounds=c(1,N))
     spab=round(spab)
     spab=spab[match(spname,names(spab))]

@@ -7,5 +7,5 @@ Author: Guochun Shen, qsyang
 Maintainer: Guochun Shen <shenguochun@gmail.com>
 Description: This is a collective R functions for various spatial explicit analyses in Community ecology
 License: GNU3
-Depends: Rcpp (>= 0.10.2), spatstat (>= 1.31), RandomFields, raster, maps, parallel, ape, phytools
+Depends: Rcpp (>= 0.10.2), spatstat (>= 1.31), RandomFields, raster, maps, parallel, ape, picante
 LinkingTo: Rcpp
