@@ -163,7 +163,7 @@ vector<list<double> > phylocorrsingle2(double* fx, double* fy, int* fsp, double*
 	    	    continue;
 	    	}
 	    	dist=pow(pow(x[j]-fx[i],2)+pow(y[j]-fy[i],2),0.5);
-	    	if(dist > *rmax ){
+	    	if(dist > (*rmax-*step/2) || dist < (*step/2)){
 	    	    continue;
 	    	}
 	    	ibin=dist / *step;

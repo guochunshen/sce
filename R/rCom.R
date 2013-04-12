@@ -290,7 +290,8 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
       gamma=gamma[adji,]
       gamma=gamma[,adji]
     }
-    gamma=scaleRange(gamma,0.5,1)
+    gamma=round(scaleRange(gamma,0.7,1),6)
+    
     rownames(gamma)=colnames(gamma)=spname
     if(!is.null(competition$intra)){
       if(!competition$intra)

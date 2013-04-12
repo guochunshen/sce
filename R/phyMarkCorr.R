@@ -51,8 +51,8 @@ phyMarkCorr=function(com,phyd,focalij=NULL,rmax,step=1,nsim=19,alpha=0.05,scale=
         as.double(as.numeric(phyd)), as.double(step), as.double(pk), as.integer(nsim),
         as.double(mean), as.double(upper), as.double(lower), as.double(pvalues),
         as.double(alpha), as.integer(scale));
-  r=seq(step/2,rmax,step)
-  result=list("real"=re[[11]][-1],"upper"=re[[14]][-1],"lower"=re[[15]][-1],"r"=r[-1],"pvalues"=re[[16]][-1])
+  r=seq(step,rmax,step)
+  result=list("real"=re[[11]],"upper"=re[[14]],"lower"=re[[15]],"r"=r,"pvalues"=re[[16]])
   class(result)="pmc"
   return(result)
 }

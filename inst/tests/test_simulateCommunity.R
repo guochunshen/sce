@@ -132,16 +132,18 @@ test_that("test on the rCom",{
   
   #pure competition with unform abundance distribution, 
   #and signficant phylogenetic signal in niche
-  com=rCom(N,S,win,ab="unif",niche="physignal",phy=list(br=runif,phylosignal=100),
-           competition=list(beta=0.9,r=10,nrep=5e5,verbose=FALSE,intra=TRUE))
+  com=rCom(N,S,win,ab="unif",niche="physignal",phy=list(br=rexp,phylosignal=100),
+           competition=list(beta=0.9,r=5,nrep=5e5,verbose=FALSE,intra=TRUE))
   #phylogenetic signal in niche
   expect_true(phylosig(com$phylo,com$niche,test=TRUE,nsim=1E3)$P<0.1)
   #significant phylogenetic structure is expected at small scale
-  comphy=phyMarkCorr(com,cophenetic(com$phylo),nsim=199,rmax=30)
+  comphy=phyMarkCorr(com,cophenetic(com$phylo),nsim=199,rmax=20,step=0.5)
   phypvalue=comphy$pvalues
   expect_true((1-pbinom(sum(phypvalue<0.05),length(phypvalue),0.05))<0.05)
-  #plot(comphy,log="x")
-  
+  par(mfrow=c(1,2))
+  plot(comphy,log="x")
+  abline(v=2)
+  plot(com,col=com$traits$species)
   
   #pure competition with strong phylogenetic signal in abundance and niche
   com=rCom(N,S,win,ab="physignal",niche="physignal",phy=list(br=runif,phylosignal=100),
