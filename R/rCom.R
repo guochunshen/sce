@@ -156,7 +156,7 @@
 #'
 
 
-rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,niche=NULL,competition=NULL){
+rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,niche=NULL,competition=NULL, ...){
   
   if(is.null(phy)){
     if(!is.null(niche)){
@@ -187,7 +187,7 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
   
   #generate a phylogenetic tree if it is required
   if(!is.null(phy)){
-    phytree=rcoal(S,tip.label=spname,br=phy$br)
+    phytree=rcoal(S,tip.label=spname,br=phy$br,...)
   }
   
   #generate the species abundance distribution

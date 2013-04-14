@@ -4,7 +4,7 @@
 \usage{
   rCom(N, S, win, ab = "unif",
     intra = list(type = "Poisson"), phy = NULL,
-    covr = NULL, niche = NULL, competition = NULL)
+    covr = NULL, niche = NULL, competition = NULL, ...)
 }
 \arguments{
   \item{N}{expected total number of individuals in the
