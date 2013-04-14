@@ -37,6 +37,7 @@ test_that("test the previous rCommunity",{
 
 
 test_that("test on the rCom",{
+  library(phytools)
   N=1000
   S=10
   win=owin(c(0,100),c(0,100))
