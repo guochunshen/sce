@@ -90,6 +90,7 @@ For further information on any of these functions, type \code{help(name)} where 
   \tabular{ll}{
   \code{\link{pcf_adaptive}} \tab estimate the pair correlation function by an adaptive method. \cr
   \code{\link{phyMarkCorr}} \tab phylogenetic mark correlation function with the species shuffling null model \cr
+  \code{\link{comdist_C}} \tab an C++ implementation of the inter-community mean pairwise distance \cr
   }
 }
 
