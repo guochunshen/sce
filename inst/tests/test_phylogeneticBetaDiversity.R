@@ -2,11 +2,36 @@ context("test on the phylogenetic beta diversity")
 
 test_that("the conventional phylogenetic beta diversity",{
   data(phylocom)
-  re1=comdist(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE)
+  re11=comdist(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE)
   #test on the C++ version of the comdist function in the picante package
-  re2=comdist_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE)
+  re12=comdist_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE)
   #test the result
-  expect_equal(re1,re2)
+  expect_equal(re11,re12)
+  re13=comdist(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE)
+  #test on the C++ version of the comdist function in the picante package
+  re14=comdist_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE)
+  expect_equal(re13,re14)
+  
+  re21=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude.conspecifics = FALSE)
+  #test on the C++ version of the comdist function in the picante package
+  re22=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude.conspecifics = FALSE)
+  #test the result
+  expect_equal(as.matrix(re21),as.matrix(re22))
+  re23=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude.conspecifics = FALSE)
+  #test on the C++ version of the comdist function in the picante package
+  re24=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude.conspecifics = FALSE)
+  expect_equal(as.matrix(re13),as.matrix(re14))
+  
+  re21=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude.conspecifics = TRUE)
+  #test on the C++ version of the comdist function in the picante package
+  re22=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude.conspecifics = TRUE)
+  #test the result
+  expect_equal(as.matrix(re21),as.matrix(re22))
+  re23=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude.conspecifics = TRUE)
+  #test on the C++ version of the comdist function in the picante package
+  re24=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude.conspecifics = TRUE)
+  expect_equal(as.matrix(re13),as.matrix(re14))
+  
   
   #test the speed advantage
   com=rCom(12000,10,win=owin(c(0,100),c(0,100)),ab="physignal",phy=list(br=rexp,phylosignal=1000))
@@ -16,5 +41,9 @@ test_that("the conventional phylogenetic beta diversity",{
   t1=system.time(comdist(sample, dist, abundance.weighted=TRUE))
   t2=system.time(comdist_C(sample, dist, abundance.weighted=TRUE))
   expect_true(as.logical(t1[1]>t2[1]*100))
+  
+  t3=system.time(comdistnt(sample, dist, abundance.weighted=TRUE))
+  t4=system.time(comdistnt_C(sample, dist, abundance.weighted=TRUE))
+  expect_true(as.logical(t3[1]>t4[1]*100))
   
 })
