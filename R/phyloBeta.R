@@ -16,17 +16,21 @@ phyloBeta<-function(com,phyd,Fun,nsim,rmax=50,alpha=0.05,...){
   #get the community spatial distance matrix
   quadratindex=as.numeric(rownames(comtable))
   spaced=as.matrix(dist(attr(com,"quadratxy")[quadratindex,]))
-  spaced=spaced[lower.tri(spaced)]
+  #define the community pairs within the maximum distance away
+  cal_pairs=spaced<=rmax
+  spaced[!cal_pairs]=NA
+  spaced=round(spaced[lower.tri(spaced)],2)
+  
   
   #calcualte the observed comdist
-  phylo_beta_obs=tapply(as.numeric(Fun(comm=comtable,dis=phyd, ...)),spaced,mean,na.rm=TRUE)
+  phylo_beta_obs=tapply(as.numeric(Fun(comm=comtable,dis=phyd, cal_pairs=cal_pairs, ...)),spaced,mean,na.rm=TRUE)
   
   #using species shuffling null model to generate a phylogeny tree under the null model
   phy_nulls=spShuffle(phyd,nsim)
   
   #calculate the confidence envelope
   phylo_beta_nulls=unlist(lapply(phy_nulls,function(x) {
-    tapply(as.numeric(Fun(comm=comtable,dis=x, ...)),spaced,mean,na.rm=TRUE)
+    tapply(as.numeric(Fun(comm=comtable,dis=x,cal_pairs=cal_pairs, ...)),spaced,mean,na.rm=TRUE)
   }))
   dim(phylo_beta_nulls)=c(length(phylo_beta_obs),nsim)
   lower=round(nsim*alpha/2)
@@ -42,8 +46,8 @@ phyloBeta<-function(com,phyd,Fun,nsim,rmax=50,alpha=0.05,...){
   pvalues[pvalues>0.5]=1-pvalues[pvalues>0.5]
   
   r=as.numeric(names(phylo_beta_obs))
-  selr=r<=rmax
-  re=list(r=r[selr],real=as.numeric(phylo_beta_obs)[selr],
-          lower=phylo_beta_conf[1,][selr],upper=phylo_beta_conf[2,][selr],pvalues=pvalues[selr])
+
+  re=list(r=r,real=as.numeric(phylo_beta_obs),
+          lower=phylo_beta_conf[1,],upper=phylo_beta_conf[2,],pvalues=pvalues)
   return(re)
 }

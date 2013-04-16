@@ -87,5 +87,7 @@ test_that("the conventional phylogenetic beta diversity",{
   
   expect_true(any(re1$real!=re2$real))
   
+  expect_true(max(re1$r)<50)
+  
 
 })
