@@ -9,8 +9,8 @@
 #'        branch length distribution. it can be runif (default) and rexp or other 
 #' @param ab a character represent the distribution of species abundance. current values a "unif", "lognormal", "logseries" and "physignal".
 #'        note that "physignal" means the species abundance distribution follows phylogenetic relationship between species. in this case,
-#'        a phylogeney should be given. \code{physigPvalue} also should be given to indicate how strong the phylogenetic signal in niche or
-#'        abundance should be generated. 
+#'        a phylogeney should be given. \code{phy$phylosignal} also should be given to indicate how strong the phylogenetic signal in niche or
+#'        abundance should be generated. it is the maximum pvalue of the phylogenetic signal in abundance.
 #'        
 #' @param intra a list represent spatial pattern of intraspecific individuals. it's \code{type} can be "Poisson" and "cluster". if its
 #'        \code{type} equals "cluster", a manten clustering process is specified with parameter \code{alpha}, \code{sigma2} and \code{nu}
@@ -60,7 +60,7 @@
 #'
 #'
 #'#pure random with strong phylogenetic signal abundance distribution
-#'com=rCom(N,S,win,ab="physignal",phy=list(br=rexp,phylosignal=1000))
+#'com=rCom(N,S,win,ab="physignal",phy=list(br=rexp,phylosignal=0.05))
 #'#should be significant phylogenetic signal in abundance
 #'expect_true(phylosig(com$phylo,com$ab,test=TRUE)$P<0.1)
 #'#the phylogenetic structure should be random at all scale
@@ -77,7 +77,7 @@
 #'
 #'#pure habitat filtering with unfirom ahundance distribution and uniform niche distribution
 #'com=rCom(N,S,win,ab="unif",covr=list(type="sin",scale=16,strength=5),niche="unif"
-#'         ,phy=list(br=runif,phylosignal=100))
+#'         ,phy=list(br=runif,phylosignal=0.05))
 #'sp1=subset(com,com$traits$species==names(which(com$ab==max(com$ab))))
 #'fitmodel=fitCluster(sp1,~covr,sigTest=TRUE)
 #'pvalues=as.numeric(attr(fitmodel,"pvalues"))
@@ -91,7 +91,7 @@
 #'
 #'#pure habitat filtering with strong phylogenetic signal in abundance, 
 #'#no compeittion, no phylogenetic signal in niche
-#'com=rCom(N,S,win,ab="physignal",phy=list(br=runif,phylosignal=100),
+#'com=rCom(N,S,win,ab="physignal",phy=list(br=runif,phylosignal=0.05),
 #'         covr=list(type="sin",scale=16,strength=5),niche="unif")
 #'expect_true(phylosig(com$phylo,com$ab,test=TRUE)$P<0.05)
 #'#no signal in species niche
@@ -107,7 +107,7 @@
 #'
 #'
 #'#pure habitat filtering with strong phylogenetic signal in niche
-#'com=rCom(N,S,win,ab="unif",phy=list(br=runif,phylosignal=100),covr=list(type="sin",scale=16,strength=5),niche="physignal")
+#'com=rCom(N,S,win,ab="unif",phy=list(br=runif,phylosignal=0.05),covr=list(type="sin",scale=16,strength=5),niche="physignal")
 #'#phylogenetic signal in niche
 #'expect_true(phylosig(com$phylo,com$niche,test=TRUE,nsim=1E3)$P<0.1)
 #'#nonrandom phylogenetic pattern at small scale
@@ -117,7 +117,7 @@
 #'plot(comphy)
 #'
 #'#pure interspecific competition with unform abundance distribution, and no phylogenetic signal in niche
-#'com=rCom(N,S,win,ab="unif",niche="unif",phy=list(br=runif,phylosignal=100),
+#'com=rCom(N,S,win,ab="unif",niche="unif",phy=list(br=runif,phylosignal=0.05),
 #'         competition=list(beta=0.9,r=10,nrep=5e5,verbose=FALSE,intra=TRUE))
 #'pppdata=com$com
 #'marks(pppdata)=com$traits$species
@@ -135,7 +135,7 @@
 #'
 #'#pure competition with unform abundance distribution, 
 #'#and signficant phylogenetic signal in niche
-#'com=rCom(N,S,win,ab="unif",niche="physignal",phy=list(br=runif,phylosignal=100),
+#'com=rCom(N,S,win,ab="unif",niche="physignal",phy=list(br=runif,phylosignal=0.05),
 #'         competition=list(beta=0.9,r=10,nrep=5e5,verbose=FALSE,intra=TRUE))
 #'#phylogenetic signal in niche
 #'expect_true(phylosig(com$phylo,com$niche,test=TRUE,nsim=1E3)$P<0.1)
@@ -147,7 +147,7 @@
 #'
 #'
 #'#pure competition with strong phylogenetic signal in abundance and niche
-#'com=rCom(N,S,win,ab="physignal",niche="physignal",phy=list(br=runif,phylosignal=100),
+#'com=rCom(N,S,win,ab="physignal",niche="physignal",phy=list(br=runif,phylosignal=0.05),
 #'         competition=list(beta=0.9,r=5,nrep=5e5,verbose=FALSE,intra=TRUE))
 #'expect_true(phylosig(com$phylo,com$ab,test=TRUE)$P<0.05)
 #'expect_true(phylosig(com$phylo,com$niche,test=TRUE)$P<0.05)

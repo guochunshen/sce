@@ -14,7 +14,8 @@
 \value{
   a new scp object with a "ploti" trait in the traits of
   the community it also has an attribute "spaced" contains
-  spatial distance between quadrats
+  spatial distance between quadrats and an attribute given
+  the spatial location of each quadrat
 }
 \description{
   divide a large plot into small quadrats
