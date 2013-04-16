@@ -53,5 +53,6 @@ comdistnt_C<-function (comm, dis, abundance.weighted = FALSE, exclude.conspecifi
   comdisnt=comdistntInner(N,dis,x,exclude.conspecifics)
   rownames(comdisnt) <- colnames(comdisnt) <- rownames(comm)
   re=as.dist(comdisnt)
+  re[is.na(re)]=NA
   return(re)
 }

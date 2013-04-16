@@ -8,6 +8,7 @@
 #'@return
 #'a new scp object with a "ploti" trait in the traits of the community
 #'it also has an attribute "spaced" contains spatial distance between quadrats
+#' and an attribute given the spatial location of each quadrat
 #'
 #'@examples
 #'data(testData)
@@ -32,5 +33,6 @@ quadratize=function(com,nx,ny){
   ploty=rep((yi_breaks[-1]+yi_breaks[-(nx+1)])/2,each=nx)
   plotd=dist(cbind(plotx,ploty))
   attr(com,"spaced")=plotd
+  attr(com,"quadratxy")=data.frame(x=plotx,y=ploty)
   return(com)
 }

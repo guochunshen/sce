@@ -58,7 +58,7 @@ test_that("test on the rCom",{
   
   
   #pure random with strong phylogenetic signal abundance distribution
-  com=rCom(N,S,win,ab="physignal",phy=list(br=rexp,phylosignal=1000))
+  com=rCom(N,S,win,ab="physignal",phy=list(br=rexp,phylosignal=0.01))
   #should be significant phylogenetic signal in abundance
   expect_true(phylosig(com$phylo,com$ab,test=TRUE)$P<0.1)
   #the phylogenetic structure should be random at all scale
@@ -75,7 +75,7 @@ test_that("test on the rCom",{
   
   #pure habitat filtering with unfirom ahundance distribution and uniform niche distribution
   com=rCom(N,S,win,ab="unif",covr=list(type="sin",scale=16,strength=5),niche="unif"
-           ,phy=list(br=runif,phylosignal=100))
+           ,phy=list(br=runif,phylosignal=0.01))
   sp1=subset(com,com$traits$species==names(which(com$ab==max(com$ab))))
   fitmodel=fitCluster(sp1,~covr,sigTest=TRUE)
   pvalues=as.numeric(attr(fitmodel,"pvalues"))
@@ -89,7 +89,7 @@ test_that("test on the rCom",{
   
   #pure habitat filtering with strong phylogenetic signal in abundance, 
   #no compeittion, no phylogenetic signal in niche
-  com=rCom(N,S,win,ab="physignal",phy=list(br=runif,phylosignal=100),
+  com=rCom(N,S,win,ab="physignal",phy=list(br=runif,phylosignal=0.01),
            covr=list(type="sin",scale=16,strength=5),niche="unif")
   expect_true(phylosig(com$phylo,com$ab,test=TRUE)$P<0.05)
   #no signal in species niche
@@ -105,7 +105,7 @@ test_that("test on the rCom",{
   
   
   #pure habitat filtering with strong phylogenetic signal in niche
-  com=rCom(N,S,win,ab="unif",phy=list(br=runif,phylosignal=100),covr=list(type="sin",scale=16,strength=5),niche="physignal")
+  com=rCom(N,S,win,ab="unif",phy=list(br=runif,phylosignal=0.01),covr=list(type="sin",scale=16,strength=5),niche="physignal")
   #phylogenetic signal in niche
   expect_true(phylosig(com$phylo,com$niche,test=TRUE,nsim=1E3)$P<0.1)
   #nonrandom phylogenetic pattern at small scale
@@ -115,7 +115,7 @@ test_that("test on the rCom",{
   plot(comphy)
 
   #pure interspecific competition with unform abundance distribution, and no phylogenetic signal in niche
-  com=rCom(N,S,win,ab="unif",niche="unif",phy=list(br=runif,phylosignal=100),
+  com=rCom(N,S,win,ab="unif",niche="unif",phy=list(br=runif,phylosignal=0.01),
            competition=list(beta=0.9,r=10,nrep=5e5,verbose=FALSE,intra=TRUE))
   pppdata=com$com
   marks(pppdata)=com$traits$species
@@ -133,7 +133,7 @@ test_that("test on the rCom",{
   
   #pure competition with unform abundance distribution, 
   #and signficant phylogenetic signal in niche
-  com=rCom(N,S,win,ab="unif",niche="physignal",phy=list(br=rexp,phylosignal=100),
+  com=rCom(N,S,win,ab="unif",niche="physignal",phy=list(br=rexp,phylosignal=0.01),
            competition=list(beta=0.9,r=5,nrep=5e5,verbose=FALSE,intra=TRUE))
   #phylogenetic signal in niche
   expect_true(phylosig(com$phylo,com$niche,test=TRUE,nsim=1E3)$P<0.1)
@@ -147,7 +147,7 @@ test_that("test on the rCom",{
   plot(com,col=com$traits$species)
   
   #pure competition with strong phylogenetic signal in abundance and niche
-  com=rCom(N,S,win,ab="physignal",niche="physignal",phy=list(br=runif,phylosignal=100),
+  com=rCom(N,S,win,ab="physignal",niche="physignal",phy=list(br=runif,phylosignal=0.01),
            competition=list(beta=0.9,r=5,nrep=5e5,verbose=FALSE,intra=TRUE))
   expect_true(phylosig(com$phylo,com$ab,test=TRUE)$P<0.05)
   expect_true(phylosig(com$phylo,com$niche,test=TRUE)$P<0.05)
