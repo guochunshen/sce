@@ -4,6 +4,7 @@
 #'@param comm Community data matrix, rows are the sample plot, cols are the species name
 #'@param dis interspecific distance matrix
 #'@param abundance.weighted Should mean pairwise distances separating species in two communities be weighted by species abundances? (default = FALSE)
+#'@param cal_pairs a logical matrix to indicate which pair of communities should be used to calculate the index
 #'
 #'@note this is an c++ implementation of comdist function in the picanate package.
 #'
@@ -29,7 +30,7 @@
 #'
 
 
-comdist_C<-function (comm, dis, abundance.weighted = FALSE) 
+comdist_C<-function (comm, dis, abundance.weighted = FALSE, cal_pairs=NULL) 
 {
   x <- as.matrix(comm)
   dat <- match.comm.dist(comm, dis)
@@ -41,7 +42,12 @@ comdist_C<-function (comm, dis, abundance.weighted = FALSE)
   N <- dim(x)[1]
   S <- dim(x)[2]
   x <- decostand(x, method = "total", MARGIN = 1)
-  comdist = commdistInner(N,dis,x)
+  if(is.null(cal_pairs)){
+    cal_pairs=matrix(TRUE,nrow=N,ncol=N)
+  }
+  comdist = commdistInner(N,dis,x,cal_pairs)
+  #set the uninteresting community pair equals to NA
+  comdist[!cal_pairs]=NA
   row.names(comdist) <- row.names(x)
   colnames(comdist) <- row.names(x)
   return(as.dist(comdist))

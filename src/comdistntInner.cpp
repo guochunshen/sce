@@ -3,13 +3,14 @@
 using namespace Rcpp;
 
 //[[Rcpp::export]]
-NumericMatrix comdistntInner(const int N, NumericMatrix dis, NumericMatrix x, bool exclude_conspecifics){
+NumericMatrix comdistntInner(const int N, NumericMatrix dis, NumericMatrix x, bool exclude_conspecifics, LogicalMatrix cal_pairs){
   
   NumericMatrix comdist(N,N);
   
   for(int l=0; l<(N-1); l++){
     for(int k=1; k<N; k++){
-      NumericVector row1=x(k, _);
+      if(cal_pairs(k,l)){
+       NumericVector row1=x(k, _);
       NumericVector row2=x(l, _);
       
       int ncol=row1.size();
@@ -70,7 +71,8 @@ NumericMatrix comdistntInner(const int N, NumericMatrix dis, NumericMatrix x, bo
       }
       
       
-      comdist(k,l)=localsum;
+      comdist(k,l)=localsum; 
+      }
     }
   }
   return(comdist);

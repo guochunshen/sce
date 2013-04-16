@@ -2,6 +2,7 @@
 #'calculate the the quadrat based phylogenetic beta diversity with significant test by simulations
 #'
 #'@param com a quadratized scp object trait for each individual and phylogeney
+#'@param phyd phylogenetic distance matrix
 #'@param nsim number of shuffling tip from the given phylongeny
 #'@param rmax maximum spatial distance between two communities
 #'@param ... other parameters past to \code{\link{comdist_C}} function.
@@ -9,16 +10,13 @@
 #'
 #'
 
-phyloBeta<-function(com,Fun,nsim,rmax=50,alpha=0.05,...){
+phyloBeta<-function(com,phyd,Fun,nsim,rmax=50,alpha=0.05,...){
   #get the community matrix
   comtable=table(com$traits$ploti,com$traits$species)
   #get the community spatial distance matrix
   quadratindex=as.numeric(rownames(comtable))
   spaced=as.matrix(dist(attr(com,"quadratxy")[quadratindex,]))
   spaced=spaced[lower.tri(spaced)]
-  
-  #get the phylogenetic distance matrix
-  phyd=cophenetic(com$phylo)
   
   #calcualte the observed comdist
   phylo_beta_obs=tapply(as.numeric(Fun(comm=comtable,dis=phyd, ...)),spaced,mean,na.rm=TRUE)

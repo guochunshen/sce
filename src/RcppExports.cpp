@@ -6,27 +6,29 @@
 using namespace Rcpp;
 
 // comdistntInner
-NumericMatrix comdistntInner(const int N, NumericMatrix dis, NumericMatrix x, bool exclude_conspecifics);
-RcppExport SEXP sce_comdistntInner(SEXP NSEXP, SEXP disSEXP, SEXP xSEXP, SEXP exclude_conspecificsSEXP) {
+NumericMatrix comdistntInner(const int N, NumericMatrix dis, NumericMatrix x, bool exclude_conspecifics, LogicalMatrix cal_pairs);
+RcppExport SEXP sce_comdistntInner(SEXP NSEXP, SEXP disSEXP, SEXP xSEXP, SEXP exclude_conspecificsSEXP, SEXP cal_pairsSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
     int N = Rcpp::as<int >(NSEXP);
     NumericMatrix dis = Rcpp::as<NumericMatrix >(disSEXP);
     NumericMatrix x = Rcpp::as<NumericMatrix >(xSEXP);
     bool exclude_conspecifics = Rcpp::as<bool >(exclude_conspecificsSEXP);
-    NumericMatrix __result = comdistntInner(N, dis, x, exclude_conspecifics);
+    LogicalMatrix cal_pairs = Rcpp::as<LogicalMatrix >(cal_pairsSEXP);
+    NumericMatrix __result = comdistntInner(N, dis, x, exclude_conspecifics, cal_pairs);
     return Rcpp::wrap(__result);
 END_RCPP
 }
 // commdistInner
-NumericMatrix commdistInner(const int N, NumericMatrix dis, NumericMatrix x);
-RcppExport SEXP sce_commdistInner(SEXP NSEXP, SEXP disSEXP, SEXP xSEXP) {
+NumericMatrix commdistInner(const int N, NumericMatrix dis, NumericMatrix x, LogicalMatrix cal_pairs);
+RcppExport SEXP sce_commdistInner(SEXP NSEXP, SEXP disSEXP, SEXP xSEXP, SEXP cal_pairsSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
     int N = Rcpp::as<int >(NSEXP);
     NumericMatrix dis = Rcpp::as<NumericMatrix >(disSEXP);
     NumericMatrix x = Rcpp::as<NumericMatrix >(xSEXP);
-    NumericMatrix __result = commdistInner(N, dis, x);
+    LogicalMatrix cal_pairs = Rcpp::as<LogicalMatrix >(cal_pairsSEXP);
+    NumericMatrix __result = commdistInner(N, dis, x, cal_pairs);
     return Rcpp::wrap(__result);
 END_RCPP
 }

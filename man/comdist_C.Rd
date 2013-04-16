@@ -2,7 +2,8 @@
 \alias{comdist_C}
 \title{A c++ implementation of the inter-community mean pairwise distance}
 \usage{
-  comdist_C(comm, dis, abundance.weighted = FALSE)
+  comdist_C(comm, dis, abundance.weighted = FALSE,
+    cal_pairs = NULL)
 }
 \arguments{
   \item{comm}{Community data matrix, rows are the sample
@@ -13,6 +14,9 @@
   \item{abundance.weighted}{Should mean pairwise distances
   separating species in two communities be weighted by
   species abundances? (default = FALSE)}
+
+  \item{cal_pairs}{a logical matrix to indicate which pair
+  of communities should be used to calculate the index}
 }
 \description{
   A c++ implementation of the inter-community mean pairwise

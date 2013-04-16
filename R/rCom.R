@@ -199,8 +199,12 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
     spab=rlognormal(N,S)
   }else if(ab=="physignal"){
     spab=fastBM(phytree,a=N/S,sig2=N/S*10,bounds=c(1,N))
-    while(phylosignal(spab,phytree)$PIC.variance.P>phy$phylosignal)
+    bk=phylosignal(spab,phytree)
+    while(bk$PIC.variance.P>phy$phylosignal){
       spab=fastBM(phytree,a=N/S,sig2=N/S*10,bounds=c(1,N))
+      bk=phylosignal(spab,phytree)
+    }
+      
     spab=round(spab)
     spab=spab[match(spname,names(spab))]
   }
@@ -357,7 +361,9 @@ rCom<-function(N,S,win,ab="unif",intra=list(type="Poisson"),phy=NULL,covr=NULL,n
     com$gamma=gamma
     com$niche=spniche
   }
-    
+  if(ab=="physignal"){
+    com$phyK=bk
+  }
   
   return(com)
   

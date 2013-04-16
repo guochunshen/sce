@@ -47,6 +47,18 @@ test_that("the conventional phylogenetic beta diversity",{
   re2=comdistnt_C(sample1,cophenetic(phylocom$phylo),abundance.weighted=TRUE)
   expect_equal(as.matrix(re),as.matrix(re2))
   
+  #test the selection of community pairs
+  sample1=phylocom$sample
+  cal_pairs=matrix(TRUE,dim(sample1)[1],dim(sample1)[1])
+  cal_pairs[1,2]=FALSE
+  cal_pairs[2,1]=FALSE
+  re2=comdist_C(sample1,cophenetic(phylocom$phylo),abundance.weighted=TRUE,cal_pairs)
+  expect_true( all(is.na(as.matrix(re2)[!cal_pairs])))
+  
+  re3=comdistnt_C(sample1,cophenetic(phylocom$phylo),abundance.weighted=TRUE,TRUE,cal_pairs)
+  expect_true( all(is.na(as.matrix(re3)[!cal_pairs])))
+  
+  
   #test the speed advantage
   com=rCom(12000,10,win=owin(c(0,100),c(0,100)),ab="physignal",phy=list(br=rexp,phylosignal=1000))
   com=quadratize(com,20,20)
@@ -64,14 +76,16 @@ test_that("the conventional phylogenetic beta diversity",{
   #test the metric under the species shuffling null model
   com=rCom(1000,10,win=owin(c(0,100),c(0,100)),ab="physignal",phy=list(br=rexp,phylosignal=1000))
   com=quadratize(com,20,20)
-  re1=phyloBeta(com,Fun=comdist_C,nsim=10,abundance.weighted=FALSE)
-  re2=phyloBeta(com,Fun=comdist_C,nsim=10,abundance.weighted=TRUE)
+  phyd=cophenetic(com$phylo)
+  re1=phyloBeta(com,phyd=phyd,Fun=comdist_C,nsim=10,abundance.weighted=FALSE)
+  re2=phyloBeta(com,phyd=phyd,Fun=comdist_C,nsim=10,abundance.weighted=TRUE)
   
   expect_true(any(re1$real!=re2$real))
   
-  re1=phyloBeta(com,Fun=comdistnt_C,nsim=10,abundance.weighted=FALSE)
-  re2=phyloBeta(com,Fun=comdistnt_C,nsim=10,abundance.weighted=TRUE)
+  re1=phyloBeta(com,phyd=phyd,Fun=comdistnt_C,nsim=10,abundance.weighted=FALSE)
+  re2=phyloBeta(com,phyd=phyd,Fun=comdistnt_C,nsim=10,abundance.weighted=TRUE)
   
   expect_true(any(re1$real!=re2$real))
   
+
 })

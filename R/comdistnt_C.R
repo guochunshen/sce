@@ -36,7 +36,7 @@
 #'
 
 
-comdistnt_C<-function (comm, dis, abundance.weighted = FALSE, exclude.conspecifics = FALSE) 
+comdistnt_C<-function (comm, dis, abundance.weighted = FALSE, exclude.conspecifics = FALSE, cal_pairs=NULL) 
 {
   dat <- match.comm.dist(comm, dis)
   comm <- dat$comm
@@ -50,7 +50,13 @@ comdistnt_C<-function (comm, dis, abundance.weighted = FALSE, exclude.conspecifi
     x[x!=0]=1
     x=x/apply(x,1,sum)/2
   }
-  comdisnt=comdistntInner(N,dis,x,exclude.conspecifics)
+  if(is.null(cal_pairs)){
+    cal_pairs=matrix(TRUE,nrow=N,ncol=N)
+  }
+  comdisnt=comdistntInner(N,dis,x,exclude.conspecifics,cal_pairs)
+  #set the uninteresting community pair equals to NA
+  comdisnt[!cal_pairs]=NA
+  
   rownames(comdisnt) <- colnames(comdisnt) <- rownames(comm)
   re=as.dist(comdisnt)
   re[is.na(re)]=NA
