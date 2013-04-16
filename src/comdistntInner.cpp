@@ -9,7 +9,7 @@ NumericMatrix comdistntInner(const int N, NumericMatrix dis, NumericMatrix x, bo
   
   for(int l=0; l<(N-1); l++){
     for(int k=1; k<N; k++){
-      if(cal_pairs(k,l)){
+      if(cal_pairs(k,l) && k>l){
        NumericVector row1=x(k, _);
       NumericVector row2=x(l, _);
       
