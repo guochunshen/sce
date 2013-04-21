@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include "myfunction.h"
 
 using namespace Rcpp;
 
@@ -12,8 +13,16 @@ NumericMatrix comdistntInner(const int N, NumericMatrix dis, NumericMatrix x, bo
       if(cal_pairs(k,l) && k>l){
        NumericVector row1=x(k, _);
       NumericVector row2=x(l, _);
-      
-      int ncol=row1.size();
+     
+      comdist(k,l)=nearestPhylogeneticDistance(row1,row2,dis,exclude_conspecifics); 
+      }
+    }
+  }
+  return(comdist);
+}
+
+double nearestPhylogeneticDistance(NumericVector row1, NumericVector row2, NumericMatrix dis, bool exclude_conspecifics){
+   int ncol=row1.size();
       double localsum=0.0;
       
       //from row1 to row2
@@ -69,11 +78,5 @@ NumericMatrix comdistntInner(const int N, NumericMatrix dis, NumericMatrix x, bo
         localsum+=row2[i]*mindis; 
         }
       }
-      
-      
-      comdist(k,l)=localsum; 
-      }
-    }
-  }
-  return(comdist);
+      return(localsum);
 }

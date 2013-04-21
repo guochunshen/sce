@@ -32,3 +32,19 @@ BEGIN_RCPP
     return Rcpp::wrap(__result);
 END_RCPP
 }
+// phyloBeta_C
+List phyloBeta_C(const int N, NumericMatrix dis, NumericMatrix x, NumericMatrix qxy, double rmax, bool exclude_conspecifics = true, int indextype = 0);
+RcppExport SEXP sce_phyloBeta_C(SEXP NSEXP, SEXP disSEXP, SEXP xSEXP, SEXP qxySEXP, SEXP rmaxSEXP, SEXP exclude_conspecificsSEXP, SEXP indextypeSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope __rngScope;
+    int N = Rcpp::as<int >(NSEXP);
+    NumericMatrix dis = Rcpp::as<NumericMatrix >(disSEXP);
+    NumericMatrix x = Rcpp::as<NumericMatrix >(xSEXP);
+    NumericMatrix qxy = Rcpp::as<NumericMatrix >(qxySEXP);
+    double rmax = Rcpp::as<double >(rmaxSEXP);
+    bool exclude_conspecifics = Rcpp::as<bool >(exclude_conspecificsSEXP);
+    int indextype = Rcpp::as<int >(indextypeSEXP);
+    List __result = phyloBeta_C(N, dis, x, qxy, rmax, exclude_conspecifics, indextype);
+    return Rcpp::wrap(__result);
+END_RCPP
+}

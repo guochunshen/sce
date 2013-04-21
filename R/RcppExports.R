@@ -9,3 +9,7 @@ commdistInner <- function(N, dis, x, cal_pairs) {
     .Call('sce_commdistInner', PACKAGE = 'sce', N, dis, x, cal_pairs)
 }
 
+phyloBeta_C <- function(N, dis, x, qxy, rmax, exclude_conspecifics = TRUE, indextype = 0L) {
+    .Call('sce_phyloBeta_C', PACKAGE = 'sce', N, dis, x, qxy, rmax, exclude_conspecifics, indextype)
+}
+

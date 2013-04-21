@@ -12,24 +12,24 @@ test_that("the conventional phylogenetic beta diversity",{
   re14=comdist_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE)
   expect_equal(re13,re14)
   
-  re21=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude.conspecifics = FALSE)
+  re21=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude_conspecifics = FALSE)
   #test on the C++ version of the comdist function in the picante package
-  re22=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude.conspecifics = FALSE)
+  re22=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude_conspecifics = FALSE)
   #test the result
   expect_equal(as.matrix(re21),as.matrix(re22))
-  re23=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude.conspecifics = FALSE)
+  re23=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude_conspecifics = FALSE)
   #test on the C++ version of the comdist function in the picante package
-  re24=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude.conspecifics = FALSE)
+  re24=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude_conspecifics = FALSE)
   expect_equal(as.matrix(re13),as.matrix(re14))
   
-  re21=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude.conspecifics = TRUE)
+  re21=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude_conspecifics = TRUE)
   #test on the C++ version of the comdist function in the picante package
-  re22=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude.conspecifics = TRUE)
+  re22=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude_conspecifics = TRUE)
   #test the result
   expect_equal(as.matrix(re21),as.matrix(re22))
-  re23=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude.conspecifics = TRUE)
+  re23=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude_conspecifics = TRUE)
   #test on the C++ version of the comdist function in the picante package
-  re24=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude.conspecifics = TRUE)
+  re24=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude_conspecifics = TRUE)
   expect_equal(as.matrix(re13),as.matrix(re14))
   
   #test on empty community
@@ -90,4 +90,28 @@ test_that("the conventional phylogenetic beta diversity",{
   expect_true(max(re1$r)<50)
   
 
+  #test the second version
+  com=rCom(1000,10,win=owin(c(0,100),c(0,100)),ab="physignal",phy=list(br=rexp,phylosignal=1000))
+  com=quadratize(com,5,5)
+  phyd=cophenetic(com$phylo)
+  re1=phyloBeta2(com,phyd=phyd,type="dpw",nsim=1000,abundance.weighted=TRUE)
+  re2=phyloBeta(com,phyd=phyd,Fun=comdist_C,nsim=500,abundance.weighted=TRUE)
+  expect_true(all(re1$real==re2$real))
+  #the confidence interval also looks quite similar
+  
+  re3=phyloBeta2(com,phyd=phyd,type="dnn",nsim=100,abundance.weighted=TRUE,exclude_conspecifics=TRUE)
+  re4=phyloBeta(com,phyd=phyd,Fun=comdistnt_C,nsim=100,abundance.weighted=TRUE,exclude_conspecifics=TRUE)
+  expect_true(all(re3$real==re4$real))
+  re3=phyloBeta2(com,phyd=phyd,type="dnn",nsim=10,abundance.weighted=FALSE,exclude_conspecifics=TRUE)
+  re4=phyloBeta(com,phyd=phyd,Fun=comdistnt_C,nsim=10,abundance.weighted=FALSE,exclude_conspecifics=TRUE)
+  expect_true(all(re3$real==re4$real))
+  
+  
+  re5=phyloBeta2(com,phyd=phyd,type="dnn",nsim=10,abundance.weighted=TRUE,exclude_conspecifics=FALSE)
+  re6=phyloBeta(com,phyd=phyd,Fun=comdistnt_C,nsim=10,abundance.weighted=TRUE,exclude_conspecifics=FALSE)
+  expect_true(all(re5$real==re6$real))
+  re5=phyloBeta2(com,phyd=phyd,type="dnn",nsim=10,abundance.weighted=FALSE,exclude_conspecifics=FALSE)
+  re6=phyloBeta(com,phyd=phyd,Fun=comdistnt_C,nsim=10,abundance.weighted=FALSE,exclude_conspecifics=FALSE)
+  expect_true(all(re5$real==re6$real))
+    
 })
