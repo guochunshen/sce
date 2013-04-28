@@ -1,5 +1,5 @@
 #'
-#'scale a vector's range and keep the relationship between elements
+#'scale a vector's range and keep the linear relationship between elements
 #'
 #'@param x a numeric vector or maxtrix to be scale the range
 #'@param min the minimum value of the output vector
