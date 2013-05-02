@@ -129,6 +129,7 @@ For further information on any of these functions, type \code{help(name)} where 
     \code{\link{dataframeToIms}} \tab convert a data.frame into a list of im objects \cr
     \code{\link{downloadNATree}} \tab download the north American tree distribution files from interent \cr
     \code{\link{NAtreeRaster}} \tab transfer the zipped shapfile distribution of tree data into a dataframe of species occurance \cr
+    \code{\link{taobaoAPI}} \tab an interface of taobao open API \cr
   }
 }
 \author{
