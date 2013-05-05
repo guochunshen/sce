@@ -3,7 +3,7 @@
 \title{An C++ implementation of inter-community mean nearest taxon distance}
 \usage{
   comdistnt_C(comm, dis, abundance.weighted = FALSE,
-    exclude.conspecifics = FALSE, cal_pairs = NULL)
+    exclude_conspecifics = FALSE, cal_pairs = NULL)
 }
 \arguments{
   \item{comm}{Community data matrix}

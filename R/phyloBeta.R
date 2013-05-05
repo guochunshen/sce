@@ -8,7 +8,6 @@
 #'@param ... other parameters past to \code{\link{comdist_C}} function.
 #'
 #'
-#'@examples
 #'
 #'
 #'

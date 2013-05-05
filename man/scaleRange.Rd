@@ -1,6 +1,6 @@
 \name{scaleRange}
 \alias{scaleRange}
-\title{scale a vector's range and keep the relationship between elements}
+\title{scale a vector's range and keep the linear relationship between elements}
 \usage{
   scaleRange(x, min, max)
 }
@@ -13,8 +13,8 @@
   \item{max}{the maxmum value of the output vector}
 }
 \description{
-  scale a vector's range and keep the relationship between
-  elements
+  scale a vector's range and keep the linear relationship
+  between elements
 }
 \examples{
 x=runif(100,1,100)

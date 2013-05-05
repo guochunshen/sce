@@ -81,6 +81,16 @@ For further information on any of these functions, type \code{help(name)} where 
     \code{\link{removeRareSpecies}} \tab remove rare species from the community \cr
     \code{\link{selSpeciesByAbund}} \tab select a community with specific species abundance \cr
     \code{\link{applyGroup}} \tab apply a function on each member of a group devided from a community, paralla computation supported \cr
+    \code{\link{knq}} \tab To find the kth nearest neighborhood in the q equal angle sector for each forcal point/event \cr
+  }
+  
+  
+  \bold{To estimate parameters of the population/community}
+  
+  \tabular{ll}{
+    \code{\link{gsimpleDPDE}} \tab The general simple distance based population density estimator \cr
+    \code{\link{gcompositeDPDE}} \tab The general composite distance based population density estimator \cr
+    \code{\link{gnonrandomDPDE}} \tab The general nonrandom distance based population density estimator \cr
   }
   
 }
@@ -92,6 +102,7 @@ For further information on any of these functions, type \code{help(name)} where 
   \code{\link{phyMarkCorr}} \tab phylogenetic mark correlation function with the species shuffling null model \cr
   \code{\link{comdist_C}} \tab an C++ implementation of the inter-community mean pairwise distance \cr
   \code{\link{comdistnt_C}} \tab an C++ implementation of the inter-community mean nearest taxon distance \cr
+  \code{\link{HSindex}} \tab The Hopkins and skellam's aggregation index \cr
   }
 }
 
@@ -119,6 +130,7 @@ For further information on any of these functions, type \code{help(name)} where 
 \section{VI. Other functions}{
 
   \tabular{ll}{
+    \code{\link{RRMSE}} \tab the relative root mean square error \cr
     \code{\link{sendmail}} \tab send email via a public mail servise \cr
     \code{\link{scaleRange}} \tab scale the range of a vector and keeping linear relationship between elements unchange. \cr
     \code{\link{rlognormal}} \tab generate a lognormal distributed species abundance distribution \cr
