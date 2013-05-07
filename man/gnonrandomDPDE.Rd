@@ -29,4 +29,9 @@
   the forms of estimator based on point to event distances
   and event to event distances are different.
 }
+\examples{
+r_samples=matrix(runif(100,0,4),nrow=50,ncol=2)
+gnonrandomDPDE(r_samples,dtype="ptoe",k=1,area=100)
+gnonrandomDPDE(r_samples,dtype="etoe",k=1,area=100)
+}
 
