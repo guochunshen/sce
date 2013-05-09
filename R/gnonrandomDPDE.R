@@ -31,18 +31,19 @@ gnonrandomDPDE<-function(r_samples,dtype="ptoe",k,area,...){
   r=as.vector(r_samples)
   #remove 0 neighborhood distance
   r=r[r!=0]
+  
   if(length(r)>0){
     if(dtype=="ptoe"){
-      ngpars=try(optim(c(0.03,2),fn=ngobf_ptoe,r=r,k=k,q=q,control=list(maxit=100000,fnscale=-1),...))
+      ngpars=try(optim(c(n+1,2),fn=ngobf_ptoe,r=r,k=k,q=q,area=area,lower=c(n,1e-5),control=list(maxit=100000,fnscale=-1),...))
     }else{
-      ngpars=try(optim(c(0.03,2),fn=ngobf_etoe,r=r,k=k,q=q,control=list(maxit=100000,fnscale=-1),...))
+      ngpars=try(optim(c(n+1,2),fn=ngobf_etoe,r=r,k=k,q=q,area=area,lower=c(n,1e-5),control=list(maxit=100000,fnscale=-1),...))
     }
     
     if(class(ngpars)=="try-error"){
       #browser()
       N=NA
     }else if(ngpars$convergence==0)
-      N=ngpars$par[1]*area
+      N=ngpars$par[1]
     else
       N=NA
   }else{
@@ -51,25 +52,22 @@ gnonrandomDPDE<-function(r_samples,dtype="ptoe",k,area,...){
   return(N)
 }
 
-ngobf_ptoe=function(x,r,k,q){
-  #x=c("lambda","a")
-  if(any(x<0))
-    return(-10e20)
-  lam=x[1]
+ngobf_ptoe=function(x,r,k,q,area){
+  
+  nind=x[1]
+  lam=nind/area
   a=x[2]
   n=length(r)
-  #re=n*log(lam)+sum(log(r))-(k+1)*sum(log(1+(pi*lam*r^2)/k))
+  
   re=n*k*log(lam)+n*lgamma(k+a)+n*a*log(a)-n*lgamma(a)+
     sum(-(k+a)*log(pi*lam/q*r^2+a))
   return(re)
 }
 
 
-ngobf_etoe=function(x,r,k,q){
-  #x=c("lambda","a")
-  if(any(x<0))
-    return(-10e20)
-  lam=x[1]
+ngobf_etoe=function(x,r,k,q,area){
+  nind=x[1]
+  lam=nind/area
   a=x[2]
   n=length(r)
   
