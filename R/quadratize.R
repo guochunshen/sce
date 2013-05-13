@@ -4,6 +4,7 @@
 #'@param com a scp object
 #'@param nx number of quadrat in the x axis
 #'@param ny number of qudart in the y axis
+#'@param qd a logical value indicate whether to calculate pairwise quadrat spaital distances.
 #'
 #'@return
 #'a new scp object with a "ploti" trait in the traits of the community
@@ -19,7 +20,7 @@
 #'
 
 
-quadratize=function(com,nx,ny){
+quadratize=function(com,nx,ny,qd=FALSE){
   data.ppp=com$com
   win=data.ppp$win
   xi_breaks=seq(0-1e-5,win$xrange[2]+1e-5,length.out=nx+1)
@@ -31,8 +32,10 @@ quadratize=function(com,nx,ny){
   #spatial distance between quadrat
   plotx=rep((xi_breaks[-1]+xi_breaks[-(nx+1)])/2,times=ny)
   ploty=rep((yi_breaks[-1]+yi_breaks[-(nx+1)])/2,each=nx)
-  plotd=dist(cbind(plotx,ploty))
-  attr(com,"spaced")=plotd
+  if(qd){
+    plotd=dist(cbind(plotx,ploty))
+    attr(com,"spaced")=plotd
+  }
   attr(com,"quadratxy")=data.frame(x=plotx,y=ploty)
   return(com)
 }

@@ -2,7 +2,7 @@
 \alias{quadratize}
 \title{divide a large plot into small quadrats}
 \usage{
-  quadratize(com, nx, ny)
+  quadratize(com, nx, ny, qd = FALSE)
 }
 \arguments{
   \item{com}{a scp object}
@@ -10,6 +10,9 @@
   \item{nx}{number of quadrat in the x axis}
 
   \item{ny}{number of qudart in the y axis}
+
+  \item{qd}{a logical value indicate whether to calculate
+  pairwise quadrat spaital distances.}
 }
 \value{
   a new scp object with a "ploti" trait in the traits of
