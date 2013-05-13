@@ -12,22 +12,22 @@ test_that("the conventional phylogenetic beta diversity",{
   re14=comdist_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE)
   expect_equal(re13,re14)
   
-  re21=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude_conspecifics = FALSE)
+  re21=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude.conspecifics = FALSE)
   #test on the C++ version of the comdist function in the picante package
   re22=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude_conspecifics = FALSE)
   #test the result
   expect_equal(as.matrix(re21),as.matrix(re22))
-  re23=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude_conspecifics = FALSE)
+  re23=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude.conspecifics = FALSE)
   #test on the C++ version of the comdist function in the picante package
   re24=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude_conspecifics = FALSE)
   expect_equal(as.matrix(re13),as.matrix(re14))
   
-  re21=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude_conspecifics = TRUE)
+  re21=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude.conspecifics = TRUE)
   #test on the C++ version of the comdist function in the picante package
   re22=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=TRUE, exclude_conspecifics = TRUE)
   #test the result
   expect_equal(as.matrix(re21),as.matrix(re22))
-  re23=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude_conspecifics = TRUE)
+  re23=comdistnt(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude.conspecifics = TRUE)
   #test on the C++ version of the comdist function in the picante package
   re24=comdistnt_C(phylocom$sample, cophenetic(phylocom$phylo), abundance.weighted=FALSE, exclude_conspecifics = TRUE)
   expect_equal(as.matrix(re13),as.matrix(re14))

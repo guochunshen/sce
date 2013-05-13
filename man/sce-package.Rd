@@ -103,6 +103,7 @@ For further information on any of these functions, type \code{help(name)} where 
   \code{\link{comdist_C}} \tab an C++ implementation of the inter-community mean pairwise distance \cr
   \code{\link{comdistnt_C}} \tab an C++ implementation of the inter-community mean nearest taxon distance \cr
   \code{\link{HSindex}} \tab The Hopkins and skellam's aggregation index \cr
+  \code{\link{phyloBeta}} \tab calculate the quadrat based phylogenetic beta diversity with significant test \cr
   }
 }
 

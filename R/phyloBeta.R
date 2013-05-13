@@ -118,7 +118,7 @@ phyloBeta_one <- function (comtable, phyd, type, abundance.weighted, qxy, rmax, 
   
   N <- dim(x)[1]
   S <- dim(x)[2]  
-  print(list(N, dis, x,qxy,rmax,exclude_conspecifics, indextype))
+  #print(list(N, dis, x,qxy,rmax,exclude_conspecifics, indextype))
   #observe
   phyobs=phyloBeta_C(N, dis, x,qxy,rmax,exclude_conspecifics, indextype)
   phylo_beta_obs=tapply(phyobs$phyd,round(phyobs$spaced,2),mean,na.rm=TRUE)
