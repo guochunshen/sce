@@ -95,7 +95,7 @@ test_that("the conventional phylogenetic beta diversity",{
   com=quadratize(com,5,5)
   phyd=cophenetic(com$phylo)
   re1=phyloBeta2(com,phyd=phyd,type="dpw",nsim=1000,abundance.weighted=TRUE)
-  re2=phyloBeta(com,phyd=phyd,Fun=comdist_C,nsim=500,abundance.weighted=TRUE)
+  re2=phyloBeta(com,phyd=phyd,Fun=comdist_C,nsim=5000,abundance.weighted=TRUE)
   expect_true(all(re1$real==re2$real))
   #the confidence interval also looks quite similar
   

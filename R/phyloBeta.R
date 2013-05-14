@@ -35,8 +35,11 @@ phyloBeta<-function(com,phyd,Fun,nsim,rmax=50,alpha=0.05,...){
   phy_nulls=spShuffle(phyd,nsim)
   
   #calculate the confidence envelope
-  phylo_beta_nulls=unlist(lapply(phy_nulls,function(x) {
-    tapply(as.numeric(Fun(comm=comtable,dis=x,cal_pairs=cal_pairs, ...)),spaced,mean,na.rm=TRUE)
+  
+  phylo_beta_nulls=unlist(lapply(1:nsim,function(x) {
+    print(x)
+    tapply(as.numeric(Fun(comm=comtable,dis=phy_nulls[[x]],cal_pairs=cal_pairs, ...)),spaced,mean,na.rm=TRUE)
+    
   }))
   dim(phylo_beta_nulls)=c(length(phylo_beta_obs),nsim)
   lower=round(nsim*alpha/2)

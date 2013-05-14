@@ -45,8 +45,16 @@ comdist_C<-function (comm, dis, abundance.weighted = FALSE, cal_pairs=NULL)
   if(is.null(cal_pairs)){
     cal_pairs=matrix(TRUE,nrow=N,ncol=N)
   }
+  if(dim(cal_pairs)[1]!=N | dim(dis)[1]!=S){
+    browser()
+  }
+  #print(cal_pairs)
   comdist = commdistInner(N,dis,x,cal_pairs)
   #set the uninteresting community pair equals to NA
+  a=try(comdist[!cal_pairs])
+  if(class(a)=="try-error"){
+    browser()
+  }
   comdist[!cal_pairs]=NA
   row.names(comdist) <- row.names(x)
   colnames(comdist) <- row.names(x)

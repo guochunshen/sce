@@ -2,6 +2,7 @@
 #include "myfunction.h"
 
 using namespace Rcpp;
+using namespace std;
 
 //[[Rcpp::export]]
 NumericMatrix commdistInner(const int N, NumericMatrix dis, NumericMatrix x, LogicalMatrix cal_pairs){
@@ -13,12 +14,13 @@ NumericMatrix commdistInner(const int N, NumericMatrix dis, NumericMatrix x, Log
       if(cal_pairs(k,l) && k>l){
        NumericVector row1=x(k, _);
       NumericVector row2=x(l, _);
-      
+      //cout<<N<<" "<<l<<" "<<k<<" ";
       comdist(k,l)=meanPhylogeneticDistance(row1, row2, dis); 
+      //cout<<" "<<comdist(k,l)<<endl;
       }
     }
   }
-  return(comdist);
+  return comdist;
 }
 
 
@@ -31,5 +33,6 @@ double meanPhylogeneticDistance(NumericVector row1, NumericVector row2, NumericM
               localsum+=row1[i]*row2[j]*dis(i,j);
             }
           }
+         
     return(localsum);
 }
