@@ -49,7 +49,10 @@ comdist_C<-function (comm, dis, abundance.weighted = FALSE, cal_pairs=NULL)
     browser()
   }
   #print(cal_pairs)
-  comdist = commdistInner(N,dis,x,cal_pairs)
+  #comdist = commdistInner(N,dis,x,cal_pairs)
+  comdist=rep(0,N^2)
+  comdist=.C("comdist",as.integer(N),as.integer(S),as.double(dis),as.double(x),as.integer(cal_pairs),as.double(comdist))[[6]]
+  dim(comdist)=c(N,N)
   #set the uninteresting community pair equals to NA
   a=try(comdist[!cal_pairs])
   if(class(a)=="try-error"){

@@ -88,30 +88,6 @@ test_that("the conventional phylogenetic beta diversity",{
   expect_true(any(re1$real!=re2$real))
   
   expect_true(max(re1$r)<50)
-  
 
-  #test the second version
-  com=rCom(1000,10,win=owin(c(0,100),c(0,100)),ab="physignal",phy=list(br=rexp,phylosignal=1000))
-  com=quadratize(com,5,5)
-  phyd=cophenetic(com$phylo)
-  re1=phyloBeta2(com,phyd=phyd,type="dpw",nsim=1000,abundance.weighted=TRUE)
-  re2=phyloBeta(com,phyd=phyd,Fun=comdist_C,nsim=5000,abundance.weighted=TRUE)
-  expect_true(all(re1$real==re2$real))
-  #the confidence interval also looks quite similar
-  
-  re3=phyloBeta2(com,phyd=phyd,type="dnn",nsim=100,abundance.weighted=TRUE,exclude_conspecifics=TRUE)
-  re4=phyloBeta(com,phyd=phyd,Fun=comdistnt_C,nsim=100,abundance.weighted=TRUE,exclude_conspecifics=TRUE)
-  expect_true(all(re3$real==re4$real))
-  re3=phyloBeta2(com,phyd=phyd,type="dnn",nsim=10,abundance.weighted=FALSE,exclude_conspecifics=TRUE)
-  re4=phyloBeta(com,phyd=phyd,Fun=comdistnt_C,nsim=10,abundance.weighted=FALSE,exclude_conspecifics=TRUE)
-  expect_true(all(re3$real==re4$real))
-  
-  
-  re5=phyloBeta2(com,phyd=phyd,type="dnn",nsim=10,abundance.weighted=TRUE,exclude_conspecifics=FALSE)
-  re6=phyloBeta(com,phyd=phyd,Fun=comdistnt_C,nsim=10,abundance.weighted=TRUE,exclude_conspecifics=FALSE)
-  expect_true(all(re5$real==re6$real))
-  re5=phyloBeta2(com,phyd=phyd,type="dnn",nsim=10,abundance.weighted=FALSE,exclude_conspecifics=FALSE)
-  re6=phyloBeta(com,phyd=phyd,Fun=comdistnt_C,nsim=10,abundance.weighted=FALSE,exclude_conspecifics=FALSE)
-  expect_true(all(re5$real==re6$real))
-    
+ 
 })
