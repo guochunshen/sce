@@ -75,9 +75,9 @@ markCorr<-function(com,markName,r,testFunName,nsim=10,h=0.5,exclude_conspecific=
       conf_low_index=1
     conf=apply(mkcsim,1,function(x) sort(x)[c(conf_low_index,nsim-conf_low_index)])
     dim(conf)=c(2,nr)
-    return(list(obs=mkcobs,low=conf[1,],upper=conf[2,],const=const))
+    return(list(r=r,obs=mkcobs,lower=conf[1,],upper=conf[2,],const=const))
   }else{
-    return(list(obs=mkcobs,const=const))
+    return(list(r=r,obs=mkcobs,const=const))
   }
   
 }
