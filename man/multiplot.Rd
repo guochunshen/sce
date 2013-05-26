@@ -1,6 +1,6 @@
 \name{multiplot}
 \alias{multiplot}
-\title{Multiple plot function}
+\title{Multiple plot function for ggplot figures}
 \usage{
   multiplot(..., plotlist = NULL, file, cols = 1,
     layout = NULL)
@@ -15,7 +15,7 @@
   'cols' is ignored.}
 }
 \description{
-  Multiple plot function
+  Multiple plot function for ggplot figures
 }
 \details{
   If the layout is something like matrix(c(1,2,3,3),

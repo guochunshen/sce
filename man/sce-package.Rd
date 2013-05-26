@@ -82,6 +82,7 @@ For further information on any of these functions, type \code{help(name)} where 
     \code{\link{selSpeciesByAbund}} \tab select a community with specific species abundance \cr
     \code{\link{applyGroup}} \tab apply a function on each member of a group devided from a community, paralla computation supported \cr
     \code{\link{knq}} \tab To find the kth nearest neighborhood in the q equal angle sector for each forcal point/event \cr
+    \code{\link{pcaHabitat}} \tab transfer all of the habitat variables by PCA \cr
   }
   
   
@@ -104,6 +105,7 @@ For further information on any of these functions, type \code{help(name)} where 
   \code{\link{comdistnt_C}} \tab an C++ implementation of the inter-community mean nearest taxon distance \cr
   \code{\link{HSindex}} \tab The Hopkins and skellam's aggregation index \cr
   \code{\link{phyloBeta}} \tab calculate the quadrat based phylogenetic beta diversity with significant test \cr
+  \code{\link{markCorr}} \tab mark correlation function with mark random shuffle null model \cr
   }
 }
 
@@ -142,6 +144,7 @@ For further information on any of these functions, type \code{help(name)} where 
     \code{\link{dataframeToIms}} \tab convert a data.frame into a list of im objects \cr
     \code{\link{downloadNATree}} \tab download the north American tree distribution files from interent \cr
     \code{\link{NAtreeRaster}} \tab transfer the zipped shapfile distribution of tree data into a dataframe of species occurance \cr
+    \code{\link{multiplot}} \tab Multiple plot function for ggplot figures \cr
     \code{\link{taobaoAPI}} \tab an interface of taobao open API \cr
   }
 }

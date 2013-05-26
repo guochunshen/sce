@@ -1,4 +1,4 @@
-#' Multiple plot function
+#' Multiple plot function for ggplot figures
 #'
 #'@param ... ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
 #'@param cols Number of columns in layout
