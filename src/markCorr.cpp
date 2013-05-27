@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <vector>
 
 using namespace std;
 
@@ -38,6 +39,9 @@ void markcorr(int* N, double* x, double* y, double* mark, double* r, int* nr, do
       rmax=r[i];
     }
   }
+  //maximum interpoint distances
+  rmax+= *h;
+  
   double tcsum=0;
   int tccount=0;
   
@@ -48,19 +52,21 @@ void markcorr(int* N, double* x, double* y, double* mark, double* r, int* nr, do
       if((*exclude_conspecific)==0 || ((*exclude_conspecific)==1 && sp[i]!=sp[j])){
         double dij=pow(pow(x[i]-x[j],2)+pow(y[i]-y[j],2),0.5);
         //do the calculation only when the interpoint distance is smaller than the maximum r+h
-        if(dij<(rmax+ *h)){
-          int pi=pointPosition(dij,r,nr,h);
-          //if the point is near any r value, just do the point count and testfuntion sum 
-          if(pi< *nr){
+        if(dij<=rmax){
+          //one point pair can be assigned into several distance
+          vector< int> pis=pointPosition(dij,r,nr,h);
+          for (int pij=0; pij<pis.size();pij++ ){
+            int pi=pis[pij];
+            //if the point is near any r value, just do the point count and testfuntion sum 
             pcount[pi]++;
-          
+      
             //sum the test function for observed marks and simulated marks
             for(int k=0; k< (*nsim+1); k++){
               int simui=k* (*nr);
-              tfsum[pi+simui]+=testfun(mark[marki[i+simui]],mark[marki[j+simui]], tftype);
-            }
-            
+               tfsum[pi+simui]+=testfun(mark[marki[i+simui]],mark[marki[j+simui]], tftype);
+            }      
           }
+          
         }
         if((*isnormalize)==1){
           tccount++;
@@ -110,11 +116,11 @@ double testfun(double m1, double m2, int* tftype){
 
 
 //it returns the position of a point in the given r vector, and nr otherwise
-int pointPosition(double d, double* r, int* nr, double* h){
-  int pi= *nr;
+vector< int> pointPosition(double d, double* r, int* nr, double* h){
+  vector< int> pi;
   for(int i=0; i< *nr; i++){
     if(fabs(r[i]-d)<= *h){
-      pi=i;
+      pi.push_back(i);
     }
   }
   return pi;

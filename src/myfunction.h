@@ -28,4 +28,4 @@ double meanPhylogeneticDistance(NumericVector row1, NumericVector row2,NumericMa
 double nearestPhylogeneticDistance(NumericVector row1, NumericVector row2, NumericMatrix dis, bool exclude_conspecifics);
 double meanPhylogeneticDistance(int* S,  int* N,int k, int l, double* x, double* dis);
 double nearestPhylogeneticDistance(int* S, int* N, int k, int l, double* x, int* exclude_conspecifics,double* dis);
-int pointPosition(double d, double* r, int* nr, double* h);
+vector< int> pointPosition(double d, double* r, int* nr, double* h);

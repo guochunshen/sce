@@ -2,16 +2,18 @@ context("Mark correlation functions")
 
 test_that("the individual based mark correlation function",{
   data(testData)
-  debug(markCorr)
-  re1=markCorr(com=testData,markName="dbh",r=1:10,testFunName="abdif",nsim=10,h=1,exclude_conspecific=FALSE)
+  #regenerate dbh for each species, every conspecific has the same dbh, thus we can compare our new metric with 
+  # the phylogenetic mark correlation function
+  spdbh=runif(testData$S)
+  testData$traits$dbh=rep(spdbh,testData$ab)
   
-  #define the test function, m1,m2 is the position of individual in the data set
-  data.ppp=testData$com
-  marks(data.ppp)=testData$traits$dbh
-  isna=is.na(testData$traits$dbh)
-  data.ppp=data.ppp[!isna]
-  re2=markcorr(data.ppp,f=function(m1,m2) {abs(m1-m2)},r=0:10)
+  re1=markCorr(com=testData,markName="dbh",r=1:10,testFunName="abdif",nsim=10,h=0.5,exclude_conspecific=TRUE)
   
-  #re2$trans[-1]
+  spdbh_dist=as.matrix(dist(spdbh))
+  rownames(spdbh_dist)=colnames(spdbh_dist)=testData$sp
+  
+  re2=phyMarkCorr(testData,spdbh_dist,rmax=10,step=1,nsim=10,alpha=0.05,scale=TRUE)
+  
+  #the observed value should be equal.
   
 })
