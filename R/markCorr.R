@@ -44,7 +44,7 @@ markCorr<-function(com,markName,r,testFunName,nsim=10,h=0.5,exclude_conspecific=
   }
   #number of total individuals
   N=length(mark)
-  randomMarki=replicate(nsim,sample(1:N))
+  randomMarki=replicate(nsim,sample(0:(N-1)))
   
   sp=as.numeric(as.factor(com$traits$species))
   
@@ -55,7 +55,7 @@ markCorr<-function(com,markName,r,testFunName,nsim=10,h=0.5,exclude_conspecific=
   #void markcorr(int* N, double* x, double* y, double* mark, double* r, int* nr, double* h, int* tftype,
   #int* nsim, int* marki, int* exclude_conspecific,double* mkcvalues)
   nr=length(r)
-  marki=c(1:N,as.vector(randomMarki))
+  marki=c(0:(N-1),as.vector(randomMarki))
   mkcvalues=rep(0,times=nr*(nsim+1))
   const=0;
   
