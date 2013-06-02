@@ -35,6 +35,11 @@
   accumulated verion of the mark correlation function if it
   is TRUE}
 }
+\value{
+  an mc object that coult be plot it directly by
+  \code{plot}. it contains four elements: r: obs: upper:
+  lower:
+}
 \description{
   The c++ implemented mark correlation function with mark
   random labeling null model
@@ -52,6 +57,10 @@
 }
 \examples{
 data(testData)
-re1=markCorr(com=testData,markName="dbh",r=1:10,testFunName="tf1",nsim=10,h=1,exclude_conspecific=TRUE)
+re1=markCorr(com=testData,markName="dbh",r=1:10,testFunName="abdif",nsim=10,h=1,exclude_conspecific=TRUE)
+plot(re1)
+
+re2=markCorr(com=testData,markName="dbh",r=1:10,testFunName="abdif",nsim=10,h=1,exclude_conspecific=TRUE,isaccum=TRUE)
+plot(re2)
 }
 

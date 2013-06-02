@@ -21,12 +21,20 @@
 #'testFunName: sum (sum of the marks of two points): m1+m2
 #'testFunName: reldif (relative absolute difference): abs(m1-m2)/(m1+m2)
 #'
+#'@return
+#'an mc object that coult be plot it directly by \code{plot}. it contains four elements:
+#'r:
+#'obs:
+#'upper:
+#'lower:
 #'
 #'@examples
 #'data(testData)
-#'re1=markCorr(com=testData,markName="dbh",r=1:10,testFunName="tf1",nsim=10,h=1,exclude_conspecific=TRUE)
+#'re1=markCorr(com=testData,markName="dbh",r=1:10,testFunName="abdif",nsim=10,h=1,exclude_conspecific=TRUE)
+#'plot(re1)
 #'
-#'
+#'re2=markCorr(com=testData,markName="dbh",r=1:10,testFunName="abdif",nsim=10,h=1,exclude_conspecific=TRUE,isaccum=TRUE)
+#'plot(re2)
 
 markCorr<-function(com,markName,r,testFunName,nsim=10,h=0.5,exclude_conspecific=FALSE,
                    normalize=TRUE,alpha=0.05,isaccum=FALSE){
@@ -76,10 +84,17 @@ markCorr<-function(com,markName,r,testFunName,nsim=10,h=0.5,exclude_conspecific=
       conf_low_index=1
     conf=apply(mkcsim,1,function(x) sort(x)[c(conf_low_index,nsim-conf_low_index)])
     dim(conf)=c(2,nr)
-    return(list(r=r,obs=mkcobs,lower=conf[1,],upper=conf[2,],const=const))
+    result=list(r=r,obs=mkcobs,lower=conf[1,],upper=conf[2,],const=const)
   }else{
-    return(list(r=r,obs=mkcobs,const=const))
+    result=list(r=r,obs=mkcobs,const=const)
   }
-  
+  class(result)="mc"
+  return(result)
 }
 
+plot.mc=function(re){
+  re2=data.frame(r=re$r,obs=re$obs,upper=re$upper,lower=re$lower)
+  require(ggplot2)
+  p=ggplot(re2)+geom_smooth(aes(x=r,y=obs,ymin=lower,ymax=upper),stat="identity")
+  return(p)
+}
