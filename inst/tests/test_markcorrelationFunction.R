@@ -96,7 +96,7 @@ test_that("the individual based mark correlation function",{
     
   }
   
-  #test the observed value between the first value
+  #test the observed value between the forth value
   r2count=0
   r2sum=0
   for(i in 1:testCom$N){
@@ -115,5 +115,29 @@ test_that("the individual based mark correlation function",{
     expect_equal(r2value,re2$obs[4])
   }
   
+  
+  #test the accumulated mark correlation function
+  re3=markCorr(com=testCom,markName="dbh",r=seq(0.1,0.5,0.05),testFunName="abdif",nsim=10,
+               h=0.01,exclude_conspecific=TRUE,isaccum=TRUE)
+  
+  r3count=0
+  r3sum=0
+  for(i in 1:testCom$N){
+    for(j in 1:i){
+      spd=sqrt((testCom$com$x[i]-testCom$com$x[j])^2+(testCom$com$y[i]-testCom$com$y[j])^2)
+      if(spd<=re1$r[4] && i!=j && testCom$traits$species[i]!= testCom$traits$species[j]){
+        
+        r3count=r3count+1
+        r3sum=r3sum+abs(testCom$traits$dbh[i]-testCom$traits$dbh[j])
+      }
+    }
+  }
+  
+  if(r3count==0){
+    expect_equal(0,re3$obs[4])
+  }else{
+    r3value=r3sum/r3count/ctconst2
+    expect_equal(r3value,re3$obs[4])
+  }
   
 })

@@ -4,7 +4,7 @@
 \usage{
   markCorr(com, markName, r, testFunName, nsim = 10,
     h = 0.5, exclude_conspecific = FALSE, normalize = TRUE,
-    alpha = 0.05)
+    alpha = 0.05, isaccum = FALSE)
 }
 \arguments{
   \item{com}{a scp object}
@@ -30,6 +30,10 @@
 
   \item{alpha}{significant level used to calculate
   pointwise confidence interval}
+
+  \item{isaccum}{a logical flag to calculate the
+  accumulated verion of the mark correlation function if it
+  is TRUE}
 }
 \description{
   The c++ implemented mark correlation function with mark

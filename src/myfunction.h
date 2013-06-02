@@ -20,7 +20,8 @@ void comdistnt(int* N, int* S, double* dis, double* x, int* cal_pairs, int* excl
 
 //the mark correlation function for numeric data
 void markcorr(int* N, double* x, double* y, double* mark, double* r, int* nr, double* h, int* tftype,
-    int* nsim, int* marki, int* exclude_conspecific,int* sp,double* mkcvalues, int* isnormalize, double* tc);
+    int* nsim, int* marki, int* exclude_conspecific,int* sp,double* mkcvalues, int* isnormalize,
+    double* tc, int* isaccum);
 
 }
 

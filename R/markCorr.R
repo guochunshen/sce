@@ -10,6 +10,7 @@
 #'@param exclude_conspecific a logical flag to whether include the conspecific indiviual or not
 #'@param normalize a logical flag to normalize the mark correlation function
 #'@param alpha significant level used to calculate pointwise confidence interval
+#'@param isaccum a logical flag to calculate the accumulated verion of the mark correlation function if it is TRUE
 #'
 #'@details
 #'it calculate the mark correlation function for individual based numerical marks, e.g. DBH.
@@ -28,7 +29,7 @@
 #'
 
 markCorr<-function(com,markName,r,testFunName,nsim=10,h=0.5,exclude_conspecific=FALSE,
-                   normalize=TRUE,alpha=0.05){
+                   normalize=TRUE,alpha=0.05,isaccum=FALSE){
   mi=which(names(com$traits)==markName)
   if(length(mi)==0)
     stop("no mark is found equals to the given mark name")
@@ -58,12 +59,11 @@ markCorr<-function(com,markName,r,testFunName,nsim=10,h=0.5,exclude_conspecific=
   marki=c(1:N,as.vector(randomMarki))-1
   mkcvalues=rep(0,times=nr*(nsim+1))
   const=0;
-
   
   re=.C("markcorr",as.integer(N),as.double(com$com$x),as.double(com$com$y),as.double(mark),as.double(r),
      as.integer(nr),as.double(h),as.integer(tftype),as.integer(nsim),as.integer(marki),
      as.integer(exclude_conspecific),as.integer(sp),as.double(mkcvalues),as.integer(normalize),
-        as.double(const))[c(13,15)]
+        as.double(const),as.integer(isaccum))[c(13,15)]
   
   const=re[[2]]
   re=re[[1]]

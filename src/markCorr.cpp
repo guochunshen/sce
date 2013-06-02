@@ -16,13 +16,22 @@ using namespace std;
 //nsim number of shuffling used to calcualte confidence interval, 0 means only calculate the observed value
 //marki the observed mark index and already permuated index of individual marks, its length equals to N*nsim
 //mkcvalues the observed value of the mark correlation function and the simulated value of the mark correlation function under mark shuffling null model
-
+//isnormalize whether needed to normalize the mark correlation function
+//tc the constant value of the normailzed term
+//isaccum whether to calculate the accumulated mark correlation function
 
 
 double testfun(double m1, double m2, int* tftype);
 
+void nonaccumfun(double dij, double rmax, double* r, int* nr, double* h, int* marki,
+double* mark, int* tftype,int*nsim, int i, int j, int *pcount, double *tfsum );
+
+void accumfun(double dij, double rmax, double* r, int* nr, double* h, int* marki,
+double* mark, int* tftype,int*nsim, int i, int j, int *pcount, double *tfsum);
+
 void markcorr(int* N, double* x, double* y, double* mark, double* r, int* nr, double* h, int* tftype,
-    int* nsim, int* marki, int* exclude_conspecific,int* sp,double* mkcvalues, int* isnormalize, double* tc){
+    int* nsim, int* marki, int* exclude_conspecific,int* sp,double* mkcvalues, int* isnormalize,
+    double* tc, int* isaccum){
   //define the array to store data
   double tfsum[*nr * (*nsim+1)];
   int pcount[*nr];
@@ -45,29 +54,22 @@ void markcorr(int* N, double* x, double* y, double* mark, double* r, int* nr, do
   double tcsum=0;
   int tccount=0;
   
+  //pointers of the pcount and tfsum
+  int *ppcount = pcount;
+  double * ptfsum = tfsum;
+  
   //run over all pairs of points
   for(int i=0; i< *N; i++ ){
     for(int j=i+1; j< *N; j++){
       
       if((*exclude_conspecific)==0 || ((*exclude_conspecific)==1 && sp[i]!=sp[j])){
         double dij=pow(pow(x[i]-x[j],2)+pow(y[i]-y[j],2),0.5);
-        //do the calculation only when the interpoint distance is smaller than the maximum r+h
-        if(dij<=rmax){
-          //one point pair can be assigned into several distance
-          vector< int> pis=pointPosition(dij,r,nr,h);
-          for (int pij=0; pij<pis.size();pij++ ){
-            int pi=pis[pij];
-            //if the point is near any r value, just do the point count and testfuntion sum 
-            pcount[pi]++;
-      
-            //sum the test function for observed marks and simulated marks
-            for(int k=0; k< (*nsim+1); k++){
-              int simui=k* (*nr);
-               tfsum[pi+simui]+=testfun(mark[marki[i+simui]],mark[marki[j+simui]], tftype);
-            }      
-          }
-          
+        if((*isaccum)==0){
+          nonaccumfun(dij, rmax, r, nr, h, marki,mark, tftype, nsim, i, j, ppcount, ptfsum );
+        }else{
+          accumfun(dij, rmax, r, nr, h, marki,mark, tftype, nsim, i, j, ppcount, ptfsum );
         }
+        
         if((*isnormalize)==1){
           tccount++;
           tcsum+=testfun(mark[i],mark[j], tftype);
@@ -95,6 +97,48 @@ void markcorr(int* N, double* x, double* y, double* mark, double* r, int* nr, do
     }
   }
 }
+
+
+//the way to calculate the unite of accumulated mark correlation for one point pair
+void accumfun(double dij, double rmax, double* r, int* nr, double* h, int* marki,
+double* mark, int* tftype,int*nsim, int i, int j, int *pcount, double *tfsum){
+  
+  if(dij<= (rmax- (*h))){
+    for(int ri=0; ri< (*nr); ri++){
+      if(dij<=r[ri]){
+        pcount[ri]++;
+        
+        for(int k=0; k<(*nsim+1); k++){
+          int simui=k* (*nr);
+          tfsum[ri+simui]+=testfun(mark[marki[i+simui]],mark[marki[j+simui]], tftype);
+        }
+      }
+    }
+  }
+}
+
+//the way to calculate the unite of nonaccumulated mark correlation for one point pair
+void nonaccumfun(double dij, double rmax, double* r, int* nr, double* h, int* marki,
+double* mark, int* tftype,int*nsim, int i, int j, int *pcount, double *tfsum ){
+  //do the calculation only when the interpoint distance is smaller than the maximum r+h
+        if(dij<=rmax){
+          //one point pair can be assigned into several distance
+          vector< int> pis=pointPosition(dij,r,nr,h);
+          for (int pij=0; pij<pis.size();pij++ ){
+            int pi=pis[pij];
+            //if the point is near any r value, just do the point count and testfuntion sum 
+            pcount[pi]++;
+      
+            //sum the test function for observed marks and simulated marks
+            for(int k=0; k< (*nsim+1); k++){
+              int simui=k* (*nr);
+               tfsum[pi+simui]+=testfun(mark[marki[i+simui]],mark[marki[j+simui]], tftype);
+            }      
+          }
+          
+        }
+}
+
 
 //the test function
 double testfun(double m1, double m2, int* tftype){
