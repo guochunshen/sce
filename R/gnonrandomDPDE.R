@@ -22,28 +22,38 @@
 
 #TODO add the etoe estimator into the function
 gnonrandomDPDE<-function(r_samples,dtype="ptoe",k,area,...){
+  #number of equal angle sectors
   q=dim(r_samples)[2]
+  #remove rows with missing value
   del=apply(r_samples,1,function(x) any(is.na(x)))
   r_samples=r_samples[!del,]
+  #number of focal points/events
   n=dim(r_samples)[1]
   if(is.null(n))
     n=length(r_samples)
+  
+  #all of the sampled distances
   r=as.vector(r_samples)
+  
   #remove 0 neighborhood distance
   r=r[r!=0]
   
   if(length(r)>0){
     if(dtype=="ptoe"){
-      ngpars=try(optim(c(n+1,2),fn=ngobf_ptoe,r=r,k=k,q=q,area=area,lower=c(n,1e-5),control=list(maxit=100000,fnscale=-1),...))
+      fn=ngobf_ptoe
     }else{
-      ngpars=try(optim(c(n+1,2),fn=ngobf_etoe,r=r,k=k,q=q,area=area,lower=c(n,1e-5),control=list(maxit=100000,fnscale=-1),...))
+      fn=ngobf_etoe
     }
+    
+    lam_min=n/area
+    
+    ngpars=try(optim(c((n+1)/area,2),fn=fn,r=r,k=k,q=q,lam_min=lam_min,control=list(maxit=100000,fnscale=-1),...))
     
     if(class(ngpars)=="try-error"){
       #browser()
       N=NA
     }else if(ngpars$convergence==0)
-      N=ngpars$par[1]
+      N=ngpars$par[1]*area
     else
       N=NA
   }else{
@@ -52,11 +62,16 @@ gnonrandomDPDE<-function(r_samples,dtype="ptoe",k,area,...){
   return(N)
 }
 
-ngobf_ptoe=function(x,r,k,q,area){
+ngobf_ptoe=function(x,r,k,q,lam_min){
   
-  nind=x[1]
-  lam=nind/area
+  lam=x[1]
+  if(lam<lam_min){
+    return(-1e20)
+  }
   a=x[2]
+  if(a<=0){
+    return(-1e20)
+  }
   n=length(r)
   
   re=n*k*log(lam)+n*lgamma(k+a)+n*a*log(a)-n*lgamma(a)+
@@ -65,10 +80,15 @@ ngobf_ptoe=function(x,r,k,q,area){
 }
 
 
-ngobf_etoe=function(x,r,k,q,area){
-  nind=x[1]
-  lam=nind/area
+ngobf_etoe=function(x,r,k,q,lam_min){
+  lam=x[1]
+  if(lam<lam_min){
+    return(-1e20)
+  }
   a=x[2]
+  if(a<=0){
+    return(-1e20)
+  }
   n=length(r)
   
   re=n*k*log(lam)+n*lgamma(k+a+1)+n*(a+1)*log(a)-n*lgamma(a+1)+
