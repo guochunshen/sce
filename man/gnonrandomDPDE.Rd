@@ -2,7 +2,10 @@
 \alias{gnonrandomDPDE}
 \title{The general nonrandom distance based population density estimator (DPDE)}
 \usage{
-  gnonrandomDPDE(r_samples, dtype = "ptoe", k, area, ...)
+  #maximum likelyhood based estimation
+    gnonrandomDPDE(r_samples,dtype="ptoe",k,area,...)
+    #moment based estimation
+    gnonrandomDPDE2(r_samples,dtype="ptoe",k,area,...)
 }
 \arguments{
   \item{r_samples}{neighborhood distance matrix. The number

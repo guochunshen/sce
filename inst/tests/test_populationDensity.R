@@ -111,7 +111,7 @@ test_that("test on the population density estimator",{
   #using real data
   load("./data/BROSAL_scp.RData")
   obs=data.frame(x=spscp$com$x,y=spscp$com$y)
-  nf=300
+  nf=400
   Nest=numeric()
   for(i in 1:100){
     focals=data.frame(x=runif(nf,5,995),y=runif(nf,5,495))
@@ -125,6 +125,7 @@ test_that("test on the population density estimator",{
   focals=obs[sample(1:spscp$N,nf),]
   etoe_r=knq(focals,obs,k=1,q=1,type="etoe")
   gnrcompositeDPDE(ptoe_r,etoe_r,k=1,area=5e5)
-  
+  gnonrandomDPDE2(ptoe_r,dtype="ptoe",k=1,area=5e5)
+  gnonrandomDPDE2(etoe_r,dtype="etoe",k=1,area=5e5)
   
 })
