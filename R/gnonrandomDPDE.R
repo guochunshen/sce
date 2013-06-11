@@ -63,6 +63,7 @@ gnonrandomDPDE<-function(r_samples,dtype="ptoe",k,area,...){
   return(N)
 }
 
+
 ngobf_ptoe=function(x,r,k,q,lam_min){
   
   lam=x[1]
