@@ -46,8 +46,9 @@ gnonrandomDPDE<-function(r_samples,dtype="ptoe",k,area,...){
     }
     
     lam_min=n/area
+    lam_intial=1/mean(r)^2
     
-    ngpars=try(optim(c((n+1)/area,2),fn=fn,r=r,k=k,q=q,lam_min=lam_min,control=list(maxit=100000,fnscale=-1),...))
+    ngpars=try(optim(c(lam_intial,2),fn=fn,r=r,k=k,q=q,lam_min=lam_min,control=list(maxit=100000,fnscale=-1),...))
     
     if(class(ngpars)=="try-error"){
       #browser()
@@ -69,7 +70,8 @@ ngobf_ptoe=function(x,r,k,q,lam_min){
     return(-1e20)
   }
   a=x[2]
-  if(a<=0){
+  #from gao's paper, we know that a can't be smaller than 0.5
+  if(a<=0.5){
     return(-1e20)
   }
   n=length(r)

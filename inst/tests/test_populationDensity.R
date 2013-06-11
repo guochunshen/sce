@@ -107,4 +107,16 @@ test_that("test on the population density estimator",{
   ds=knq(focals,obs,k=k,q=q,type="ptoe")
   gnonrandomDPDE(ds,dtype="ptoe",k=k,area=1)
   gsimpleDPDE(ds,k=k,area=1)
+  
+  #using real data
+  load("./data/BROSAL_scp.RData")
+  obs=data.frame(x=spscp$com$x,y=spscp$com$y)
+  nf=400
+  Nest=numeric()
+  for(i in 1:100){
+    focals=data.frame(x=runif(nf,5,995),y=runif(nf,5,495))
+    ds=knq(focals,obs,k=1,q=1,type="ptoe")
+    Nest[i]=gnonrandomDPDE(ds,dtype="ptoe",k=1,area=5e5)
+  }
+  
 })
