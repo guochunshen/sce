@@ -92,6 +92,7 @@ For further information on any of these functions, type \code{help(name)} where 
     \code{\link{gsimpleDPDE}} \tab The general simple distance based population density estimator \cr
     \code{\link{gcompositeDPDE}} \tab The general composite distance based population density estimator \cr
     \code{\link{gnonrandomDPDE}} \tab The general nonrandom distance based population density estimator \cr
+    \code{\link{gnrcompositeDPDE}} \tab The general composite distance based population density estimator based on negative binomial distribution \cr
   }
   
 }

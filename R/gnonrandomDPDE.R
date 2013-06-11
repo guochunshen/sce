@@ -28,6 +28,11 @@
 
 #TODO add the etoe estimator into the function
 gnonrandomDPDE<-function(r_samples,dtype="ptoe",k,area,...){
+  
+  initial=gnonrandomDPDE2(r_samples,dtype,k,area)
+  lam_init=attr(initial,"lam")
+  a_init=attr(initial,"a")
+  
   #number of equal angle sectors
   q=dim(r_samples)[2]
   #remove rows with missing value
@@ -52,9 +57,8 @@ gnonrandomDPDE<-function(r_samples,dtype="ptoe",k,area,...){
     }
     
     lam_min=n/area
-    lam_intial=1/mean(r)^2
     
-    ngpars=try(optim(c(lam_intial,2),fn=fn,r=r,k=k,q=q,lam_min=lam_min,control=list(maxit=100000,fnscale=-1),...))
+    ngpars=try(optim(c(lam_init,a_init),fn=fn,r=r,k=k,q=q,lam_min=lam_min,control=list(maxit=100000,fnscale=-1),...))
     
     if(class(ngpars)=="try-error"){
       #browser()
@@ -78,10 +82,15 @@ gnonrandomDPDE2<-function(r_samples,dtype="ptoe",k,area,...){
   er3=mean((r_samples)^2,na.rm=TRUE)
   if(dtype=="ptoe"){
     lam=((2*k-1)*er2*er3-er1*k)*q/er1/er3/pi
+    a=((2*k-1)*er2*er3-er1*k)/((2*k-1)*er2*er3-2*er1*k)
   }else{
     lam=q*k/er3/pi
+    a=(er2*k)/(2*k*(er1*er3-er2)-er1*er3)
   }
+  
   N=lam*area
+  attr(N,"lam")=lam
+  attr(N,"a")=a
   return(N)
 }
 

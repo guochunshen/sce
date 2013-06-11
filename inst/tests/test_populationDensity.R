@@ -125,7 +125,9 @@ test_that("test on the population density estimator",{
   focals=obs[sample(1:spscp$N,nf),]
   etoe_r=knq(focals,obs,k=1,q=1,type="etoe")
   gnrcompositeDPDE(ptoe_r,etoe_r,k=1,area=5e5)
+  gnonrandomDPDE(ptoe_r,dtype="ptoe",k=1,area=5e5)
   gnonrandomDPDE2(ptoe_r,dtype="ptoe",k=1,area=5e5)
+  gnonrandomDPDE(etoe_r,dtype="etoe",k=1,area=5e5)
   gnonrandomDPDE2(etoe_r,dtype="etoe",k=1,area=5e5)
   
 })
