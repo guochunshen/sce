@@ -59,6 +59,7 @@ For further information on any of these functions, type \code{help(name)} where 
     \code{\link{rCluster}} \tab simulate a cluster population distribution from a fitted cluster model or given parameters \cr
     \code{\link{rCommunity}} \tab simulate a community uniquely driven by random/dispersal/habitat/compeition \cr
     \code{\link{rCom}} \tab simulate a community with phylogenetic information \cr
+    \code{\link{rPopNeg}} \tab Generate simulated population with negative binomial abundance distribution \cr
   }
    \bold{Typical spatial community data within the package}
   
