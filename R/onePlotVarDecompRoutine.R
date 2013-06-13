@@ -46,6 +46,8 @@ onePlotVarDecompRoutine <- function(com,fit_cores=10,gof_cores=5,ctlpars=list(rm
   if(!inherits(fitmodel_rep,"repository"))
     fitmodel_rep=create_repository(result_rep_id,com$sp,"./reps")
   
+  #read the task again to avoid inconsistent between task list
+  fitmodel_rep=read_repository(result_rep_id,"./reps")
   #step1: get a list of best fitted cluster models for each species 
   results=applyGroup(com,com$traits$species,onespModel,ctlpars=ctlpars,verbpro=TRUE,mc.cores=fit_cores,
                           multicore=TRUE,repository=fitmodel_rep)

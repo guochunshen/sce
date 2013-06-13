@@ -105,7 +105,7 @@ pcfoneless <- function (U, par, nu, nU, ff,filename="temp_backingfile",usingBigm
   if(canBigmatrix){
     nUlimit=5000
   }else{
-    nUlimit=8000
+    nUlimit=800000
   }
   
   if((!usingBigmatrix) & nU<nUlimit){
