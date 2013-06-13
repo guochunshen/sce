@@ -159,3 +159,13 @@ test_that("test on the rCom",{
   
   
 })
+
+test_that("test on the rPopNeg",{
+  
+  win=owin(c(10,50),c(30,100))
+  nxy=c(8,14)
+  lam=0.2
+  p1=rPopNeg(lam,1,win,nxy)$com
+  expect_true(min(p1$x)>10 & max(p1$x)<50 & min(p1$y)>30 & max(p1$y)<100)
+  
+})
