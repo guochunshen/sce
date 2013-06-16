@@ -84,6 +84,7 @@ For further information on any of these functions, type \code{help(name)} where 
     \code{\link{applyGroup}} \tab apply a function on each member of a group devided from a community, paralla computation supported \cr
     \code{\link{knq}} \tab To find the kth nearest neighborhood in the q equal angle sector for each forcal point/event \cr
     \code{\link{pcaHabitat}} \tab transfer all of the habitat variables by PCA \cr
+    \code{\link{smallLargeDBH}} \tab divide the whole community into small and large DBH groups \cr
   }
   
   
