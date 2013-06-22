@@ -37,7 +37,7 @@
 
 
 onePlotVarDecompRoutine <- function(com,fit_cores=10,gof_cores=5,ctlpars=list(rmax = 25, rmin = 2, 
-                          bw = 2, sigma2 = 3, alpha = 10, nurange = c(Inf, 0.5), q = 0.5, 
+                          bw = 2, sigma2 = 3, alpha = 10, nurange = c(Inf, 0.5), q = 0.5, varconf=FALSE,
                             edgecor = "translate",  nsim= 19, r = seq(0, 25, 2), siglevel = 0.05),
                             result_rep_id=NULL){
   
@@ -75,8 +75,17 @@ onespModel=function(com,ctlpars){
   propVariance=varDecomp(fittedmodel,r=c(0:ctlpars$rmax),R=4)
   
   #step4 confidence interval of PVH and PVR
-  var_conf=envelopeVar(fittedmodel,nsim=ctlpars$nsim,conf_level=0.95,
-  r=c(0:ctlpars$rmax),R=4,delta=1,simple=TRUE)
+  if(!is.null(ctlpars$varconf)){
+    if(ctlpars$varconf){
+      var_conf=envelopeVar(fittedmodel,nsim=ctlpars$nsim,conf_level=0.95,
+                           r=c(0:ctlpars$rmax),R=4,delta=1,simple=TRUE)
+    }else{
+      var_conf=NA
+    }
+  }else{
+    var_conf=NA
+  }
+  
   
   #compose result
   params=as.vector(fittedmodel)
