@@ -149,6 +149,7 @@ For further information on any of these functions, type \code{help(name)} where 
     \code{\link{NAtreeRaster}} \tab transfer the zipped shapfile distribution of tree data into a dataframe of species occurance \cr
     \code{\link{multiplot}} \tab Multiple plot function for ggplot figures \cr
     \code{\link{taobaoAPI}} \tab an interface of taobao open API \cr
+    \code{\link{changeTostar}} \tab A help functions to change pvalue into the correspondence significant level using * \cr
   }
 }
 \author{
